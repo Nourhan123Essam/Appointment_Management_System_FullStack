@@ -15,6 +15,8 @@ namespace Appointment_System.Domain.Entities
 
         public string DoctorId { get; set; } // FK to ApplicationUser
 
+        public string? GuestEmail { get; set; } // If the appointment is for a guest
+
         public DateTime AppointmentTime { get; set; }  // Store only Year-Month-Day Hour
 
         public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;

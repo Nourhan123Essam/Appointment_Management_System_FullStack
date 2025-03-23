@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.3.0",
+    "@angular/cdk": "^17.3.10",
     "@angular/common": "^17.3.0",
     "@angular/compiler": "^17.3.0",
     "@angular/core": "^17.3.0",
@@ -18,7 +19,11 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "@primeng/themes": "^19.0.10",
+    "bootstrap": "^5.3.3",
     "ng-recaptcha": "^13.2.1",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.15",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

@@ -18,24 +18,17 @@ namespace Appointment_System.Infrastructure.Data
         // Dbsets:
         public DbSet<ApplicationUser> Users { get; set; }  
         public DbSet<IdentityRole> Roles { get; set; }     
-        public DbSet<Appointment> Appointments { get; set; } 
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<DoctorQualification> DoctorQualifications { get; set; }
+        public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Configure Appointment relationships
-            builder.Entity<Appointment>()
-                .HasOne<ApplicationUser>()
-                .WithMany()
-                .HasForeignKey(a => a.DoctorId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent accidental deletions
-
-            builder.Entity<Appointment>()
-                .HasOne<ApplicationUser>()
-                .WithMany()
-                .HasForeignKey(a => a.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent accidental deletions
+            // Apply custom relationships
+            ModelBuilderExtensions.ApplyEntityRelationships(builder);
 
         }
     }
