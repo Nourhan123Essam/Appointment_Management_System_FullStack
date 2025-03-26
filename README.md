@@ -2,16 +2,13 @@
 
 A full-stack healthcare appointment management system built with .NET 8 and Angular 19. It focuses on security, role-based access, structured design, and maintainability.
 
----
-
-**Temporarily**, the frontend is hosted here until the issue is resolved: [Frontend part of the project](https://github.com/Nourhan123Essam/Temp_Appointment_system_Frontend)
 
 ---
 
 ## 📌 **Overview**
 This project manages **doctor-patient bookings** with:
 - **Backend:** .NET 8, Entity Framework Core, Fluent API
-- **Frontend:** Angular 19, PrimeNG, Bootstrap
+- **Frontend:** Angular 17, PrimeNG, Bootstrap
 - **Database:** SQL Server
 - **Security:** JWT Authentication, Role-based Authorization, CAPTCHA
 
