@@ -30,6 +30,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 
+builder.Services.AddScoped<IDoctorAvailabilityRepository, DoctorAvailabilityRepository>();
+builder.Services.AddScoped<IDoctorAvailabilityService, DoctorAvailabilityService>();
+
+builder.Services.AddScoped<IDoctorQualificationRepository, DoctorQualificationRepository>();
+builder.Services.AddScoped<IDoctorQualificationService, DoctorQualificationService>();
+
+
 // Add services to the container.
 builder.Services.AddCors(options =>
 {

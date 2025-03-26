@@ -22,6 +22,7 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
         {
             return await _context.DoctorAvailabilities
                 .Where(d => d.DoctorId == doctorId)
+                .AsNoTracking() // No tracking for better performance
                 .ToListAsync();
         }
 
