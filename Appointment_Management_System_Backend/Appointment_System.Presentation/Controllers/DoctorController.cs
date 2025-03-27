@@ -1,5 +1,7 @@
-﻿using Appointment_System.Application.DTOs.DoctorAvailability;
+﻿using Appointment_System.Application.DTOs.Doctor;
+using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,17 +15,32 @@ namespace Appointment_System.Presentation.Controllers
     {
         private readonly IDoctorAvailabilityService _service;
         private readonly IDoctorQualificationService _qualification_service;
+        private readonly IDoctorService _doctorService;
 
-
-        public DoctorController(IDoctorAvailabilityService service, IDoctorQualificationService qualification_service)
+        public DoctorController(IDoctorAvailabilityService service, IDoctorQualificationService qualification_service, IDoctorService doctorService)
         {
             _service = service;
             _qualification_service  = qualification_service;
+            _doctorService = doctorService;
         }
 
+        //////////////////////////////// 1 ///////////////////////////////////////
+        // Doctor CRUD operations
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateDoctor([FromBody]DoctorCreateDto doctorDto)
+        {
+            var result = await _doctorService.CreateDoctorAsync(doctorDto);
+            if (!result)
+                return BadRequest("Failed to create doctor.");
+
+            return Ok("Doctor created successfully.");
+        }
+
+        //////////////////////////////// 2 ///////////////////////////////////////
         // DoctorQualification CRUD operations
         [Authorize(Roles = "Admin")]
-        [HttpGet]
+        [HttpGet("GetQualificationByDoctorId")]
         public async Task<ActionResult<List<DoctorQualificationDto>>> GetQualificationByDoctorId(string doctorId)
         {
             var qualifications = await _qualification_service.GetByDoctorIdAsync(doctorId);
@@ -31,7 +48,7 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("{id}")]
+        [HttpGet("GetQualificationById/{id}")]
         public async Task<ActionResult<DoctorQualificationDto>> GetQualificationById(int id)
         {
             var qualification = await _qualification_service.GetByIdAsync(id);
@@ -40,7 +57,7 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost]
+        [HttpPost("CreateQualification")]
         public async Task<IActionResult> CreateQualification(string doctorId, CreateDoctorQualificationDto dto)
         {
             dto.DoctorId = doctorId;
@@ -49,7 +66,7 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
+        [HttpPut("UpdateQualification/{id}")]
         public async Task<IActionResult> UpdateQualification(int id, UpdateDoctorQualificationDto dto)
         {
             await _qualification_service.UpdateAsync(id, dto);
@@ -57,17 +74,18 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteQualification/{id}")]
         public async Task<IActionResult> DeleteQualification(int id)
         {
             await _qualification_service.DeleteAsync(id);
             return NoContent();
         }
 
+        //////////////////////////////// 3 ///////////////////////////////////////
         // DoctorAvailability CRUD operations
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("{id}")]
+        [HttpGet("GetAvailabilityById/{id}")]
         public async Task<ActionResult<DoctorAvailabilityDto>> GetAvailabilityById(int id)
         {
             var availability = await _service.GetByIdAsync(id);
@@ -76,22 +94,22 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("doctor/{doctorId}")]
+        [HttpGet("GetAvailabilityByDoctorId/{doctorId}")]
         public async Task<ActionResult<IEnumerable<DoctorAvailabilityDto>>> GetAvailabilityByDoctorId(string doctorId)
         {
             return Ok(await _service.GetByDoctorIdAsync(doctorId));
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateDoctorAvailabilityDto dto)
+        [HttpPost("CreateAvailability")]
+        public async Task<IActionResult> CreateAvailability(CreateDoctorAvailabilityDto dto)
         {
             await _service.AddAsync(dto);
             return CreatedAtAction(nameof(GetAvailabilityByDoctorId), new { doctorId = dto.DoctorId }, dto);
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
+        [HttpPut("UpdateAvailability/{id}")]
         public async Task<IActionResult> UpdateAvailability(int id, UpdateDoctorAvailabilityDto dto)
         {
             try
@@ -106,7 +124,7 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAvailability/{id}")]
         public async Task<IActionResult> DeleteAvailability(int id)
         {
             await _service.DeleteAsync(id);

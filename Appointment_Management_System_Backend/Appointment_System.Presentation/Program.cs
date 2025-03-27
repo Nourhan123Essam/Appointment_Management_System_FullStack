@@ -1,12 +1,16 @@
+using System.Text;
 using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Infrastructure.Data;
 using Appointment_System.Infrastructure.Repositories.Implementations;
 using Appointment_System.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +40,10 @@ builder.Services.AddScoped<IDoctorAvailabilityService, DoctorAvailabilityService
 builder.Services.AddScoped<IDoctorQualificationRepository, DoctorQualificationRepository>();
 builder.Services.AddScoped<IDoctorQualificationService, DoctorQualificationService>();
 
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
 
 // Add services to the container.
 builder.Services.AddCors(options =>
@@ -48,6 +56,60 @@ builder.Services.AddCors(options =>
         .AllowCredentials();
     });
 });
+
+// Add JWT authentication to Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer' [space] and then your token."
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+//configure authentication and jwt 
+var AccessAppSettings = builder.Configuration;
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = AccessAppSettings["Jwt:Issuer"],
+        ValidAudience = AccessAppSettings["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(AccessAppSettings["Jwt:Key"])
+        )
+    };
+});
+
 
 var configuration = builder.Configuration;
 builder.Services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));

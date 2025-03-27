@@ -15,6 +15,10 @@ namespace Appointment_System.Application.DTOs.DoctorAvailability
         public TimeSpan EndTime { get; set; }
         public string DoctorId { get; set; }
 
+        public DoctorAvailabilityDto()
+        {
+            
+        }
         // Constructor that takes the entity as input
         public DoctorAvailabilityDto(Domain.Entities.DoctorAvailability availability)
         {
