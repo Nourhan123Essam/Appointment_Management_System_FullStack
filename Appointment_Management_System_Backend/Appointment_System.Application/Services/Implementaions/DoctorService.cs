@@ -1,4 +1,6 @@
 ﻿using Appointment_System.Application.DTOs.Doctor;
+using Appointment_System.Application.DTOs.DoctorAvailability;
+using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Infrastructure.Data;
@@ -27,6 +29,7 @@ namespace Appointment_System.Application.Services.Implementaions
             _context = context;
         }
 
+        // Create Docotor
         public async Task<bool> CreateDoctorAsync(DoctorCreateDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -86,6 +89,53 @@ namespace Appointment_System.Application.Services.Implementaions
                 await transaction.RollbackAsync();
                 return false;
             }
+        }
+
+
+        // Get All Doctors
+        public async Task<List<DoctorDto>> GetAllDoctorsAsync()
+        {
+            var doctors = await _doctorRepository.GetAllDoctorsAsync();
+
+            return doctors.Select(d => new DoctorDto(
+                Id : d.Id,
+                FullName: d.FullName,
+                YearsOfExperience: d.YearsOfExperience,
+                Specialization: d.Specialization,
+                LicenseNumber: d.LicenseNumber,
+                ConsultationFee: d.ConsultationFee,
+                WorkplaceType: d.WorkplaceType,
+                Qualifications: d.Qualifications.Select(q => new DoctorQualificationDto(q)).ToList(),
+                Availabilities: d.Availabilities.Select(a => new DoctorAvailabilityDto(a)).ToList()
+            )).ToList();
+        }
+
+        //Update Doctor
+        public async Task<bool> UpdateDoctorAsync(string doctorId, DoctorUpdateDto dto)
+        {
+            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            if (doctor == null)
+                return false;
+
+            // Update only doctor details
+            doctor.FullName = dto.FullName;
+            doctor.YearsOfExperience = dto.YearsOfExperience;
+            doctor.Specialization = dto.Specialization;
+            doctor.LicenseNumber = dto.LicenseNumber;
+            doctor.ConsultationFee = dto.ConsultationFee;
+            doctor.WorkplaceType = dto.WorkplaceType;
+
+            return await _doctorRepository.UpdateDoctorAsync(doctor);
+        }
+
+        // Delete Doctor
+        public async Task<bool> DeleteDoctorAsync(string doctorId)
+        {
+            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            if (doctor == null)
+                return false;
+
+            return await _doctorRepository.DeleteDoctorAsync(doctor);
         }
     }
 }

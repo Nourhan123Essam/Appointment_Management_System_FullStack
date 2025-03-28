@@ -23,6 +23,11 @@ namespace Appointment_System.Infrastructure.Data
         public int? TotalRatingScore { get; set; } = 0;
         public int? TotalRatingsGiven { get; set; } = 0;
 
+        // Navigation properties (One-to-Many relationships)
+        public ICollection<DoctorQualification> Qualifications { get; set; } = new List<DoctorQualification>();
+        public ICollection<DoctorAvailability> Availabilities { get; set; } = new List<DoctorAvailability>();
+
+
     }
 
 }

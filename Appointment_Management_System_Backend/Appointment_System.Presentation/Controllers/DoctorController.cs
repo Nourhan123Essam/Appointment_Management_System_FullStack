@@ -37,6 +37,39 @@ namespace Appointment_System.Presentation.Controllers
             return Ok("Doctor created successfully.");
         }
 
+        [HttpGet("doctors")]
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            var doctors = await _doctorService.GetAllDoctorsAsync();
+            return Ok(doctors);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{doctorId}")]
+        public async Task<IActionResult> UpdateDoctor(string doctorId, [FromBody] DoctorUpdateDto dto)
+        {
+            var updated = await _doctorService.UpdateDoctorAsync(doctorId, dto);
+
+            if (!updated)
+                return NotFound("Doctor not found.");
+
+            return Ok("Doctor updated successfully.");
+        }
+
+        [HttpDelete("{doctorId}")]
+        public async Task<IActionResult> DeleteDoctor(string doctorId)
+        {
+            var deleted = await _doctorService.DeleteDoctorAsync(doctorId);
+
+            if (!deleted)
+                return NotFound("Doctor not found.");
+
+            return Ok("Doctor deleted successfully.");
+        }
+
+
+
+
         //////////////////////////////// 2 ///////////////////////////////////////
         // DoctorQualification CRUD operations
         [Authorize(Roles = "Admin")]

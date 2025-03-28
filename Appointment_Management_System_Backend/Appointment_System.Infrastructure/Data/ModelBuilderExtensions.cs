@@ -29,17 +29,17 @@ namespace Appointment_System.Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent accidental deletions
 
 
-            // DoctorQualification Relationship
+            // Ensure Doctor Qualifications reference the correct User ID
             modelBuilder.Entity<DoctorQualification>()
-                .HasOne<ApplicationUser>()
-                .WithMany() // No navigation in ApplicationUser
-                .HasForeignKey(q => q.DoctorId)
+                .HasOne<ApplicationUser>()  // Links to ApplicationUser
+                .WithMany(d => d.Qualifications)
+                .HasForeignKey(q => q.DoctorId) // Ensure FK is DoctorId, not ApplicationUserId
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // DoctorAvailability Relationship
+            // Ensure Doctor Availabilities reference the correct User ID
             modelBuilder.Entity<DoctorAvailability>()
                 .HasOne<ApplicationUser>()
-                .WithMany() // No navigation in ApplicationUser
+                .WithMany(d => d.Availabilities)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
