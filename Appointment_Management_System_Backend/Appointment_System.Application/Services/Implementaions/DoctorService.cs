@@ -1,10 +1,7 @@
 ﻿using Appointment_System.Application.DTOs.Doctor;
-using Appointment_System.Application.DTOs.DoctorAvailability;
-using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories.Implementations;
 using Appointment_System.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -29,8 +26,17 @@ namespace Appointment_System.Application.Services.Implementaions
             _context = context;
         }
 
+        // Get Dcotor by Id 
+        public async Task<DoctorDto?> GetDoctorByIdAsync(string doctorId)
+        {
+            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            return doctor == null ? null : new DoctorDto(doctor);
+        }
+
+
+
         // Create Docotor
-        public async Task<bool> CreateDoctorAsync(DoctorCreateDto dto)
+        public async Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -50,7 +56,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 };
 
                 var result = await _userManager.CreateAsync(doctor, dto.Password);
-                if (!result.Succeeded) return false;
+                if (!result.Succeeded) return null;
 
                 // 2️- Assign the "Doctor" role
                 if (!await _roleManager.RoleExistsAsync("Doctor"))
@@ -82,32 +88,41 @@ namespace Appointment_System.Application.Services.Implementaions
                 // 5️- Commit transaction
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                return true;
+
+
+                // 6️- Fetch and return doctor with full details
+                return await GetDoctorByIdAsync(doctor.Id);
             }
             catch
             {
                 await transaction.RollbackAsync();
-                return false;
+                return null;
             }
         }
 
+
+        // Get All Doctors basic Data
+        public async Task<List<DoctorsBasicDataDto>> GetAllDoctorsBasicDataAsync()
+        {
+            var doctors = await _doctorRepository.GetAllDoctorsBasicDataAsync();
+
+            return doctors.Select(d => new DoctorsBasicDataDto(
+                Id: d.Id,
+                FullName: d.FullName,
+                YearsOfExperience: d.YearsOfExperience,
+                Specialization: d.Specialization,
+                LicenseNumber: d.LicenseNumber,
+                ConsultationFee: d.ConsultationFee,
+                WorkplaceType: d.WorkplaceType
+            )).ToList();
+        }
 
         // Get All Doctors
         public async Task<List<DoctorDto>> GetAllDoctorsAsync()
         {
             var doctors = await _doctorRepository.GetAllDoctorsAsync();
 
-            return doctors.Select(d => new DoctorDto(
-                Id : d.Id,
-                FullName: d.FullName,
-                YearsOfExperience: d.YearsOfExperience,
-                Specialization: d.Specialization,
-                LicenseNumber: d.LicenseNumber,
-                ConsultationFee: d.ConsultationFee,
-                WorkplaceType: d.WorkplaceType,
-                Qualifications: d.Qualifications.Select(q => new DoctorQualificationDto(q)).ToList(),
-                Availabilities: d.Availabilities.Select(a => new DoctorAvailabilityDto(a)).ToList()
-            )).ToList();
+            return doctors.Select(d => new DoctorDto(d)).ToList();
         }
 
         //Update Doctor

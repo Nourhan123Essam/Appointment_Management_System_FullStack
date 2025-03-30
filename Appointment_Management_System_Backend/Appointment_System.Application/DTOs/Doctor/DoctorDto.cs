@@ -1,19 +1,39 @@
 ﻿using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Domain.Enums;
+using Appointment_System.Infrastructure.Data;
 
 namespace Appointment_System.Application.DTOs.Doctor
 {
-    public record DoctorDto(
-         string Id,
-         string FullName,
-         int? YearsOfExperience,
-         string? Specialization,
-         string? LicenseNumber,
-         decimal? ConsultationFee,
-         WorkplaceType? WorkplaceType,
-         List<DoctorQualificationDto> Qualifications,
-         List<DoctorAvailabilityDto> Availabilities
-     );
+    public record DoctorDto
+    {
+        public string Id { get; init; }
+        public string FullName { get; init; }
+        public int? YearsOfExperience { get; init; }
+        public string? Specialization { get; init; }
+        public string? LicenseNumber { get; init; }
+        public decimal? ConsultationFee { get; init; }
+        public WorkplaceType? WorkplaceType { get; init; }
+        public List<DoctorQualificationDto> Qualifications { get; init; } = new();
+        public List<DoctorAvailabilityDto> Availabilities { get; init; } = new();
+
+        // Empty constructor (for cases where mapping happens in service)
+        public DoctorDto() { }
+
+        // Constructor that maps from ApplicationUser
+        public DoctorDto(ApplicationUser doctor)
+        {
+            Id = doctor.Id;
+            FullName = doctor.FullName;
+            YearsOfExperience = doctor.YearsOfExperience;
+            Specialization = doctor.Specialization;
+            LicenseNumber = doctor.LicenseNumber;
+            ConsultationFee = doctor.ConsultationFee;
+            WorkplaceType = doctor.WorkplaceType;
+            Qualifications = doctor.Qualifications.Select(q => new DoctorQualificationDto(q)).ToList();
+            Availabilities = doctor.Availabilities.Select(a => new DoctorAvailabilityDto(a)).ToList();
+        }
+    }
+
 
 }

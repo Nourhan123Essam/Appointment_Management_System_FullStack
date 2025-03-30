@@ -32,10 +32,12 @@ namespace Appointment_System.Application.Services.Implementaions
                 new DoctorQualificationDto(qualification);
         }
 
-        public async Task AddAsync(CreateDoctorQualificationDto dto)
+        public async Task<DoctorQualificationDto> AddAsync(CreateDoctorQualificationDto dto)
         {
             var qualification = dto.ToEntity();
-            await _repository.AddAsync(qualification);
+            qualification.Id = await _repository.AddAsync(qualification);
+            var newQualification = new DoctorQualificationDto(qualification);
+            return newQualification;
         }
 
         public async Task UpdateAsync(int id, UpdateDoctorQualificationDto dto)

@@ -11,7 +11,7 @@ namespace Appointment_System.Application.Services.Interfaces
     {
         Task<List<DoctorQualificationDto>> GetByDoctorIdAsync(string doctorId);
         Task<DoctorQualificationDto?> GetByIdAsync(int id);
-        Task AddAsync(CreateDoctorQualificationDto dto);
+        Task<DoctorQualificationDto> AddAsync(CreateDoctorQualificationDto dto);
         Task UpdateAsync(int id, UpdateDoctorQualificationDto dto);
         Task DeleteAsync(int id);
     }

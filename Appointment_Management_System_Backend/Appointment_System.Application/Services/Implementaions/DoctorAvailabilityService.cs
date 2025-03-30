@@ -32,7 +32,7 @@ namespace Appointment_System.Application.Services.Implementaions
             return availabilities.Select(a => new DoctorAvailabilityDto(a));
         }
 
-        public async Task AddAsync(CreateDoctorAvailabilityDto dto)
+        public async Task<DoctorAvailabilityDto> AddAsync(CreateDoctorAvailabilityDto dto)
         {
             var availability = new DoctorAvailability
             {
@@ -41,7 +41,9 @@ namespace Appointment_System.Application.Services.Implementaions
                 EndTime = dto.EndTime,
                 DoctorId = dto.DoctorId
             };
-            await _repository.AddAsync(availability);
+            availability.Id = await _repository.AddAsync(availability);
+            var newAvailability = new DoctorAvailabilityDto(availability);
+            return newAvailability;
         }
 
       

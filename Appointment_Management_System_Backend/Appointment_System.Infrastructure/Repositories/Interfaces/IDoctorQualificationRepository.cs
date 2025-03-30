@@ -6,7 +6,7 @@ namespace Appointment_System.Infrastructure.Repositories.Interfaces
     {
         Task<DoctorQualification?> GetByIdAsync(int id);
         Task<IEnumerable<DoctorQualification>> GetByDoctorIdAsync(string doctorId);
-        Task AddAsync(DoctorQualification qualification);
+        Task<int> AddAsync(DoctorQualification qualification);
         Task UpdateAsync(DoctorQualification qualification);
         Task DeleteAsync(int id);
     }

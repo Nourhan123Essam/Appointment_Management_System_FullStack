@@ -14,6 +14,7 @@ namespace Appointment_System.Infrastructure.Repositories.Interfaces
         Task AddAvailabilityAsync(List<DoctorAvailability> availabilities);
         Task AddQualificationsAsync(List<DoctorQualification> qualifications);
         Task<List<ApplicationUser>> GetAllDoctorsAsync();
+        Task<List<ApplicationUser>> GetAllDoctorsBasicDataAsync();
         Task<bool> UpdateDoctorAsync(ApplicationUser doctor);
         Task<ApplicationUser> GetDoctorByIdAsync(string id);
         Task<bool> DeleteDoctorAsync(ApplicationUser doctor);

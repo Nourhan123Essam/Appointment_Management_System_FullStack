@@ -26,15 +26,35 @@ namespace Appointment_System.Presentation.Controllers
 
         //////////////////////////////// 1 ///////////////////////////////////////
         // Doctor CRUD operations
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetDoctorById(string id)
+        {
+            var doctor = await _doctorService.GetDoctorByIdAsync(id);
+            if (doctor == null)
+                return NotFound($"Doctor with ID {id} not found.");
+
+            return Ok(doctor);
+        }
+
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateDoctor([FromBody]DoctorCreateDto doctorDto)
         {
-            var result = await _doctorService.CreateDoctorAsync(doctorDto);
-            if (!result)
+            var doctor = await _doctorService.CreateDoctorAsync(doctorDto);
+            if (doctor == null)
                 return BadRequest("Failed to create doctor.");
 
-            return Ok("Doctor created successfully.");
+            return CreatedAtAction(nameof(GetDoctorById), new { id = doctor.Id }, doctor);
+        }
+
+        [HttpGet("doctorsBasicData")]
+        public async Task<IActionResult> GetAllDoctorsBasicData()
+        {
+            var doctors = await _doctorService.GetAllDoctorsBasicDataAsync();
+            return Ok(doctors);
         }
 
         [HttpGet("doctors")]
@@ -91,11 +111,10 @@ namespace Appointment_System.Presentation.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateQualification")]
-        public async Task<IActionResult> CreateQualification(string doctorId, CreateDoctorQualificationDto dto)
+        public async Task<IActionResult> CreateQualification(CreateDoctorQualificationDto dto)
         {
-            dto.DoctorId = doctorId;
-            await _qualification_service.AddAsync(dto);
-            return CreatedAtAction(nameof(GetQualificationByDoctorId), new { doctorId }, dto);
+            var newQualification = await _qualification_service.AddAsync(dto);
+            return CreatedAtAction(nameof(GetQualificationByDoctorId), new { doctorId = dto.DoctorId }, newQualification);
         }
 
         [Authorize(Roles = "Admin")]
@@ -137,8 +156,8 @@ namespace Appointment_System.Presentation.Controllers
         [HttpPost("CreateAvailability")]
         public async Task<IActionResult> CreateAvailability(CreateDoctorAvailabilityDto dto)
         {
-            await _service.AddAsync(dto);
-            return CreatedAtAction(nameof(GetAvailabilityByDoctorId), new { doctorId = dto.DoctorId }, dto);
+            var newAvailability = await _service.AddAsync(dto);
+            return CreatedAtAction(nameof(GetAvailabilityByDoctorId), new { doctorId = dto.DoctorId }, newAvailability);
         }
 
         [Authorize(Roles = "Admin")]

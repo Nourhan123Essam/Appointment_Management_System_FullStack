@@ -31,10 +31,11 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task AddAsync(DoctorQualification qualification)
+        public async Task<int> AddAsync(DoctorQualification qualification)
         {
             await _context.DoctorQualifications.AddAsync(qualification);
             await _context.SaveChangesAsync();
+            return qualification.Id;
         }
 
         public async Task UpdateAsync(DoctorQualification qualification)

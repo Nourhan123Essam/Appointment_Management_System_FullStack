@@ -26,10 +26,11 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public async Task AddAsync(DoctorAvailability availability)
+        public async Task<int> AddAsync(DoctorAvailability availability)
         {
             await _context.DoctorAvailabilities.AddAsync(availability);
             await _context.SaveChangesAsync();
+            return availability.Id;
         }
 
         public async Task UpdateAsync(DoctorAvailability availability)

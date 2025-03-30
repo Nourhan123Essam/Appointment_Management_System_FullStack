@@ -17,6 +17,16 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
             _userManager = userManager;
         }
 
+        // Get Doctor by Id
+        public async Task<ApplicationUser?> GetDoctorByIdAsync(string doctorId)
+        {
+            return await _context.Users
+                .Include(d => d.Availabilities)
+                .Include(d => d.Qualifications)
+                .FirstOrDefaultAsync(d => d.Id == doctorId);
+        }
+
+
         // Create Doctor
         public async Task AddDoctorAsync(ApplicationUser doctor)
         {
@@ -33,13 +43,13 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
             _context.DoctorQualifications.AddRange(qualifications);
         }
 
-        // Get Doctor by Id
-        public async Task<ApplicationUser> GetDoctorByIdAsync(string id)
+        // Get all Doctors basic Data
+        public async Task<List<ApplicationUser>> GetAllDoctorsBasicDataAsync()
         {
-            return await _context.Users.FindAsync(id);   
-
+            // Get doctors using UserManager
+            var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
+            return doctors.ToList();
         }
-
 
         // Get all Doctors
         public async Task<List<ApplicationUser>> GetAllDoctorsAsync()
