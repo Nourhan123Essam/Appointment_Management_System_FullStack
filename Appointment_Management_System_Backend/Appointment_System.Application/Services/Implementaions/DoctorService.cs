@@ -113,7 +113,9 @@ namespace Appointment_System.Application.Services.Implementaions
                 Specialization: d.Specialization,
                 LicenseNumber: d.LicenseNumber,
                 ConsultationFee: d.ConsultationFee,
-                WorkplaceType: d.WorkplaceType
+                WorkplaceType: d.WorkplaceType,
+                TotalRatingScore: d.TotalRatingScore,
+                TotalRatingsGiven: d.TotalRatingsGiven
             )).ToList();
         }
 
@@ -139,6 +141,8 @@ namespace Appointment_System.Application.Services.Implementaions
             doctor.LicenseNumber = dto.LicenseNumber;
             doctor.ConsultationFee = dto.ConsultationFee;
             doctor.WorkplaceType = dto.WorkplaceType;
+            doctor.TotalRatingsGiven = dto.TotalRatingsGiven;
+            doctor.TotalRatingScore = dto.TotalRatingScore;
 
             return await _doctorRepository.UpdateDoctorAsync(doctor);
         }

@@ -1,0 +1,89 @@
+/* Main Container */
+.doctor-list-container {
+    max-width: 90%; /* Avoid full width */
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3D52A0; /* Professional medical blue */
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* Buttons */
+button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    transition: 0.3s;
+}
+
+.p-button {
+    background-color: #7091E6 !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.p-button:hover {
+    background-color: #8697C4 !important;
+}
+
+/* Table Styling */
+p-table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #ADBBDA !important;
+    text-align: left;
+    padding: 0.75rem;
+}
+
+tr:nth-child(even) {
+    background-color: #EDE8F5;
+}
+
+/* Actions Column */
+.p-button-text {
+    color: white !important;
+}
+
+.p-button-danger {
+    background: none !important;
+    color: red !important;
+}
+
+.flex-table-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .p-inputgroup {
+    flex-grow: 1;
+    max-width: 25%;
+    display: flex;
+  }
+  
+  .p-button {
+    margin-right: 10px;
+  }
+  

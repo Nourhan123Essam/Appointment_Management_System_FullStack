@@ -13,7 +13,7 @@ import { DeletePatientComponent } from './patients/delete-patient/delete-patient
 import { DoctorsComponent } from './doctors/doctors.component';
 import { AddDoctorComponent } from './doctors/add-doctor/add-doctor.component';
 import { UpdateDoctorComponent } from './doctors/update-doctor/update-doctor.component';
-import { DeleteDoctorComponent } from './doctors/delete-doctor/delete-doctor.component';
+import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/appointments', pathMatch: 'full' },
@@ -35,10 +35,10 @@ export const routes: Routes = [
     { path: 'delete-patient', component: DeletePatientComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
   
     // Doctors (Admin Only)
-    { path: 'doctors', component: DoctorsComponent, canActivate: [authGuard] },
+    { path: 'doctors', component: DoctorsComponent },
     { path: 'add-doctor', component: AddDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
     { path: 'update-doctor', component: UpdateDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
-    { path: 'delete-doctor', component: DeleteDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
+    { path: 'doctor-details/:id', component: DoctorDetailsComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
   
     { path: '**', redirectTo: '/appointments' }
 ];

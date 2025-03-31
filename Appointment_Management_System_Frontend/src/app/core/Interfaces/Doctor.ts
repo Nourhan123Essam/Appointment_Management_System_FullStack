@@ -9,12 +9,15 @@ export interface Doctor {
   licenseNumber?: string;
   consultationFee?: number;
   workplaceType?: WorkplaceType;
+  TotalRatingScore?: number;
+  TotalRatingsGiven?: number;
   qualifications: DoctorQualification[];
   availabilities: DoctorAvailability[];
 }
 
 export enum WorkplaceType {
-  Clinic = 'Clinic',
-  Hospital = 'Hospital',
-  Telemedicine = 'Telemedicine'
+  Clinic = 0,
+  Hospital = 1,
+  Telemedicine = 2
 }
+

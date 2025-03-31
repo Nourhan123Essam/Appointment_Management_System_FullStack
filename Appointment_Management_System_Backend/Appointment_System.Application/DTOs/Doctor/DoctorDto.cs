@@ -14,6 +14,8 @@ namespace Appointment_System.Application.DTOs.Doctor
         public string? LicenseNumber { get; init; }
         public decimal? ConsultationFee { get; init; }
         public WorkplaceType? WorkplaceType { get; init; }
+        public int? TotalRatingScore { get; set; } = 0;
+        public int? TotalRatingsGiven { get; set; } = 0;
         public List<DoctorQualificationDto> Qualifications { get; init; } = new();
         public List<DoctorAvailabilityDto> Availabilities { get; init; } = new();
 
@@ -30,6 +32,8 @@ namespace Appointment_System.Application.DTOs.Doctor
             LicenseNumber = doctor.LicenseNumber;
             ConsultationFee = doctor.ConsultationFee;
             WorkplaceType = doctor.WorkplaceType;
+            TotalRatingScore = doctor.TotalRatingScore;
+            TotalRatingsGiven = doctor.TotalRatingsGiven;
             Qualifications = doctor.Qualifications.Select(q => new DoctorQualificationDto(q)).ToList();
             Availabilities = doctor.Availabilities.Select(a => new DoctorAvailabilityDto(a)).ToList();
         }

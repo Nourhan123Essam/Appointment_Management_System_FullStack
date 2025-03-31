@@ -9,6 +9,8 @@ namespace Appointment_System.Application.DTOs.Doctor
          string? Specialization,
          string? LicenseNumber,
          decimal? ConsultationFee,
-         WorkplaceType? WorkplaceType
+         WorkplaceType? WorkplaceType,
+         int? TotalRatingScore,
+         int? TotalRatingsGiven
      );
 }

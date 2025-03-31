@@ -15,6 +15,8 @@ namespace Appointment_System.Application.DTOs.Doctor
         public string? LicenseNumber { get; set; }
         public decimal? ConsultationFee { get; set; }
         public WorkplaceType? WorkplaceType { get; set; }
+        public int? TotalRatingScore { get; set; } = 0;
+        public int? TotalRatingsGiven { get; set; } = 0;
     }
 
 }
