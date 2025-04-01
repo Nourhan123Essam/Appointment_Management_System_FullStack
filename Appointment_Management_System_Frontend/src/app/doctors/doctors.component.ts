@@ -97,7 +97,11 @@ export class DoctorsComponent {
   }
   
   openAddDoctorDialog() {
-    this.dialogService.open(AddDoctorComponent, { width: '50%' });
+    this.dialogService.open(AddDoctorComponent, { 
+      width: '50%',
+      header: `Add Doctor`,
+      closable: true
+     });
   }
 
   openUpdateDoctorDialog(doctor: Doctor) {

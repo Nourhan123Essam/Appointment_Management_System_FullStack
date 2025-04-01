@@ -1,1 +1,108 @@
-<p>add-doctor works!</p>
+<form [formGroup]="doctorForm" (ngSubmit)="submitForm()" class="doctor-form">
+  
+    <!-- Full Name -->
+    <div class="form-group full-width">
+      <label>Full Name</label>
+      <input type="text" formControlName="fullName" required>
+    </div>
+  
+    <!-- Two Columns Layout -->
+    <div class="form-row">
+      <div class="form-group">
+        <label>Specialization</label>
+        <input type="text" formControlName="specialization">
+      </div>
+      <div class="form-group">
+        <label>License Number</label>
+        <input type="text" formControlName="licenseNumber">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label>Years of Experience</label>
+        <input type="number" formControlName="yearsOfExperience">
+      </div>
+      <div class="form-group">
+        <label>Consultation Fee</label>
+        <input type="number" formControlName="consultationFee">
+      </div>
+    </div>
+  
+    <!-- Workplace Type -->
+    <div class="form-group full-width">
+      <label>Workplace Type</label>
+      <select formControlName="workplaceType">
+        <option *ngFor="let type of workplaceTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+  
+    <!-- Qualifications Section -->
+    <div class="section">
+      <div class="section-header" (click)="toggleQualifications()">
+        <div>
+          <span class="mx-1">Qualifications</span>
+          <i class="fa" [ngClass]="{'fa-chevron-up': showQualifications, 'fa-chevron-down': !showQualifications}"></i>
+        </div>
+        <button type="button" (click)="addQualification()">+</button>
+      </div>
+      <div *ngIf="showQualifications" formArrayName="qualifications" >
+        <p-table [value]= "qualifications.controls" [autoLayout]="true">
+            <ng-template pTemplate="header" >
+            <tr>
+                <th>Qualification Name</th>
+                <th>Issuing Institution</th>
+                <th>Year Earned</th>
+                <th>Action</th>
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-qualification let-i="rowIndex">
+                <tr [formGroupName]="i">
+
+                    <td><input type="text" formControlName="qualificationName" required></td>
+                    <td><input type="text" formControlName="issuingInstitution"></td>
+                    <td><input type="number" formControlName="yearEarned" required></td>
+                    <td><button type="button" (click)="removeQualification(i)">🗑</button></td>
+                </tr>
+            </ng-template>
+        </p-table>
+      </div>
+    </div>
+  
+    <!-- Availabilities Section -->
+    <div class="section">
+      <div class="section-header" (click)="toggleAvailabilities()">
+        <span>Availabilities</span>
+        <button type="button" (click)="addAvailability()">+</button>
+      </div>
+      <div *ngIf="showAvailabilities" formArrayName="availabilities" >
+        <p-table [value]= "availabilities.controls" [autoLayout]="true">
+            <ng-template pTemplate="header" >
+              <tr>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Action</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-availability let-i="rowIndex">
+              <tr [formGroupName]="i">
+                <td>
+                  <select formControlName="dayOfWeek">
+                    <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+                  </select>
+                </td>
+                <td><input type="time" formControlName="startTime" required></td>
+                <td><input type="time" formControlName="endTime" required></td>
+                <td><button type="button" (click)="removeAvailability(i)">🗑</button></td>
+              </tr>
+            </ng-template>
+        </p-table>
+      </div>
+      
+    </div>
+  
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="doctorForm.invalid">Submit</button>
+  </form>
+  

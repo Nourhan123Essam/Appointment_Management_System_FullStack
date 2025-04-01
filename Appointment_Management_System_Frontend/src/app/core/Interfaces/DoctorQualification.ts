@@ -1,4 +1,4 @@
-export interface DoctorQualification {
+  export interface DoctorQualification {
     id: number;
     qualificationName: string;
     issuingInstitution?: string;

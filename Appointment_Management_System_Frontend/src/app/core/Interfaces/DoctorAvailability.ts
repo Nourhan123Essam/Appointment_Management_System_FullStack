@@ -1,4 +1,4 @@
-export interface DoctorAvailability {
+  export interface DoctorAvailability {
     id: number;
     dayOfWeek: DayOfWeek;
     startTime: string; // Using string because TimeSpan is not a native JS type
