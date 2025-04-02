@@ -4,11 +4,13 @@ using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointment_System.Presentation.Controllers
 {
+    [EnableCors("AllowSpecificOrigins")]  // Apply CORS directly on controller
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorController : ControllerBase

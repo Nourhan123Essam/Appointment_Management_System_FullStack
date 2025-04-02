@@ -9,6 +9,7 @@ namespace Appointment_System.Application.DTOs.Doctor
     {
         public string Id { get; init; }
         public string FullName { get; init; }
+        public string Email { get; set; }
         public int? YearsOfExperience { get; init; }
         public string? Specialization { get; init; }
         public string? LicenseNumber { get; init; }
@@ -27,6 +28,7 @@ namespace Appointment_System.Application.DTOs.Doctor
         {
             Id = doctor.Id;
             FullName = doctor.FullName;
+            Email = doctor.Email;                 
             YearsOfExperience = doctor.YearsOfExperience;
             Specialization = doctor.Specialization;
             LicenseNumber = doctor.LicenseNumber;

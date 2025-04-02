@@ -74,7 +74,11 @@ export class DoctorStateService {
   addDoctor(newDoctor: Doctor): Observable<Doctor> {
     return this.doctorApi.addDoctor(newDoctor).pipe(
       tap((savedDoctor) => {
+        console.log("new created doctor", savedDoctor);
+        
         const updatedDoctors = [...(this.doctorsSubject.value || []), savedDoctor];
+        console.log("updated list of doctor", updatedDoctors);
+        
         this.doctorsSubject.next(updatedDoctors);
       })
     );

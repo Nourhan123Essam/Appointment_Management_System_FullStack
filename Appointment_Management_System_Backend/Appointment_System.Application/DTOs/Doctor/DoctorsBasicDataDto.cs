@@ -5,6 +5,7 @@ namespace Appointment_System.Application.DTOs.Doctor
     public record DoctorsBasicDataDto(
          string Id,
          string FullName,
+         string Email,
          int? YearsOfExperience,
          string? Specialization,
          string? LicenseNumber,

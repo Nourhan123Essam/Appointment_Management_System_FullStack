@@ -45,17 +45,6 @@ builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 
 
 
-// Add services to the container.
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200") // Add your Angular app URL
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-        .AllowCredentials();
-    });
-});
 
 // Add JWT authentication to Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -113,6 +102,20 @@ builder.Services.AddAuthentication(options =>
 
 var configuration = builder.Configuration;
 builder.Services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));
+
+// Add CORS to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // Your Angular app URL
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials()
+              .SetIsOriginAllowed(origin => true) // Allow dynamic origins
+              .WithExposedHeaders("Authorization"); // Ensure Angular can access headers
+    });
+});
 
 
 var app = builder.Build();

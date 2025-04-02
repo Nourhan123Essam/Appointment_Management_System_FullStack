@@ -10,6 +10,7 @@ namespace Appointment_System.Application.DTOs.Doctor
     public class DoctorUpdateDto
     {
         public string FullName { get; set; }
+        public string Email { get; set; }
         public int? YearsOfExperience { get; set; }
         public string? Specialization { get; set; }
         public string? LicenseNumber { get; set; }

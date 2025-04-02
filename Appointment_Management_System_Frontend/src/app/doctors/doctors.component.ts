@@ -57,8 +57,14 @@ export class DoctorsComponent {
   ngOnInit() {
     this.isAdmin = this.authService.getUserRole() == 'Admin';
     this.doctorStateService.fetchDoctors().subscribe((doctors) => {
-      this.doctors = doctors;
-      this.filteredDoctors = doctors;
+      this.doctors = doctors?doctors: [];
+      this.filteredDoctors = doctors?doctors: [];
+      console.log(doctors);
+      
+    });
+    this.doctorStateService.doctors$.subscribe((doctors) => {
+      this.doctors = doctors?doctors: [];
+      this.filteredDoctors = doctors?doctors: [];
       console.log(doctors);
       
     });
@@ -99,7 +105,7 @@ export class DoctorsComponent {
   openAddDoctorDialog() {
     this.dialogService.open(AddDoctorComponent, { 
       width: '50%',
-      header: `Add Doctor`,
+      showHeader: false,
       closable: true
      });
   }

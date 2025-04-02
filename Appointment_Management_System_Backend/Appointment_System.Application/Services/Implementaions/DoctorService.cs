@@ -109,6 +109,7 @@ namespace Appointment_System.Application.Services.Implementaions
             return doctors.Select(d => new DoctorsBasicDataDto(
                 Id: d.Id,
                 FullName: d.FullName,
+                Email: d.Email,
                 YearsOfExperience: d.YearsOfExperience,
                 Specialization: d.Specialization,
                 LicenseNumber: d.LicenseNumber,
@@ -136,6 +137,7 @@ namespace Appointment_System.Application.Services.Implementaions
 
             // Update only doctor details
             doctor.FullName = dto.FullName;
+            doctor.Email = dto.Email;
             doctor.YearsOfExperience = dto.YearsOfExperience;
             doctor.Specialization = dto.Specialization;
             doctor.LicenseNumber = dto.LicenseNumber;

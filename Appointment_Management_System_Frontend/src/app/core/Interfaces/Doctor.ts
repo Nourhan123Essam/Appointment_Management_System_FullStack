@@ -4,6 +4,8 @@ import { DoctorQualification } from "./DoctorQualification";
 export interface Doctor {
   id: string;
   fullName: string;
+  email: string;
+  password: string;
   yearsOfExperience?: number;
   specialization?: string;
   licenseNumber?: string;
