@@ -11,12 +11,11 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  const expectedRoles = route.data['role'];
-  if (expectedRoles && !expectedRoles.includes(authService.getUserRole())) {
+  const expectedRoles: string[] = route.data['roles']; // Expecting an array of roles
+  if (expectedRoles && !expectedRoles.some(role => authService.hasRole(role))) {
     router.navigate(['/appointments']);
     return false;
   }
 
   return true;
-
 };

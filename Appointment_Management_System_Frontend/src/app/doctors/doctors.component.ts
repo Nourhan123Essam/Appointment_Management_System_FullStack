@@ -55,7 +55,7 @@ export class DoctorsComponent {
 
 
   ngOnInit() {
-    this.isAdmin = this.authService.getUserRole() == 'Admin';
+    this.isAdmin = this.authService.hasRole('Admin');
     this.doctorStateService.fetchDoctors().subscribe((doctors) => {
       this.doctors = doctors?doctors: [];
       this.filteredDoctors = doctors?doctors: [];

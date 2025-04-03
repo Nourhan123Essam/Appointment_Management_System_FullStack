@@ -78,10 +78,11 @@ export class LoginComponent {
 
   onLogin() {
     if (this.selectedRole() && this.selectedRole() == 'Admin') {
-      this.authService.login(this.username, this.password, this.selectedRole()).subscribe({
+      this.authService.login(this.username, this.password).subscribe({
         next: (response) => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('role', this.selectedRole());
+          console.log("response when login", response);
+          
+          localStorage.setItem('token', response.message);
           this.router.navigate(['/appointments']);
         },
         error: (error) => {
@@ -96,10 +97,9 @@ export class LoginComponent {
       this.authService.verifyCapture({ recaptchaToken: this.recaptchaToken }).subscribe({
         next:(response: any) => {
           console.log('Captcha Verified', response);
-          this.authService.login(this.username, this.password, this.selectedRole()).subscribe({
+          this.authService.login(this.username, this.password).subscribe({
             next: (res) => {
               localStorage.setItem('token', res.token);
-              localStorage.setItem('role', this.selectedRole());
               this.router.navigate(['/appointments']);
             },
             error: (error) => {

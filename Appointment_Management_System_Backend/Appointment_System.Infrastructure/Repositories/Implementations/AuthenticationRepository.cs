@@ -75,15 +75,15 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-            // Fetch the user's role from the database
-            var userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+            // Fetch all roles assigned to the user
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-            if (!string.IsNullOrEmpty(userRole))
+            foreach (var role in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, userRole));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value);
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
             var securityKey = new SymmetricSecurityKey(key);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 

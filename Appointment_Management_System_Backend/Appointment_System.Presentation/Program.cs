@@ -99,8 +99,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
 var configuration = builder.Configuration;
+
+// Capthcha
 builder.Services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));
 
 // Add CORS to the container.
