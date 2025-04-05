@@ -77,7 +77,7 @@
           <td>{{ doctor.yearsOfExperience || 'N/A' }}</td>
           <td>{{ doctor.specialization || 'N/A' }}</td>
           <td>{{ doctor.licenseNumber || 'N/A' }}</td>
-          <td>{{ getWorkplaceTypeLabel(doctor.workplaceType) }}</td>
+          <td>{{doctor.workplaceType }}</td>
           <td>{{ doctor.consultationFee ? ('$' + doctor.consultationFee) : 'N/A' }}</td>
           <td>
             {{ doctor.TotalRatingsGiven ? (doctor.TotalRatingScore / doctor.TotalRatingsGiven).toFixed(1) : 'N/A' }}

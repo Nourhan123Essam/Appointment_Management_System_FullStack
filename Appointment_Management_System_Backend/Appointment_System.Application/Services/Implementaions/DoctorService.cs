@@ -66,7 +66,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 await _userManager.AddToRoleAsync(doctor, "Doctor");
 
                 // 3️- Save Availability
-                var availabilities = dto.Availability.Select(a => new DoctorAvailability
+                var availabilities = dto.Availabilities.Select(a => new DoctorAvailability
                 {
                     DoctorId = doctor.Id,
                     DayOfWeek = a.DayOfWeek,

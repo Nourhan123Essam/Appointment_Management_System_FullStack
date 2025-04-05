@@ -12,6 +12,9 @@
     <div class="form-group full-width">
       <label>Full Name</label>
       <input type="text" formControlName="fullName" required>
+      <small *ngIf="doctorForm.get('fullName')?.invalid && doctorForm.get('fullName')?.touched">
+        This is a required field!
+      </small>
     </div>
   
     <!-- Two Columns Layout -->
@@ -19,10 +22,16 @@
       <div class="form-group">
         <label>Email</label>
         <input type="text" formControlName="email">
+        <small *ngIf="doctorForm.get('email')?.invalid && doctorForm.get('email')?.touched">
+          Enter a valid email.
+        </small>
       </div>
       <div class="form-group">
         <label>Password</label>
         <input type="text" formControlName="password">
+        <small *ngIf="doctorForm.get('password')?.invalid && doctorForm.get('password')?.touched">
+          Password must be at least 6 characters long and include: One uppercase letter, one lowercase letter, one number, and one special character (#, $, etc.).
+        </small>
       </div>
     </div>
 
@@ -41,10 +50,22 @@
       <div class="form-group">
         <label>Years of Experience</label>
         <input type="number" formControlName="yearsOfExperience">
+        <small *ngIf="doctorForm.get('yearsOfExperience')?.errors?.['max']">
+          Years of experience cannot exceed 70.
+        </small>
+        <small *ngIf="doctorForm.get('yearsOfExperience')?.invalid && doctorForm.get('yearsOfExperience')?.touched">
+          This is a required field!
+        </small>
       </div>
       <div class="form-group">
         <label>Consultation Fee</label>
         <input type="number" formControlName="consultationFee">
+        <small *ngIf="doctorForm.get('consultationFee')?.errors?.['max']">
+          Fee cannot be more than 5000.
+        </small>
+        <small *ngIf="doctorForm.get('consultationFee')?.invalid && doctorForm.get('consultationFee')?.touched">
+          This is a required field!
+        </small>
       </div>
     </div>
   
@@ -52,8 +73,11 @@
     <div class="form-group full-width">
       <label>Workplace Type</label>
       <select formControlName="workplaceType">
-        <option *ngFor="let type of workplaceTypes" [value]="type">{{ type }}</option>
+        <option *ngFor="let type of workplaceTypeOptions " [value]="getWorkplaceValue(type)">{{ type }}</option>
       </select>
+      <small *ngIf="doctorForm.get('workplaceType')?.invalid && doctorForm.get('workplaceType')?.touched">
+        This is a required field!
+      </small>
     </div>
   
     <!-- Qualifications Section -->
@@ -78,9 +102,27 @@
             <ng-template pTemplate="body" let-qualification let-i="rowIndex">
                 <tr [formGroupName]="i">
 
-                    <td><input type="text" formControlName="qualificationName" required></td>
+                    <td>
+                      <input type="text" formControlName="qualificationName" required>
+                      <small *ngIf="qualification.get('qualificationName')?.invalid && qualification.get('qualificationName')?.touched">
+                        This is a required field!
+                      </small>
+                    </td>
                     <td><input type="text" formControlName="issuingInstitution"></td>
-                    <td><input type="number" formControlName="yearEarned" required></td>
+                    <td>
+                      <input type="number" formControlName="yearEarned" required>
+                      <small *ngIf="qualification.get('yearEarned')?.touched && qualification.get('yearEarned')?.errors?.['required']">
+                        Year earned is required.
+                      </small>
+                      
+                      <small *ngIf="qualification.get('yearEarned')?.errors?.['min']">
+                        Year must be after 1900.
+                      </small>
+                      
+                      <small *ngIf="qualification.get('yearEarned')?.errors?.['max']">
+                        Year cannot be in the future.
+                      </small>
+                    </td>
                     <td><button type="button" (click)="removeQualification(i)">🗑</button></td>
                 </tr>
             </ng-template>
@@ -111,12 +153,26 @@
               <tr [formGroupName]="i">
                 <td>
                   <select formControlName="dayOfWeek">
-                    <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+                    <option *ngFor="let day of daysOfWeekOptions" [value]="getDayOfWeekValue(day)">{{ day }}</option>
                   </select>
                 </td>
-                <td><input type="time" formControlName="startTime" required></td>
-                <td><input type="time" formControlName="endTime" required></td>
+                <td>
+                  <input type="time" formControlName="startTime" required>
+                  <small *ngIf="availability.get('startTime')?.invalid && availability.get('startTime')?.touched">
+                    This is a required field!
+                  </small>
+                </td>
+                <td>
+                  <input type="time" formControlName="endTime" required>
+                  <small *ngIf="availability.get('endTime')?.invalid && availability.get('endTime')?.touched">
+                    This is a required field!
+                  </small>
+                  <small *ngIf="availability.errors?.['invalidTimeRange'] && (availability.touched || availability.dirty)">
+                    End time must be after start time.
+                  </small>
+                </td>
                 <td><button type="button" (click)="removeAvailability(i)">🗑</button></td>
+                
               </tr>
             </ng-template>
         </p-table>

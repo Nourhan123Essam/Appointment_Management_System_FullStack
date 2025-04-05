@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RecaptchaModule } from "ng-recaptcha";
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RecaptchaModule],
+  imports: [RouterOutlet, RecaptchaModule, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

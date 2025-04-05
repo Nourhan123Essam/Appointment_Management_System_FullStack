@@ -15,7 +15,7 @@ namespace Appointment_System.Application.DTOs.Doctor
         public decimal ConsultationFee { get; set; }
         public WorkplaceType WorkplaceType { get; set; }
 
-        public List<DoctorAvailabilityDto> Availability { get; set; } = new();
+        public List<DoctorAvailabilityDto> Availabilities { get; set; } = new();
         public List<DoctorQualificationDto> Qualifications { get; set; } = new();
     }
 

@@ -70,16 +70,6 @@ export class DoctorsComponent {
     });
   }
 
-  // filterDoctors() {
-  //   this.filteredDoctors = this.doctors.filter((doctor) => {
-  //     return (
-  //       doctor.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
-  //       (this.selectedWorkplaceType ? doctor.workplaceType === this.selectedWorkplaceType : true) &&
-  //       (this.selectedSpecialization ? doctor.specialization === this.selectedSpecialization : true)
-  //     );
-  //   });
-  // }
-
   sortDoctors(event: any) {
     const field = event.field;
     const order = event.order;
@@ -123,11 +113,6 @@ export class DoctorsComponent {
         this.doctorStateService.deleteDoctor(doctorId);
       }
     });
-  }
-
-  getWorkplaceTypeLabel(type?: number): string {
-    if (type === undefined) return 'N/A'; // Handle undefined values safely
-    return WorkplaceType[type] ?? 'N/A'; // Convert number to enum string
   }
   
   clear(table: Table) {

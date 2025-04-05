@@ -35,7 +35,7 @@ export class RegisterComponent {
     
 
     // Correct Regular Expression for Password Validation
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?#&]{6,}$/;
 
     if (!passwordPattern.test(value)) {
       return { passwordStrength: true }; // If the password does NOT match, return an error

@@ -15,11 +15,12 @@ export interface Doctor {
   TotalRatingsGiven?: number;
   qualifications: DoctorQualification[];
   availabilities: DoctorAvailability[];
+
 }
 
 export enum WorkplaceType {
-  Clinic = 0,
-  Hospital = 1,
-  Telemedicine = 2
+  Online,
+  Hospital,
+  Clinic
 }
 
