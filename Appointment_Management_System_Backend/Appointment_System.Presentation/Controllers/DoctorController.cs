@@ -75,7 +75,8 @@ namespace Appointment_System.Presentation.Controllers
             if (!updated)
                 return NotFound("Doctor not found.");
 
-            return Ok("Doctor updated successfully.");
+            return Ok(new { message = "Doctor updated successfully." });
+
         }
 
         [HttpDelete("{doctorId}")]
@@ -86,7 +87,8 @@ namespace Appointment_System.Presentation.Controllers
             if (!deleted)
                 return NotFound("Doctor not found.");
 
-            return Ok("Doctor deleted successfully.");
+            return Ok(new { message = "Doctor deleted successfully." });
+
         }
 
 

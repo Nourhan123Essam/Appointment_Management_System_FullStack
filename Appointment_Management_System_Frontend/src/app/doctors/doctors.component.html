@@ -83,14 +83,25 @@
             {{ doctor.TotalRatingsGiven ? (doctor.TotalRatingScore / doctor.TotalRatingsGiven).toFixed(1) : 'N/A' }}
           </td>
           <td *ngIf="isAdmin">
-            <button pButton icon="pi pi-pencil" (click)="openUpdateDoctorDialog(doctor)" class="p-button-rounded p-button-text"></button>
-            <p-confirmDialog></p-confirmDialog>  <!-- ✅ Required for dialog to appear -->
-            <button 
-              pButton icon="pi pi-trash" 
-              (click)="confirmDelete(doctor.id)" 
-              class="p-button-rounded p-button-text p-button-danger">
-            </button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button 
+                pButton  
+                icon="pi pi-pencil" 
+                (click)="openUpdateDoctorDialog(doctor)" 
+                class="p-button-rounded p-button-text">
+              </button>
+              
+              <p-confirmDialog></p-confirmDialog>  <!-- ✅ Required for dialog to appear -->
+              
+              <button 
+                pButton 
+                icon="pi pi-trash" 
+                (click)="confirmDelete(doctor.id)" 
+                class="p-button-rounded p-button-text p-button-danger">
+              </button>
+            </div>
           </td>
+          
         </tr>
       </ng-template>
   

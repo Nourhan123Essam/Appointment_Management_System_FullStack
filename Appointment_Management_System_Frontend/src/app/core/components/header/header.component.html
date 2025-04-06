@@ -1,0 +1,12 @@
+  <header class="main-header">
+    <div class="logo-section">
+      <img src="../../../../assets/Images/logo.png" alt="AppointCare Logo" class="logo" />
+      <span class="logo-text">AppointCare</span>
+    </div>
+    <nav class="nav-links">
+      <a routerLink="/appointments" routerLinkActive="active-link">Appointments</a>
+      <a routerLink="/doctors" routerLinkActive="active-link">Doctors</a>
+      <a *ngIf="isAdmin" routerLink="/patients" routerLinkActive="active-link">Patients</a>
+    </nav>
+  </header>
+  

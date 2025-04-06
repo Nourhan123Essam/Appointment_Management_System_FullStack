@@ -127,6 +127,7 @@ export class DoctorStateService {
   updateDoctor(updatedDoctor: Doctor): Observable<string> {
     return this.doctorApi.updateDoctor(updatedDoctor.id, updatedDoctor).pipe(
       tap((savedDoctor) => {
+        debugger;
         const updatedDoctors = this.doctorsSubject.value?.map(doc =>
           doc.id === updatedDoctor.id ? updatedDoctor : doc
         ) || [];

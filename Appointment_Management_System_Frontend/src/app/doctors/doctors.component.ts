@@ -101,7 +101,8 @@ export class DoctorsComponent {
   }
 
   openUpdateDoctorDialog(doctor: Doctor) {
-    this.dialogService.open(UpdateDoctorComponent, { data: doctor, width: '50%' });
+    this.dialogService.open(UpdateDoctorComponent, { data: doctor, width: '50%', showHeader: false,
+      closable: true });
   }
 
   confirmDelete(doctorId: string) {

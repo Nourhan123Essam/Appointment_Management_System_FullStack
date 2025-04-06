@@ -1,0 +1,46 @@
+/* CSS */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3f51b5; /* light grayish background */
+    padding: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px;
+    margin-right: 10px;
+    background-color: #97989f;
+    border-radius: 50%;
+  }
+  
+  .logo-text {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: white; /* dark gray-purple */
+  }
+  
+  .nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white; /* blue tone */
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-links a:hover,
+  .nav-links .active-link {
+    color: #c5cae9; /* light purple */
+    border-bottom: 2px solid #c5cae9;
+    padding-bottom: 2px;
+  }
+  
