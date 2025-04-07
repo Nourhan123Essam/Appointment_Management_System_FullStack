@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Doctor, WorkplaceType } from '../core/Interfaces/Doctor';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { AddDoctorComponent } from './add-doctor/add-doctor.component';
 import { UpdateDoctorComponent } from './update-doctor/update-doctor.component';
@@ -42,6 +42,7 @@ export class DoctorsComponent {
   private router = inject(Router);
   private dialogService = inject(DialogService);
   private confirmationService = inject(ConfirmationService);
+  messageService = inject(MessageService);
 
 
   doctors: Doctor[] = [];
@@ -68,6 +69,32 @@ export class DoctorsComponent {
       console.log(doctors);
       
     });
+  }
+
+  getWorkplaceLabel(type: WorkplaceType | number | undefined): string {
+    switch (type) {
+      case WorkplaceType.Online:
+        return 'Online';
+      case WorkplaceType.Hospital:
+        return 'Hospital';
+      case WorkplaceType.Clinic:
+        return 'Clinic';
+      default:
+        return 'Unknown';
+    }
+  }  
+
+  getWorkplaceBadgeClass(type: WorkplaceType | number | undefined): string {
+    switch (type) {
+      case WorkplaceType.Online:
+        return 'bg-primary text-white'; // blue
+      case WorkplaceType.Hospital:
+        return 'bg-secondary text-white'; // gray
+      case WorkplaceType.Clinic:
+        return 'bg-purple text-white'; // light purple (custom class or use 'bg-info' as fallback)
+      default:
+        return 'bg-dark text-white';
+    }
   }
 
   sortDoctors(event: any) {
@@ -111,10 +138,27 @@ export class DoctorsComponent {
       header: 'Confirm Deletion',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.doctorStateService.deleteDoctor(doctorId);
+        this.doctorStateService.deleteDoctor(doctorId).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Doctor Deleted',
+              detail: 'The doctor was successfully deleted.'
+            });
+          },
+          error: () => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Deletion Failed',
+              detail: 'An error occurred while deleting the doctor.'
+            });
+          }
+        });
       }
     });
   }
+  
+  
   
   clear(table: Table) {
     table.clear();

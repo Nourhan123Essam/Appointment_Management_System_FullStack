@@ -1,0 +1,47 @@
+<div class="p-fluid" style="padding: 26px 0px 26px 16px;">
+    <div class="dialog-header">
+        <div class="title-section">
+            <i class="pi pi-plus-circle me-2"></i>
+          <span class="dialog-title">{{title}}</span>
+        </div>
+        <button class="close-btn" (click)="close()">✖</button>
+      </div>  
+    <form [formGroup]="form" (ngSubmit)="submit()" class="qualification-form">
+        <div class="p-grid p-formgrid">
+            <!-- Qualification Name -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="qualificationName">Qualification Name</label>
+                <div class="col-12 col-md-8">
+                    <input id="qualificationName" pInputText formControlName="qualificationName" class="w-100" />
+                </div>
+            </div>
+            <small class="row align-items-center mb-3" *ngIf="form.get('qualificationName')?.touched && form.get('qualificationName')?.invalid" class="text-danger">
+             Required field
+            </small>
+    
+            <!-- Issuing Institution -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="issuingInstitution">Issuing Institution</label>
+                <div class="col-12 col-md-8">
+                    <input id="issuingInstitution" pInputText formControlName="issuingInstitution" class="w-100" />
+                </div>
+            </div>
+              
+    
+            <!-- Year Earned -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="yearEarned">Year Earned</label>
+                <div class="col-12 col-md-8">
+                    <input id="yearEarned" type="number" pInputText formControlName="yearEarned" class="w-100" />
+                </div>
+            </div>
+            <small class="row align-items-center mb-3" *ngIf="form.get('yearEarned')?.hasError('required') && form.get('yearEarned')?.touched" class="text-danger">Year is required</small>
+            <small class="row align-items-center mb-3" *ngIf="form.get('yearEarned')?.hasError('min')" class="text-danger">Minimum year is 1900</small>
+            <small class="row align-items-center mb-3" *ngIf="form.get('yearEarned')?.hasError('max')" class="text-danger">Year can't be in the future</small>
+        </div>
+    
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="form.invalid">Submit</button>
+      </form>
+  </div>
+  

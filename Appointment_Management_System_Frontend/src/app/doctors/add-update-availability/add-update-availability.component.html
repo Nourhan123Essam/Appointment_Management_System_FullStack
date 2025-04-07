@@ -1,0 +1,52 @@
+<div class="p-fluid" style="padding: 26px 0px 26px 16px;">
+    <div class="dialog-header">
+        <div class="title-section">
+            <i class="pi pi-plus-circle me-2"></i>
+          <span class="dialog-title">{{title}}</span>
+        </div>
+        <button class="close-btn" (click)="close()">✖</button>
+      </div>  
+    <form [formGroup]="form" (ngSubmit)="submit()" class="qualification-form">
+        <div class="p-grid p-formgrid">
+            <!-- Qualification Name -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="qualificationName">Day of week</label>
+                <div class="col-12 col-md-8">
+                    <select formControlName="dayOfWeek">
+                        <option *ngFor="let day of daysOfWeekOptions" [value]="getDayOfWeekValue(day)">{{ day }}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Issuing Institution -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="issuingInstitution">Start Time</label>
+                <div class="col-12 col-md-8">
+                    <input type="time" formControlName="startTime" required>
+                </div>
+            </div>
+            <small class="row align-items-center mb-3" *ngIf="form.get('startTime')?.invalid && form.get('startTime')?.touched">
+              This is a required field!
+            </small>
+              
+    
+            <!-- Year Earned -->
+            <div class="row align-items-center mb-3">
+                <label class="col-12 col-md-4" for="yearEarned">End Time</label>                
+                <div class="col-12 col-md-8">
+                    <input type="time" formControlName="endTime" required>
+                </div>
+            </div>
+            <small class="row align-items-center mb-3" *ngIf="form.get('endTime')?.invalid && form.get('endTime')?.touched">
+              This is a required field!
+            </small>
+            <small class="row align-items-center mb-3" *ngIf="form.errors?.['invalidTimeRange'] && (form.touched || form.dirty)">
+              End time must be after start time.
+            </small>
+        </div>
+    
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="form.invalid">Submit</button>
+      </form>
+  </div>
+  

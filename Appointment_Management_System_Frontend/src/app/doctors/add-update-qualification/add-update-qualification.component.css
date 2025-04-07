@@ -1,0 +1,83 @@
+ small {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 5px;
+    margin-top: 0px;
+  }
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    padding: 26px 0px 26px 16px;
+    background: white;
+  
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+  
+      i {
+        color: #007bff; 
+        font-size: 1.4rem;
+      }
+  
+      .dialog-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+  
+    .close-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #000;
+      transition: color 0.2s;
+  
+      &:hover {
+        color: rgb(158, 3, 32);
+      }
+    }
+  }
+
+  ::ng-deep .p-grid > .p-col-12 {
+    padding: 0.5rem 1rem;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  button[type="submit"]:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+  }
+
+  .qualification-form {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  input{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }

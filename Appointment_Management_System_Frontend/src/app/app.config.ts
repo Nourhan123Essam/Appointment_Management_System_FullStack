@@ -7,13 +7,14 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
     MessageService,
+    ConfirmationService,
     provideAnimations(),
     provideHttpClient(withInterceptors([authInterceptor])) // Register the interceptor
   ]

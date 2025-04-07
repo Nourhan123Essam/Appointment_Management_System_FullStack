@@ -20,7 +20,7 @@ export class DoctorStateService {
   doctorAvailabilities$ = this.doctorAvailabilitiesSubject.asObservable();
 
   constructor(private doctorApi: DoctorApiService) {}
-
+ 
   ///////////////////////////////////////////////////
   // Fetch functions
   ///////////////////////////////////////////////////

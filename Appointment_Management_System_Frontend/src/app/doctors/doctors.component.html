@@ -8,7 +8,9 @@
       #dt1
       [value]="doctors" 
       [paginator]="true" 
-      [rows]="10" 
+      [rows]="5" 
+      [responsiveLayout]="'scroll'" 
+      [rowsPerPageOptions]="[5, 10, 15]" 
       [sortMode]="'multiple'" 
       [globalFilterFields]="['fullName', 'specialization']"
     >
@@ -72,12 +74,18 @@
       </ng-template>
   
       <ng-template pTemplate="body" let-doctor>
-        <tr (click)="goToDoctorDetails(doctor.id)">
+        <tr (dblclick)="goToDoctorDetails(doctor.id)" style="cursor: pointer;">
           <td>{{ doctor.fullName }}</td>
           <td>{{ doctor.yearsOfExperience || 'N/A' }}</td>
           <td>{{ doctor.specialization || 'N/A' }}</td>
           <td>{{ doctor.licenseNumber || 'N/A' }}</td>
-          <td>{{doctor.workplaceType }}</td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center">
+              <span class="badge {{ getWorkplaceBadgeClass(doctor?.workplaceType) }}">
+                {{ getWorkplaceLabel(doctor?.workplaceType) }}
+              </span>
+            </div>
+          </td>          
           <td>{{ doctor.consultationFee ? ('$' + doctor.consultationFee) : 'N/A' }}</td>
           <td>
             {{ doctor.TotalRatingsGiven ? (doctor.TotalRatingScore / doctor.TotalRatingsGiven).toFixed(1) : 'N/A' }}
@@ -87,18 +95,18 @@
               <button 
                 pButton  
                 icon="pi pi-pencil" 
-                (click)="openUpdateDoctorDialog(doctor)" 
+                (click)="openUpdateDoctorDialog(doctor);" 
                 class="p-button-rounded p-button-text">
               </button>
-              
-              <p-confirmDialog></p-confirmDialog>  <!-- ✅ Required for dialog to appear -->
               
               <button 
                 pButton 
                 icon="pi pi-trash" 
-                (click)="confirmDelete(doctor.id)" 
+                (click)="confirmDelete(doctor.id);" 
                 class="p-button-rounded p-button-text p-button-danger">
               </button>
+
+
             </div>
           </td>
           
@@ -108,3 +116,4 @@
     </p-table>
   </div>
 
+  <p-confirmDialog></p-confirmDialog>  <!-- ✅ Required for dialog to appear -->

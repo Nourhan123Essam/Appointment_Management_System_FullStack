@@ -87,3 +87,8 @@ tr:nth-child(even) {
     margin-right: 10px;
   }
   
+  .bg-purple {
+    background-color: #b39ddb; /* Light purple */
+  }
+  
+  
