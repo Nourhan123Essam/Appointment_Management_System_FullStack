@@ -101,6 +101,7 @@ builder.Services.AddAuthentication(options =>
 
 var configuration = builder.Configuration;
 
+
 // Capthcha
 builder.Services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));
 
@@ -118,9 +119,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Register the middleware with DI
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
+// Add the custom middleware to the pipeline
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");

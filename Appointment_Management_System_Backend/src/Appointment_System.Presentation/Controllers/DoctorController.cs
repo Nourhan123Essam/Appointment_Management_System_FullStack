@@ -109,7 +109,6 @@ namespace Appointment_System.Presentation.Controllers
         public async Task<ActionResult<DoctorQualificationDto>> GetQualificationById(int id)
         {
             var qualification = await _qualification_service.GetByIdAsync(id);
-            if (qualification == null) return NotFound();
             return Ok(qualification);
         }
 
