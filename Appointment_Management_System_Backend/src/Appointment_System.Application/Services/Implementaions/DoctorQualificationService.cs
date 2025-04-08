@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Appointment_System.Application.DTOs.DoctorQualification;
+﻿using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Infrastructure.Repositories.Interfaces;
 
