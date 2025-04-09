@@ -28,7 +28,7 @@ namespace Appointment_System.Presentation.Controllers
 
         //////////////////////////////// 1 ///////////////////////////////////////
         // Doctor CRUD operations
-
+        #region Doctor
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(string id)
@@ -91,11 +91,11 @@ namespace Appointment_System.Presentation.Controllers
 
         }
 
-
-
+        #endregion
 
         //////////////////////////////// 2 ///////////////////////////////////////
         // DoctorQualification CRUD operations
+        #region Qualifications
         [Authorize(Roles = "Admin")]
         [HttpGet("GetQualificationByDoctorId")]
         public async Task<ActionResult<List<DoctorQualificationDto>>> GetQualificationByDoctorId(string doctorId)
@@ -135,16 +135,15 @@ namespace Appointment_System.Presentation.Controllers
             await _qualification_service.DeleteAsync(id);
             return NoContent();
         }
-
+        #endregion
         //////////////////////////////// 3 ///////////////////////////////////////
         // DoctorAvailability CRUD operations
-
+        #region Availabilities
         [Authorize(Roles = "Admin")]
         [HttpGet("GetAvailabilityById/{id}")]
         public async Task<ActionResult<DoctorAvailabilityDto>> GetAvailabilityById(int id)
         {
             var availability = await _service.GetByIdAsync(id);
-            if (availability == null) return NotFound();
             return Ok(availability);
         }
 
@@ -167,15 +166,8 @@ namespace Appointment_System.Presentation.Controllers
         [HttpPut("UpdateAvailability/{id}")]
         public async Task<IActionResult> UpdateAvailability(int id, UpdateDoctorAvailabilityDto dto)
         {
-            try
-            {
-                await _service.UpdateAsync(id, dto);
-                return Ok(new { message = "Updated Successfully!"});
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
+            await _service.UpdateAsync(id, dto);
+            return Ok(new { message = "Updated Successfully!"});
         }
 
         [Authorize(Roles = "Admin")]
@@ -183,7 +175,8 @@ namespace Appointment_System.Presentation.Controllers
         public async Task<IActionResult> DeleteAvailability(int id)
         {
             await _service.DeleteAsync(id);
-            return NoContent();
+            return Ok(new { message = "Deleted Successfully!" });
         }
+        #endregion
     }
 }

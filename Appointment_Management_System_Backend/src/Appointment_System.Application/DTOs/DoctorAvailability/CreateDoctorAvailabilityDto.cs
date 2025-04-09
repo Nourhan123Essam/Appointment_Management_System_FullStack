@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Appointment_System.Domain.Entities;
 
 namespace Appointment_System.Application.DTOs.DoctorAvailability
 {
@@ -12,5 +13,17 @@ namespace Appointment_System.Application.DTOs.DoctorAvailability
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
         public string DoctorId { get; set; }
+
+        public Domain.Entities.DoctorAvailability ToEntity()
+        {
+            return new Domain.Entities.DoctorAvailability()
+            {
+                Id = 0,
+                DayOfWeek = DayOfWeek,  
+                StartTime = StartTime,
+                EndTime = EndTime,
+                DoctorId = DoctorId
+            };
+        }
     }
 }
