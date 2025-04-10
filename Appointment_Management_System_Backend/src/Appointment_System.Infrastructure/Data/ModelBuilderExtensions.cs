@@ -17,16 +17,16 @@ namespace Appointment_System.Infrastructure.Data
         {
             // Configure Appointment relationships
             modelBuilder.Entity<Appointment>()
-                .HasOne<ApplicationUser>()
-                .WithMany()
-                .HasForeignKey(a => a.DoctorId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent accidental deletions
+             .HasOne<ApplicationUser>()
+             .WithMany(u => u.DoctorAppointments)
+             .HasForeignKey(a => a.DoctorId)
+             .OnDelete(DeleteBehavior.Restrict); // Prevent accidental deletions
 
             modelBuilder.Entity<Appointment>()
                 .HasOne<ApplicationUser>()
-                .WithMany()
+                .WithMany(u => u.PatientAppointments)
                 .HasForeignKey(a => a.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent accidental deletions
+                .OnDelete(DeleteBehavior.Restrict); // Prevent accidental deletions
 
 
             // Ensure Doctor Qualifications reference the correct User ID

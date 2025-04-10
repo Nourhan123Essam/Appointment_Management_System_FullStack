@@ -4,6 +4,7 @@ using Appointment_System.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Appointment_System.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250410133240_AddPatientFieldsToApplicationUser")]
+    partial class AddPatientFieldsToApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -355,13 +358,13 @@ namespace Appointment_System.Infrastructure.Data.Migrations
             modelBuilder.Entity("Appointment_System.Domain.Entities.Appointment", b =>
                 {
                     b.HasOne("Appointment_System.Infrastructure.Data.ApplicationUser", null)
-                        .WithMany("DoctorAppointments")
+                        .WithMany()
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Appointment_System.Infrastructure.Data.ApplicationUser", null)
-                        .WithMany("PatientAppointments")
+                        .WithMany()
                         .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -439,10 +442,6 @@ namespace Appointment_System.Infrastructure.Data.Migrations
             modelBuilder.Entity("Appointment_System.Infrastructure.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Availabilities");
-
-                    b.Navigation("DoctorAppointments");
-
-                    b.Navigation("PatientAppointments");
 
                     b.Navigation("Qualifications");
                 });

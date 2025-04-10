@@ -17,7 +17,8 @@ namespace Appointment_System.Infrastructure.Data
 
         // Dbsets:
         public DbSet<ApplicationUser> Users { get; set; }  
-        public DbSet<IdentityRole> Roles { get; set; }     
+        public DbSet<IdentityRole> Roles { get; set; }    
+        public DbSet<IdentityUserRole<string>> UserRoles {  get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<DoctorQualification> DoctorQualifications { get; set; }
         public DbSet<DoctorAvailability> DoctorAvailabilities { get; set; }
