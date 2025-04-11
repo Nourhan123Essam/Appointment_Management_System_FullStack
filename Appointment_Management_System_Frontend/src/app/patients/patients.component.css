@@ -1,0 +1,57 @@
+.patient-table-card {
+    padding: 1rem;
+    background: #f9fafe;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 50, 0.05);
+  }
+  
+  .header-controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  
+    .filter-inputs {
+      display: flex;
+      gap: 0.75rem;
+    }
+  
+    .sort-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  
+    input {
+      min-width: 200px;
+    }
+  
+    .sort-toggle {
+      min-width: 130px;
+    }
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .clickable-row {
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #eef2ff; 
+    }
+  }
+
+  .doctor-list-container {
+    max-width: 90%; /* Avoid full width */
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }

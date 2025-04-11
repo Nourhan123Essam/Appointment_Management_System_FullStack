@@ -32,9 +32,9 @@ import { AddUpdateAvailabilityComponent } from '../add-update-availability/add-u
     MessageModule,
     ConfirmDialogModule
   ],
+  providers: [DialogService, ConfirmationService],
   templateUrl: './doctor-details.component.html',
   styleUrl: './doctor-details.component.css',
-  providers: [DialogService, ConfirmationService]
 })
 export class DoctorDetailsComponent implements OnInit{
   dialogService = inject(DialogService);

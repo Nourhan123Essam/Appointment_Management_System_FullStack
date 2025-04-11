@@ -1,1 +1,77 @@
-<p>patients works!</p>
+<div class="doctor-list-container">
+    <p-card class="patient-table-card">
+        <div class="header-controls">
+          <div class="filter-inputs">
+            <input pInputText [(ngModel)]="nameFilter" placeholder="Filter by Name" (input)="loadPatients()" />
+            <input pInputText [(ngModel)]="emailFilter" placeholder="Filter by Email" (input)="loadPatients()" />
+          </div>
+      
+          <div class="sort-controls">
+            <p-dropdown 
+              [options]="sortOptions" 
+              [(ngModel)]="sortBy" 
+              (onChange)="loadPatients()"
+              placeholder="Sort by">
+            </p-dropdown>
+      
+            <p-toggleButton 
+              [(ngModel)]="isDescending" 
+              onLabel="Descending" 
+              offLabel="Ascending" 
+              (onChange)="loadPatients()"
+              styleClass="sort-toggle">
+            </p-toggleButton>
+          </div>
+        </div>
+      
+        <p-table 
+          [value]="patients" 
+          [lazy]="true"
+          (onLazyLoad)="onPageChange($event)"
+          [paginator]="true" 
+          [rows]="pageSize" 
+          [totalRecords]="totalCount"
+          [loading]="loading"
+          [responsiveLayout]="'scroll'">
+      
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Avatar</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Date of Birth</th>
+              <th>Appointments</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+      
+          <ng-template pTemplate="body" let-patient>
+            <tr (dblclick)="goToDetails(patient.id)" class="clickable-row">
+              <td>
+                <img [src]="patient.profilePictureUrl" class="avatar" alt="Profile" />
+              </td>
+              <td>{{ patient.fullName }}</td>
+              <td>{{ patient.email }}</td>
+              <td>{{ patient.gender }}</td>
+              <td>{{ patient.dateOfBirth | date }}</td>
+              <td>{{ patient.appointmentCount }}</td>
+              <td>{{ patient.createdAt | date:'short' }}</td>
+              <td>
+                <button pButton icon="pi pi-trash" class="p-button-danger" (click)="confirmDelete(patient)"></button>
+              </td>
+            </tr>
+          </ng-template>
+      
+          <ng-template pTemplate="emptymessage">
+            <tr><td colspan="8">No patients found.</td></tr>
+          </ng-template>
+        </p-table>
+    </p-card>
+</div>
+  
+  
+  <p-confirmDialog></p-confirmDialog>
+
+  

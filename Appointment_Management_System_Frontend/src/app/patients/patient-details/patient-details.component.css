@@ -1,0 +1,43 @@
+/* Ensure proper spacing between sections */
+:host ::ng-deep .grid {
+    gap: 2rem;
+  }
+  
+  /* Left panel styling (basic info) */
+  :host ::ng-deep .bg-blue-100 {
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Update button spacing */
+  :host ::ng-deep .p-button.w-full {
+    margin-top: 1.5rem;
+  }
+  
+  /* Empty state message */
+  :host ::ng-deep .p-message {
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  :host ::ng-deep .shadow-lg {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Responsive tweaks (optional) */
+  @media screen and (max-width: 768px) {
+    :host ::ng-deep .grid {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  
+  .bg-light-purple {
+    background-color: #f3f0ff; /* soft light purple */
+  }
+
+  .bg-purple {
+    background-color: #b39ddb; /* Light purple */
+  }
+  
+  

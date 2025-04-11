@@ -38,12 +38,7 @@ namespace Appointment_System.Application.Services.Implementaions
             };
 
             // Project to DTO before pagination to avoid selecting unnecessary fields
-            var projectedQuery = query.Select(p => new PatientDto
-            {
-                Id = p.Id,
-                FullName = p.FullName,
-                Email = p.Email
-            });
+            var projectedQuery = query.Select(p => new PatientDto(p));
 
             var totalCount = await projectedQuery.CountAsync();
 
