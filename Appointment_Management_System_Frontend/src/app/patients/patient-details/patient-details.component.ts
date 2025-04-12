@@ -15,7 +15,7 @@ import { DoctorQualification } from '../../core/Interfaces/DoctorQualification';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { firstValueFrom, map, Observable, switchMap, take } from 'rxjs';
-import { PatientApiService, PatientDto } from '../../core/services/Api/patient-api.service';
+import { AppointmentDto, PatientApiService, PatientDto } from '../../core/services/Api/patient-api.service';
 
 
 @Component({
@@ -35,33 +35,36 @@ import { PatientApiService, PatientDto } from '../../core/services/Api/patient-a
   styleUrl: './patient-details.component.css'
 })
 export class PatientDetailsComponent {
-   dialogService = inject(DialogService);
-    authService = inject(AuthService);
     patientService = inject(PatientApiService);
 
     patient: PatientDto | null = null;
+    appointments: AppointmentDto[] = [];
+
+    noAppointments = false;
   
-    doctorId: string = '';
-    isAdmin: boolean = false; // load this from your auth service
-    constructor(
-      private route: ActivatedRoute, 
-      private confirmationService: ConfirmationService, 
-      private messageService: MessageService,
-    ) {}
-  
-  
+    constructor(private route: ActivatedRoute) {}
+ 
     ngOnInit() {
       const id = this.route.snapshot.paramMap.get('id');
+      console.log("recieved id", id);
+      
       if(id){
+        // get patient details
         this.patientService.getPatientById(id).subscribe({
           next: (res) => {
             this.patient = res;
           },
-          error: (er) => {
-            console.log(er);
-            
-          }
-        })
+          error: (er) => console.log(er)
+        });
+
+        // get patient appointments
+        this.patientService.getPatientAppointments(id).subscribe({
+          next: (res) =>this.appointments = res,
+          error: (er) => console.log(er)
+        });
+        this.noAppointments = this.appointments.length == 0;
+        console.log("appointments", this.appointments);
+        
       }
     }
     

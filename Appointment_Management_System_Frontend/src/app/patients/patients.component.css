@@ -55,3 +55,14 @@
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
+    .sort-button {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+    }
+    
+    .sort-button-active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    

@@ -57,9 +57,16 @@ th {
     padding: 0.75rem;
 }
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
     background-color: #EDE8F5;
-}
+} */
+.clickable-row {
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #eef2ff; 
+    }
+  }
 
 /* Actions Column */
 .p-button-text {

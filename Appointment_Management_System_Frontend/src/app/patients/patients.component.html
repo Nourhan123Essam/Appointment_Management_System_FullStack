@@ -14,13 +14,26 @@
               placeholder="Sort by">
             </p-dropdown>
       
-            <p-toggleButton 
-              [(ngModel)]="isDescending" 
-              onLabel="Descending" 
-              offLabel="Ascending" 
-              (onChange)="loadPatients()"
-              styleClass="sort-toggle">
-            </p-toggleButton>
+           <div *ngIf="sortBy != ''" >
+            <p-button 
+            label="Ascending" 
+            icon="pi pi-sort-amount-up" 
+            class="m-1"
+            (onClick)="isDescending = false; loadPatients()"
+            [styleClass]="!isDescending ? 'p-button-primary' : 'p-button-outlined'">
+          </p-button>
+          
+          <p-button 
+            label="Descending" 
+            icon="pi pi-sort-amount-down" 
+            (onClick)="isDescending = true; loadPatients()"
+            [styleClass]="isDescending ? 'p-button-primary' : 'p-button-outlined'">
+          </p-button>
+          
+
+           </div>
+
+          
           </div>
         </div>
       

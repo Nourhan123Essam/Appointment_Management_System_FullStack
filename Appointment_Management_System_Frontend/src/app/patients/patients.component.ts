@@ -19,7 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { PagedResult, PatientApiService, PatientDto, PatientQueryParams } from '../core/services/Api/patient-api.service';
 import { CardModule } from 'primeng/card';
 
-
 @Component({
   selector: 'app-patients',
   imports: [
@@ -69,6 +68,8 @@ export class PatientsComponent {
 
   loadPatients(): void {
     this.loading = true;
+    console.log("direction of sorting", this.isDescending);
+    
     const queryParams: PatientQueryParams = {
       pageNumber: this.pageNumber,
       pageSize: this.pageSize,
@@ -118,9 +119,11 @@ export class PatientsComponent {
     });
   }
 
-  goToDetails(patient: PatientDto): void {
+  goToDetails(patientId: string): void {
     // Navigate to patient details
-    window.location.href = `/patient-details/${patient.id}`;
+    console.log("sent id", patientId);
+    
+    window.location.href = `/patient-details/${patientId}`;
   }
 
   onFilterChange(): void {

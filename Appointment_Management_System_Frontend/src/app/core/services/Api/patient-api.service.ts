@@ -12,7 +12,7 @@ export interface PatientDto {
   address: string;
   profilePictureUrl: string;
   createdAt: string;
-  appointmentCount: string;
+  appointmentCount: number;
 }
 
 export interface AppointmentDto {

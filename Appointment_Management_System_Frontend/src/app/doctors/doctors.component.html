@@ -40,41 +40,10 @@
           <th pSortableColumn="rating">Rating <p-sortIcon field="rating"></p-sortIcon></th>
           <th *ngIf="isAdmin">Actions</th>
         </tr>
-        <!-- <tr>
-          <th>
-            <p-columnFilter
-                    type="text"
-                    field="fullName"
-                    placeholder="Search by name"
-                    ariaLabel="Filter Name"
-            ></p-columnFilter>
-          </th>
-          <th></th>
-          <th>
-            <p-columnFilter
-                    type="text"
-                    field="specialization"
-                    placeholder="Search by specialization"
-                    ariaLabel="Filter specialization"
-            ></p-columnFilter>
-          </th>
-          <th></th>
-          <th>
-            <p-columnFilter
-                    type="text"
-                    field="workplaceType"
-                    placeholder="Search by specialization"
-                    ariaLabel="Filter specialization"
-            ></p-columnFilter>
-          </th>
-          <th></th>
-          <th></th>
-          <th *ngIf="isAdmin"></th>
-        </tr> -->
       </ng-template>
   
       <ng-template pTemplate="body" let-doctor>
-        <tr (dblclick)="goToDoctorDetails(doctor.id)" style="cursor: pointer;">
+        <tr (dblclick)="goToDoctorDetails(doctor.id)" class="clickable-row">
           <td>{{ doctor.fullName }}</td>
           <td>{{ doctor.yearsOfExperience || 'N/A' }}</td>
           <td>{{ doctor.specialization || 'N/A' }}</td>
