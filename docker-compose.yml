@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: appointment-backend
+    build:
+      context: ./Appointment_Management_System_Backend
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000" # Maps container's 7000 to host's 7000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True;
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    container_name: appointment-frontend
+    build:
+      context: ./Appointment_Management_System_Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  db:
+    container_name: appointment-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "#Nour123#"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - app-network
+
+volumes:
+  sqlserver_data: # This ensures data is persistent
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

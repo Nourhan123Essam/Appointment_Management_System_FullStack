@@ -125,6 +125,9 @@ builder.Services.AddCors(options =>
 // Register the middleware with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+builder.WebHost.UseUrls("http://*:7000");
+
+
 var app = builder.Build();
 
 // Add the custom middleware to the pipeline

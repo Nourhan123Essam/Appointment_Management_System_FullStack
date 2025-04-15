@@ -1,27 +1,24 @@
-# Use official .NET SDK image to build and run the app
+# Base image to run the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 7000
 
+# SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution file and csproj
-COPY COPY *.sln .
-                         # Copy the solution file (from parent)
-COPY *.csproj ./                        # Copy the .csproj file inside the backend folder
-
-# Restore dependencies
-RUN dotnet restore
-
-# Copy the rest of the backend source code
+# Copy everything in the backend folder (since .sln, src/, and tests/ are all here)
 COPY . .
 
-# Publish the application
+# Restore using the solution file
+RUN dotnet restore Appointment_Management_System_Backend.sln
+
+# Publish only the API project
+WORKDIR /src/src/Appointment_System.Presentation
 RUN dotnet publish -c Release -o /app/publish
 
-# Final stage to run the app
+# Final runtime image
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "Appointment_Management_System_Backend.dll"]
+ENTRYPOINT ["dotnet", "Appointment_System.Presentation.dll"]
