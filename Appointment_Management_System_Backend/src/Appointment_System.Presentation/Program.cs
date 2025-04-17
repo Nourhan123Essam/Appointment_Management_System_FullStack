@@ -20,7 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configure the database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+    //,
+    //        sqlOptions => sqlOptions.EnableRetryOnFailure()
+        )
+    );
 
 // Configure Identity with ApplicationUser and IdentityRole
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -125,7 +129,7 @@ builder.Services.AddCors(options =>
 // Register the middleware with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
-builder.WebHost.UseUrls("http://*:7000");
+//builder.WebHost.UseUrls("http://*:7000");
 
 
 var app = builder.Build();

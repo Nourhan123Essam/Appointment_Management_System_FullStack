@@ -10,7 +10,7 @@ services:
       - "7000:7000" # Maps container's 7000 to host's 7000
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=db,1435;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True;
     depends_on:
       - db
     networks:
@@ -35,7 +35,7 @@ services:
       SA_PASSWORD: "#Nour123#"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433:1433"
+      - "1435:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
