@@ -1,6 +1,6 @@
 ﻿using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
 
 namespace Appointment_System.Application.Services.Implementaions
 {

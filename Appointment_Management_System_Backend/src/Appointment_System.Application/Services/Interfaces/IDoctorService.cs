@@ -1,5 +1,4 @@
 ﻿using Appointment_System.Application.DTOs.Doctor;
-using Appointment_System.Infrastructure.Data;
 
 namespace Appointment_System.Application.Services.Interfaces
 {

@@ -1,8 +1,8 @@
 ﻿using Appointment_System.Application.DTOs.Appointment;
 using Appointment_System.Application.DTOs.Patient;
+using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Appointment_System.Application.Services.Implementaions
 {
@@ -19,41 +19,7 @@ namespace Appointment_System.Application.Services.Implementaions
 
         public async Task<PagedResult<PatientDto>> GetPatientsAsync(PatientQueryParams queryParams)
         {
-            var query = _repository.GetAllPatientsQueryable();
-
-            // Filtering by name or email
-            if (!string.IsNullOrWhiteSpace(queryParams.Search))
-            {
-                query = query.Where(p =>
-                    p.FullName.Contains(queryParams.Search) ||
-                    p.Email.Contains(queryParams.Search));
-            }
-
-            // Sorting by selected field
-            query = queryParams.SortBy?.ToLower() switch
-            {
-                "fullname" => queryParams.IsDescending ? query.OrderByDescending(p => p.FullName) : query.OrderBy(p => p.FullName),
-                "email" => queryParams.IsDescending ? query.OrderByDescending(p => p.Email) : query.OrderBy(p => p.Email),
-                _ => query.OrderBy(p => p.FullName) // Default sort
-            };
-
-            // Project to DTO before pagination to avoid selecting unnecessary fields
-            var projectedQuery = query.Select(p => new PatientDto(p));
-
-            var totalCount = await projectedQuery.CountAsync();
-
-            var items = await projectedQuery
-                .Skip((queryParams.PageNumber - 1) * queryParams.PageSize)
-                .Take(queryParams.PageSize)
-                .ToListAsync();
-
-            return new PagedResult<PatientDto>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = queryParams.PageNumber,
-                PageSize = queryParams.PageSize
-            };
+            return await _repository.GetPatientsAsync(queryParams);
         }
 
         public async Task<PatientDto?> GetPatientByIdAsync(string patientId)

@@ -1,5 +1,5 @@
 ﻿
-using Appointment_System.Infrastructure.Data;
+using Appointment_System.Domain.Entities;
 
 namespace Appointment_System.Application.DTOs.Patient
 {
@@ -19,7 +19,7 @@ namespace Appointment_System.Application.DTOs.Patient
         {
             
         }
-        public PatientDto(ApplicationUser patient)
+        public PatientDto(User patient)
         {
             Id = patient.Id;
             FullName = patient.FullName;

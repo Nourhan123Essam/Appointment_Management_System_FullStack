@@ -13,6 +13,7 @@ services:
       - ConnectionStrings__DefaultConnection=Server=db,1435;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True;
     depends_on:
       - db
+      - redis
     networks:
       - app-network
 
@@ -25,6 +26,13 @@ services:
       - "4200:4200"
     depends_on:
       - backend
+    networks:
+      - app-network
+  redis:
+    container_name: appointment-redis
+    image: redis:7
+    ports:
+      - "6379:6379"
     networks:
       - app-network
 

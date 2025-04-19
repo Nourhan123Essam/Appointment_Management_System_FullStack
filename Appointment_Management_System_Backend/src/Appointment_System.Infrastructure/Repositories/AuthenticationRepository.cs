@@ -5,16 +5,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Appointment_System.Application.Interfaces.Repositories;
+using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Appointment_System.Infrastructure.Repositories.Implementations
+namespace Appointment_System.Infrastructure.Repositories
 {
-    public class AuthenticationRepository: IAuthenticationRepository
+    public class AuthenticationRepository : IAuthenticationRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -29,25 +30,26 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
             _configuration = configuration;
         }
 
-        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
+        public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _userManager.FindByEmailAsync(email);
+            return (await _userManager.FindByEmailAsync(email)).ToDomain();
         }
-        public async Task<bool> Register(ApplicationUser appUser, string password)
+        public async Task<bool> Register(User appUser, string password)
         {
-            var userResult = await _userManager.CreateAsync(appUser, password);
+            var user = new ApplicationUser(appUser);
+            var userResult = await _userManager.CreateAsync(user, password);
             if (!userResult.Succeeded)
                 return false;
 
             // Assign "Patient" role by default
-            await _userManager.AddToRoleAsync(appUser, "Patient");
+            await _userManager.AddToRoleAsync(user, "Patient");
 
             return true;
         }
 
 
-        public async Task<Response> Login(ApplicationUser login, string password)
-        {      
+        public async Task<Response> Login(User login, string password)
+        {
 
             //check of email correct
             var user = await _userManager.FindByEmailAsync(login.Email);
@@ -62,7 +64,7 @@ namespace Appointment_System.Infrastructure.Repositories.Implementations
             }
 
             //generate token and return it as the user vervified
-            string token = await GenerateToken(login);
+            string token = await GenerateToken(new ApplicationUser(login));
             return new Response(true, token);
         }
 

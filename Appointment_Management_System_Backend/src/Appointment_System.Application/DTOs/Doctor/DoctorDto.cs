@@ -1,7 +1,7 @@
 ﻿using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Enums;
-using Appointment_System.Infrastructure.Data;
 
 namespace Appointment_System.Application.DTOs.Doctor
 {
@@ -24,7 +24,7 @@ namespace Appointment_System.Application.DTOs.Doctor
         public DoctorDto() { }
 
         // Constructor that maps from ApplicationUser
-        public DoctorDto(ApplicationUser doctor)
+        public DoctorDto(User doctor)
         {
             Id = doctor.Id;
             FullName = doctor.FullName;

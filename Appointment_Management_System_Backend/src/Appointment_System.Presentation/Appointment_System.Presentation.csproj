@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Appointment_System.Application\Appointment_System.Application.csproj" />
+    <ProjectReference Include="..\Appointment_System.Infrastructure\Appointment_System.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

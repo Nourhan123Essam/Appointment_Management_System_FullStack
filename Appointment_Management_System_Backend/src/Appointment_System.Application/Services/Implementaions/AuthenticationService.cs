@@ -5,11 +5,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Appointment_System.Application.DTOs.Authentication;
+using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
+using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
-using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
+
 
 namespace Appointment_System.Application.Services.Implementaions
 {
@@ -29,7 +29,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 return new Response(false, $"This email is already registered");
 
             // Create a new user
-            var newUser = new ApplicationUser()
+            var newUser = new User()
             {
                 Email = request.Email,
                 UserName = request.Email,

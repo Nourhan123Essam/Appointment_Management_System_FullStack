@@ -1,10 +1,10 @@
 using System.Text;
 using Appointment_System.Application.DTOs.Authentication;
+using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories.Implementations;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
+using Appointment_System.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

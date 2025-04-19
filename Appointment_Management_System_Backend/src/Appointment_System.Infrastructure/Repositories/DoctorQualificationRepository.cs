@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Appointment_System.Infrastructure.Repositories.Implementations
+namespace Appointment_System.Infrastructure.Repositories
 {
     public class DoctorQualificationRepository : IDoctorQualificationRepository
     {

@@ -1,6 +1,6 @@
 ﻿using Appointment_System.Domain.Entities;
 
-namespace Appointment_System.Infrastructure.Repositories.Interfaces
+namespace Appointment_System.Application.Interfaces.Repositories
 {
     public interface IDoctorQualificationRepository
     {

@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using Moq;using Appointment_System.Infrastructure.Data;
+using Moq;
 using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
 using System.Numerics;
+using Appointment_System.Application.Interfaces.Repositories;
 
 namespace Appointment_System.Application.Tests
 {
@@ -57,7 +57,7 @@ namespace Appointment_System.Application.Tests
                 DayOfWeek = DayOfWeek.Monday
             };
 
-            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new ApplicationUser());
+            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new User());
 
             Assert.ThrowsAsync<ArgumentException>(() => _service.AddAsync(dto));
         }
@@ -73,7 +73,7 @@ namespace Appointment_System.Application.Tests
                 DayOfWeek = DayOfWeek.Monday
             };
 
-            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("notfound")).ReturnsAsync((ApplicationUser)null);
+            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("notfound")).ReturnsAsync((User)null);
 
             Assert.ThrowsAsync<KeyNotFoundException>(() => _service.AddAsync(dto));
         }
@@ -98,7 +98,7 @@ namespace Appointment_System.Application.Tests
                 DayOfWeek = dto.DayOfWeek
             };
 
-            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new ApplicationUser());
+            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new User());
             _availabilityRepoMock.Setup(r => r.AddAsync(It.IsAny<DoctorAvailability>())).ReturnsAsync(1);
 
             var result = await _service.AddAsync(dto);
@@ -179,7 +179,7 @@ namespace Appointment_System.Application.Tests
                 }
             };
 
-            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync(doctorId)).ReturnsAsync(new ApplicationUser { Id = doctorId });
+            _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync(doctorId)).ReturnsAsync(new User { Id = doctorId });
             _availabilityRepoMock.Setup(r => r.GetByDoctorIdAsync(doctorId)).ReturnsAsync(availabilitys);
 
             var result = await _service.GetByDoctorIdAsync(doctorId);

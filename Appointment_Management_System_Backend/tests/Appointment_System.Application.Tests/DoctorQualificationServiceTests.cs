@@ -8,9 +8,8 @@ using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.DTOs.Doctor;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
-using Appointment_System.Infrastructure.Repositories.Interfaces;
 using System.Numerics;
-using Appointment_System.Infrastructure.Data;
+using Appointment_System.Application.Interfaces.Repositories;
 
 namespace Appointment_System.Application.Tests
 {
@@ -82,7 +81,7 @@ namespace Appointment_System.Application.Tests
 
             var entity = dto.ToEntity();
 
-            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new ApplicationUser());
+            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new User());
             _mockRepo.Setup(r => r.AddAsync(It.IsAny<DoctorQualification>())).ReturnsAsync(1);
 
             var result = await _service.AddAsync(dto);
@@ -101,7 +100,7 @@ namespace Appointment_System.Application.Tests
         public void AddAsync_WithMissingDoctor_ThrowsKeyNotFoundException()
         {
             var dto = new CreateDoctorQualificationDto { DoctorId = "x" };
-            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync((ApplicationUser)null);
+            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync((User)null);
 
             Assert.ThrowsAsync<KeyNotFoundException>(() => _service.AddAsync(dto));
         }
@@ -117,7 +116,7 @@ namespace Appointment_System.Application.Tests
             };
 
             // Mock the doctor repository to return true (simulate doctor exists)
-            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new ApplicationUser());
+            _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new User());
 
             Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _service.AddAsync(dto));
         }
