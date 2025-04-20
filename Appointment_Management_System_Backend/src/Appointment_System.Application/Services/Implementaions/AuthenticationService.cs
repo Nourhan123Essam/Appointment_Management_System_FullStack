@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Appointment_System.Application.DTOs.Authentication;
+using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Domain.Entities;
@@ -15,16 +16,16 @@ namespace Appointment_System.Application.Services.Implementaions
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly IAuthenticationRepository authenticationRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AuthenticationService(IAuthenticationRepository _authenticationRepository)
+        public AuthenticationService(IUnitOfWork unitOfWork)
         {
-            authenticationRepository = _authenticationRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<Response> RegisterAsync(RegisterDTO request)
         {
             // Check if the user already exists
-            var getUser = await authenticationRepository.GetUserByEmailAsync(request.Email);
+            var getUser = await _unitOfWork.Authentication.GetUserByEmailAsync(request.Email);
             if (getUser is not null)
                 return new Response(false, $"This email is already registered");
 
@@ -37,7 +38,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 FullName = request.FullName
             };
 
-            var result = await authenticationRepository.Register(newUser, request.Password);
+            var result = await _unitOfWork.Authentication.Register(newUser, request.Password);
 
             if(!result) return new Response(false, "Invalid data provided");
             return new Response(true, "User registered successfully");
@@ -46,11 +47,11 @@ namespace Appointment_System.Application.Services.Implementaions
         public async Task<Response> LoginAsync(LoginDTO request)
         {
             // Check if the user already exists
-            var getUser = await authenticationRepository.GetUserByEmailAsync(request.Email);
+            var getUser = await _unitOfWork.Authentication.GetUserByEmailAsync(request.Email);
             if (getUser is null)
                 return new Response(false, "Invalid credentials");
 
-            return await authenticationRepository.Login(getUser, request.Password);
+            return await _unitOfWork.Authentication.Login(getUser, request.Password);
 
         }
 

@@ -15,6 +15,8 @@ export class HeaderComponent implements OnInit {
   authService = inject(AuthService);
   ngOnInit(): void {
     this.isAdmin = this.authService.hasRole("Admin");
+    console.log("from heeader see if admin", this.isAdmin);
+    
   }
 
 }

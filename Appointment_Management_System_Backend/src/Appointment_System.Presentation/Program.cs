@@ -1,116 +1,38 @@
-using System.Text;
-using Appointment_System.Application.DTOs.Authentication;
-using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Application.Services.Interfaces;
+using Appointment_System.Infrastructure;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Appointment_System.Presentation.Middlewares;
+using Serilog;
+
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console() // Example: log to the console
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day) // log to file, rolling logs daily
+    .CreateLogger();
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
-// Configure the database connection
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
-    //,
-    //        sqlOptions => sqlOptions.EnableRetryOnFailure()
-        )
-    );
-
-// Configure Identity with ApplicationUser and IdentityRole
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Application layer services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
-
-builder.Services.AddScoped<IDoctorAvailabilityRepository, DoctorAvailabilityRepository>();
 builder.Services.AddScoped<IDoctorAvailabilityService, DoctorAvailabilityService>();
-
-builder.Services.AddScoped<IDoctorQualificationRepository, DoctorQualificationRepository>();
 builder.Services.AddScoped<IDoctorQualificationService, DoctorQualificationService>();
-
 builder.Services.AddScoped<IDoctorService, DoctorService>();
-builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-
 builder.Services.AddScoped<IPatientService, PatientService>();
-builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
+// Cleanly register infrastructure layer services
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
+// Add Serilog to the DI container and configure it as the logging provider
+builder.Host.UseSerilog();
 
-
-// Add JWT authentication to Swagger
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your token."
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
-
-//configure authentication and jwt 
-var AccessAppSettings = builder.Configuration;
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = AccessAppSettings["Jwt:Issuer"],
-        ValidAudience = AccessAppSettings["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(AccessAppSettings["Jwt:Key"])
-        )
-    };
-});
-
-var configuration = builder.Configuration;
-
-
-// Capthcha
-builder.Services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));
 
 // Add CORS to the container.
 builder.Services.AddCors(options =>
@@ -126,22 +48,22 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Register the middleware with DI
+// Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-
-//builder.WebHost.UseUrls("http://*:7000");
+//builder.Services.AddScoped<RequestLoggingMiddleware>();
 
 
 var app = builder.Build();
 
-// Add the custom middleware to the pipeline
+// Add the custom middlewares to the pipeline
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
 
 
-//  Ensure required roles and admin user exist
+//  Ensure required roles and admin user exist (Seeding)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;

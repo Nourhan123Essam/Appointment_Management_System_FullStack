@@ -10,6 +10,7 @@ using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
 using System.Numerics;
 using Appointment_System.Application.Interfaces.Repositories;
+using Appointment_System.Application.Interfaces;
 
 namespace Appointment_System.Application.Tests
 {
@@ -19,6 +20,7 @@ namespace Appointment_System.Application.Tests
     {
         private Mock<IDoctorQualificationRepository> _mockRepo;
         private Mock<IDoctorRepository> _mockDoctorRepo;
+        private Mock<IUnitOfWork> _mockUnitOfWork;
         private DoctorQualificationService _service;
 
         [SetUp]
@@ -26,8 +28,15 @@ namespace Appointment_System.Application.Tests
         {
             _mockRepo = new Mock<IDoctorQualificationRepository>();
             _mockDoctorRepo = new Mock<IDoctorRepository>();
-            _service = new DoctorQualificationService(_mockRepo.Object, _mockDoctorRepo.Object);
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            // Set up the UnitOfWork to return the mocked repositories
+            _mockUnitOfWork.Setup(u => u.QualificationRepository).Returns(_mockRepo.Object);
+            _mockUnitOfWork.Setup(u => u.Doctors).Returns(_mockDoctorRepo.Object);
+
+            _service = new DoctorQualificationService(_mockUnitOfWork.Object);
         }
+
 
 
         // GetByDoctorId Tests

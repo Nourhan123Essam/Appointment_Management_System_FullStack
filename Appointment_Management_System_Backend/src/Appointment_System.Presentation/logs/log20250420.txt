@@ -1,0 +1,313 @@
+2025-04-20 14:21:00.475 +02:00 [INF] User profile is available. Using 'C:\Users\CS\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-04-20 14:21:01.175 +02:00 [WRN] No store type was specified for the decimal property 'ConsultationFee' on entity type 'ApplicationUser'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-04-20 14:21:01.956 +02:00 [INF] Executed DbCommand (70ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-04-20 14:21:02.021 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-04-20 14:21:02.025 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@__normalizedName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedName_0
+2025-04-20 14:21:02.041 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[Address], [a].[ConcurrencyStamp], [a].[ConsultationFee], [a].[CreatedAt], [a].[DateOfBirth], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[Gender], [a].[LicenseNumber], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[ProfilePictureUrl], [a].[SecurityStamp], [a].[Specialization], [a].[TotalRatingScore], [a].[TotalRatingsGiven], [a].[TwoFactorEnabled], [a].[UserName], [a].[WorkplaceType], [a].[YearsOfExperience]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-04-20 14:21:02.108 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-04-20 14:21:02.144 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@__p_0='?' (Size = 450), @__p_1='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[UserId], [a].[RoleId]
+FROM [AspNetUserRoles] AS [a]
+WHERE [a].[UserId] = @__p_0 AND [a].[RoleId] = @__p_1
+2025-04-20 14:21:02.486 +02:00 [INF] Now listening on: https://localhost:7000
+2025-04-20 14:21:02.796 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-04-20 14:21:02.803 +02:00 [INF] Hosting environment: Development
+2025-04-20 14:21:02.806 +02:00 [INF] Content root path: C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Presentation
+2025-04-20 14:21:03.096 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/swagger/index.html - null null
+2025-04-20 14:21:03.235 +02:00 [INF] Request GET /swagger/index.html started at "2025-04-20T12:21:03.2346782Z"
+2025-04-20 14:21:03.309 +02:00 [INF] Request GET /swagger/index.html completed at "2025-04-20T12:21:03.3092043Z"
+2025-04-20 14:21:03.315 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/swagger/index.html - 200 null text/html;charset=utf-8 227.6821ms
+2025-04-20 14:21:03.325 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/_vs/browserLink - null null
+2025-04-20 14:21:03.325 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/_framework/aspnetcore-browser-refresh.js - null null
+2025-04-20 14:21:03.357 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/_framework/aspnetcore-browser-refresh.js - 200 13814 application/javascript; charset=utf-8 32.4053ms
+2025-04-20 14:21:03.392 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/_vs/browserLink - 200 null text/javascript; charset=UTF-8 67.7387ms
+2025-04-20 14:21:03.596 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/swagger/v1/swagger.json - null null
+2025-04-20 14:21:03.608 +02:00 [INF] Request GET /swagger/v1/swagger.json started at "2025-04-20T12:21:03.6083461Z"
+2025-04-20 14:21:03.648 +02:00 [INF] Request GET /swagger/v1/swagger.json completed at "2025-04-20T12:21:03.6483239Z"
+2025-04-20 14:21:03.651 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 54.901ms
+2025-04-20 14:22:57.520 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Authentication/login - null null
+2025-04-20 14:22:57.532 +02:00 [INF] Request OPTIONS /api/Authentication/login started at "2025-04-20T12:22:57.5329064Z"
+2025-04-20 14:22:57.543 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:22:57.553 +02:00 [INF] Request OPTIONS /api/Authentication/login completed at "2025-04-20T12:22:57.5530718Z"
+2025-04-20 14:22:57.556 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Authentication/login - 204 null null 40.5012ms
+2025-04-20 14:22:57.558 +02:00 [INF] Request starting HTTP/2 POST https://localhost:7000/api/Authentication/login - application/json 53
+2025-04-20 14:22:57.567 +02:00 [INF] Request POST /api/Authentication/login started at "2025-04-20T12:22:57.5677866Z"
+2025-04-20 14:22:57.572 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:22:57.716 +02:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2025-04-20 14:22:57.774 +02:00 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2025-04-20 14:22:57.782 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.AuthenticationController.Login (Appointment_System.Presentation)'
+2025-04-20 14:22:57.820 +02:00 [INF] Route matched with {action = "Login", controller = "Authentication"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Appointment_System.Domain.Responses.Response]] Login(Appointment_System.Application.DTOs.Authentication.LoginDTO) on controller Appointment_System.Presentation.Controllers.AuthenticationController (Appointment_System.Presentation).
+2025-04-20 14:22:57.986 +02:00 [INF] Executed DbCommand (4ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[Address], [a].[ConcurrencyStamp], [a].[ConsultationFee], [a].[CreatedAt], [a].[DateOfBirth], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[Gender], [a].[LicenseNumber], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[ProfilePictureUrl], [a].[SecurityStamp], [a].[Specialization], [a].[TotalRatingScore], [a].[TotalRatingsGiven], [a].[TwoFactorEnabled], [a].[UserName], [a].[WorkplaceType], [a].[YearsOfExperience]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-04-20 14:22:58.005 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedEmail_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[AccessFailedCount], [a].[Address], [a].[ConcurrencyStamp], [a].[ConsultationFee], [a].[CreatedAt], [a].[DateOfBirth], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[Gender], [a].[LicenseNumber], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[ProfilePictureUrl], [a].[SecurityStamp], [a].[Specialization], [a].[TotalRatingScore], [a].[TotalRatingsGiven], [a].[TwoFactorEnabled], [a].[UserName], [a].[WorkplaceType], [a].[YearsOfExperience]
+FROM [AspNetUsers] AS [a]
+WHERE [a].[NormalizedEmail] = @__normalizedEmail_0
+2025-04-20 14:22:58.206 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Name]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetRoles] AS [a0] ON [a].[RoleId] = [a0].[Id]
+WHERE [a].[UserId] = @__userId_0
+2025-04-20 14:22:58.243 +02:00 [INF] Executing OkObjectResult, writing value of type 'Appointment_System.Domain.Responses.Response'.
+2025-04-20 14:22:58.256 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.AuthenticationController.Login (Appointment_System.Presentation) in 426.4517ms
+2025-04-20 14:22:58.259 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.AuthenticationController.Login (Appointment_System.Presentation)'
+2025-04-20 14:22:58.263 +02:00 [INF] Request POST /api/Authentication/login completed at "2025-04-20T12:22:58.2634396Z"
+2025-04-20 14:22:58.271 +02:00 [INF] Request finished HTTP/2 POST https://localhost:7000/api/Authentication/login - 200 null application/json; charset=utf-8 712.9518ms
+2025-04-20 14:23:01.211 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:23:01.224 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData started at "2025-04-20T12:23:01.2241087Z"
+2025-04-20 14:23:01.226 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:01.229 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData completed at "2025-04-20T12:23:01.2291054Z"
+2025-04-20 14:23:01.231 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - 204 null null 20.5945ms
+2025-04-20 14:23:01.236 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:23:01.246 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData started at "2025-04-20T12:23:01.2459655Z"
+2025-04-20 14:23:01.249 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:01.310 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:23:01.324 +02:00 [INF] Route matched with {action = "GetAllDoctorsBasicData", controller = "Doctor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllDoctorsBasicData() on controller Appointment_System.Presentation.Controllers.DoctorController (Appointment_System.Presentation).
+2025-04-20 14:23:05.038 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-04-20 14:23:05.065 +02:00 [INF] Executed DbCommand (7ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Id], [a0].[AccessFailedCount], [a0].[Address], [a0].[ConcurrencyStamp], [a0].[ConsultationFee], [a0].[CreatedAt], [a0].[DateOfBirth], [a0].[Email], [a0].[EmailConfirmed], [a0].[FullName], [a0].[Gender], [a0].[LicenseNumber], [a0].[LockoutEnabled], [a0].[LockoutEnd], [a0].[NormalizedEmail], [a0].[NormalizedUserName], [a0].[PasswordHash], [a0].[PhoneNumber], [a0].[PhoneNumberConfirmed], [a0].[ProfilePictureUrl], [a0].[SecurityStamp], [a0].[Specialization], [a0].[TotalRatingScore], [a0].[TotalRatingsGiven], [a0].[TwoFactorEnabled], [a0].[UserName], [a0].[WorkplaceType], [a0].[YearsOfExperience]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetUsers] AS [a0] ON [a].[UserId] = [a0].[Id]
+WHERE [a].[RoleId] = @__role_Id_0
+2025-04-20 14:23:05.095 +02:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Appointment_System.Application.DTOs.Doctor.DoctorsBasicDataDto, Appointment_System.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-04-20 14:23:05.125 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation) in 3789.0451ms
+2025-04-20 14:23:05.128 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:23:05.130 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData completed at "2025-04-20T12:23:05.1303832Z"
+2025-04-20 14:23:05.132 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - 200 null application/json; charset=utf-8 3896.9473ms
+2025-04-20 14:23:12.219 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Doctor/GetQualificationByDoctorId?doctorId=aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - null null
+2025-04-20 14:23:12.219 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - null null
+2025-04-20 14:23:12.236 +02:00 [INF] Request OPTIONS /api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 started at "2025-04-20T12:23:12.2363302Z"
+2025-04-20 14:23:12.236 +02:00 [INF] Request OPTIONS /api/Doctor/GetQualificationByDoctorId started at "2025-04-20T12:23:12.2358841Z"
+2025-04-20 14:23:12.245 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:12.249 +02:00 [INF] Request OPTIONS /api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 completed at "2025-04-20T12:23:12.2499120Z"
+2025-04-20 14:23:12.246 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:12.252 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - 204 null null 33.2187ms
+2025-04-20 14:23:12.253 +02:00 [INF] Request OPTIONS /api/Doctor/GetQualificationByDoctorId completed at "2025-04-20T12:23:12.2538730Z"
+2025-04-20 14:23:12.256 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - null null
+2025-04-20 14:23:12.264 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Doctor/GetQualificationByDoctorId?doctorId=aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - 204 null null 44.8657ms
+2025-04-20 14:23:12.267 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Doctor/GetQualificationByDoctorId?doctorId=aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - null null
+2025-04-20 14:23:12.269 +02:00 [INF] Request GET /api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 started at "2025-04-20T12:23:12.2698314Z"
+2025-04-20 14:23:12.288 +02:00 [INF] Request GET /api/Doctor/GetQualificationByDoctorId started at "2025-04-20T12:23:12.2881932Z"
+2025-04-20 14:23:12.293 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:12.296 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:23:12.313 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAvailabilityByDoctorId (Appointment_System.Presentation)'
+2025-04-20 14:23:12.313 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetQualificationByDoctorId (Appointment_System.Presentation)'
+2025-04-20 14:23:12.326 +02:00 [INF] Route matched with {action = "GetAvailabilityByDoctorId", controller = "Doctor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[Appointment_System.Application.DTOs.DoctorAvailability.DoctorAvailabilityDto]]] GetAvailabilityByDoctorId(System.String) on controller Appointment_System.Presentation.Controllers.DoctorController (Appointment_System.Presentation).
+2025-04-20 14:23:12.327 +02:00 [INF] Route matched with {action = "GetQualificationByDoctorId", controller = "Doctor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.List`1[Appointment_System.Application.DTOs.DoctorQualification.DoctorQualificationDto]]] GetQualificationByDoctorId(System.String) on controller Appointment_System.Presentation.Controllers.DoctorController (Appointment_System.Presentation).
+2025-04-20 14:23:12.425 +02:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-04-20 14:23:12.449 +02:00 [INF] Executed DbCommand (67ms) [Parameters=[@__doctorId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[Id], [d].[DoctorId], [d].[IssuingInstitution], [d].[QualificationName], [d].[YearEarned]
+FROM [DoctorQualifications] AS [d]
+WHERE [d].[DoctorId] = @__doctorId_0
+2025-04-20 14:23:12.461 +02:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Appointment_System.Application.DTOs.DoctorQualification.DoctorQualificationDto, Appointment_System.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-04-20 14:23:12.470 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.DoctorController.GetQualificationByDoctorId (Appointment_System.Presentation) in 133.0922ms
+2025-04-20 14:23:12.486 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetQualificationByDoctorId (Appointment_System.Presentation)'
+2025-04-20 14:23:12.492 +02:00 [INF] Request GET /api/Doctor/GetQualificationByDoctorId completed at "2025-04-20T12:23:12.4922861Z"
+2025-04-20 14:23:12.494 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Doctor/GetQualificationByDoctorId?doctorId=aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - 200 null application/json; charset=utf-8 228.2932ms
+2025-04-20 14:23:12.536 +02:00 [INF] Executed DbCommand (56ms) [Parameters=[@__doctorId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [t].[Id], [t].[AccessFailedCount], [t].[Address], [t].[ConcurrencyStamp], [t].[ConsultationFee], [t].[CreatedAt], [t].[DateOfBirth], [t].[Email], [t].[EmailConfirmed], [t].[FullName], [t].[Gender], [t].[LicenseNumber], [t].[LockoutEnabled], [t].[LockoutEnd], [t].[NormalizedEmail], [t].[NormalizedUserName], [t].[PasswordHash], [t].[PhoneNumber], [t].[PhoneNumberConfirmed], [t].[ProfilePictureUrl], [t].[SecurityStamp], [t].[Specialization], [t].[TotalRatingScore], [t].[TotalRatingsGiven], [t].[TwoFactorEnabled], [t].[UserName], [t].[WorkplaceType], [t].[YearsOfExperience], [d].[Id], [d].[DayOfWeek], [d].[DoctorId], [d].[EndTime], [d].[StartTime], [d0].[Id], [d0].[DoctorId], [d0].[IssuingInstitution], [d0].[QualificationName], [d0].[YearEarned]
+FROM (
+    SELECT TOP(1) [a].[Id], [a].[AccessFailedCount], [a].[Address], [a].[ConcurrencyStamp], [a].[ConsultationFee], [a].[CreatedAt], [a].[DateOfBirth], [a].[Email], [a].[EmailConfirmed], [a].[FullName], [a].[Gender], [a].[LicenseNumber], [a].[LockoutEnabled], [a].[LockoutEnd], [a].[NormalizedEmail], [a].[NormalizedUserName], [a].[PasswordHash], [a].[PhoneNumber], [a].[PhoneNumberConfirmed], [a].[ProfilePictureUrl], [a].[SecurityStamp], [a].[Specialization], [a].[TotalRatingScore], [a].[TotalRatingsGiven], [a].[TwoFactorEnabled], [a].[UserName], [a].[WorkplaceType], [a].[YearsOfExperience]
+    FROM [AspNetUsers] AS [a]
+    WHERE [a].[Id] = @__doctorId_0
+) AS [t]
+LEFT JOIN [DoctorAvailabilities] AS [d] ON [t].[Id] = [d].[DoctorId]
+LEFT JOIN [DoctorQualifications] AS [d0] ON [t].[Id] = [d0].[DoctorId]
+ORDER BY [t].[Id], [d].[Id]
+2025-04-20 14:23:12.568 +02:00 [INF] Executed DbCommand (6ms) [Parameters=[@__doctorId_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[Id], [d].[DayOfWeek], [d].[DoctorId], [d].[EndTime], [d].[StartTime]
+FROM [DoctorAvailabilities] AS [d]
+WHERE [d].[DoctorId] = @__doctorId_0
+2025-04-20 14:23:12.574 +02:00 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+SelectListIterator`2[[Appointment_System.Domain.Entities.DoctorAvailability, Appointment_System.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[Appointment_System.Application.DTOs.DoctorAvailability.DoctorAvailabilityDto, Appointment_System.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-04-20 14:23:12.585 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.DoctorController.GetAvailabilityByDoctorId (Appointment_System.Presentation) in 256.3445ms
+2025-04-20 14:23:12.587 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAvailabilityByDoctorId (Appointment_System.Presentation)'
+2025-04-20 14:23:12.590 +02:00 [INF] Request GET /api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 completed at "2025-04-20T12:23:12.5900848Z"
+2025-04-20 14:23:12.592 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Doctor/GetAvailabilityByDoctorId/aa77bd3c-7217-4f15-9115-7d8d5c91b9c3 - 200 null application/json; charset=utf-8 336.279ms
+2025-04-20 14:27:04.500 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:27:04.509 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData started at "2025-04-20T12:27:04.5097498Z"
+2025-04-20 14:27:04.511 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:27:04.512 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData completed at "2025-04-20T12:27:04.5122986Z"
+2025-04-20 14:27:04.515 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - 204 null null 15.5106ms
+2025-04-20 14:27:04.517 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:27:04.521 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData started at "2025-04-20T12:27:04.5215064Z"
+2025-04-20 14:27:04.523 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:27:04.524 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:27:04.526 +02:00 [INF] Route matched with {action = "GetAllDoctorsBasicData", controller = "Doctor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllDoctorsBasicData() on controller Appointment_System.Presentation.Controllers.DoctorController (Appointment_System.Presentation).
+2025-04-20 14:27:08.758 +02:00 [INF] Executed DbCommand (7ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-04-20 14:27:08.767 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Id], [a0].[AccessFailedCount], [a0].[Address], [a0].[ConcurrencyStamp], [a0].[ConsultationFee], [a0].[CreatedAt], [a0].[DateOfBirth], [a0].[Email], [a0].[EmailConfirmed], [a0].[FullName], [a0].[Gender], [a0].[LicenseNumber], [a0].[LockoutEnabled], [a0].[LockoutEnd], [a0].[NormalizedEmail], [a0].[NormalizedUserName], [a0].[PasswordHash], [a0].[PhoneNumber], [a0].[PhoneNumberConfirmed], [a0].[ProfilePictureUrl], [a0].[SecurityStamp], [a0].[Specialization], [a0].[TotalRatingScore], [a0].[TotalRatingsGiven], [a0].[TwoFactorEnabled], [a0].[UserName], [a0].[WorkplaceType], [a0].[YearsOfExperience]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetUsers] AS [a0] ON [a].[UserId] = [a0].[Id]
+WHERE [a].[RoleId] = @__role_Id_0
+2025-04-20 14:27:08.774 +02:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Appointment_System.Application.DTOs.Doctor.DoctorsBasicDataDto, Appointment_System.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-04-20 14:27:08.776 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation) in 4243.7983ms
+2025-04-20 14:27:08.778 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:27:08.780 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData completed at "2025-04-20T12:27:08.7803057Z"
+2025-04-20 14:27:08.781 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - 200 null application/json; charset=utf-8 4264.8045ms
+2025-04-20 14:27:12.422 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - null null
+2025-04-20 14:27:12.426 +02:00 [INF] Request OPTIONS /api/Patient started at "2025-04-20T12:27:12.4262864Z"
+2025-04-20 14:27:12.429 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:27:12.430 +02:00 [INF] Request OPTIONS /api/Patient completed at "2025-04-20T12:27:12.4303759Z"
+2025-04-20 14:27:12.432 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - 204 null null 10.2167ms
+2025-04-20 14:27:12.439 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - null null
+2025-04-20 14:27:12.451 +02:00 [INF] Request GET /api/Patient started at "2025-04-20T12:27:12.4516302Z"
+2025-04-20 14:27:12.454 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:27:12.458 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation)'
+2025-04-20 14:27:12.468 +02:00 [INF] Route matched with {action = "GetPatients", controller = "Patient"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Appointment_System.Application.DTOs.Patient.PagedResult`1[Appointment_System.Application.DTOs.Patient.PatientDto]]] GetPatients(Appointment_System.Application.DTOs.Patient.PatientQueryParams) on controller Appointment_System.Presentation.Controllers.PatientController (Appointment_System.Presentation).
+2025-04-20 14:27:12.543 +02:00 [INF] Executed DbCommand (45ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[Name] = N'Patient'
+2025-04-20 14:27:12.733 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation) in 259.7551ms
+2025-04-20 14:27:12.738 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation)'
+2025-04-20 14:27:12.781 +02:00 [ERR] Unhandled exception: The LINQ expression 'DbSet<ApplicationUser>()
+    .Where(a => DbSet<IdentityUserRole<string>>()
+        .Any(i => i.UserId == a.Id && i.RoleId == __patientRoleId_0))
+    .OrderBy(a => a.ToDomain().FullName)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'DbSet<ApplicationUser>()
+    .Where(a => DbSet<IdentityUserRole<string>>()
+        .Any(i => i.UserId == a.Id && i.RoleId == __patientRoleId_0))
+    .OrderBy(a => a.ToDomain().FullName)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Appointment_System.Infrastructure.Repositories.PatientRepository.GetPatientsAsync(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Infrastructure\Repositories\PatientRepository.cs:line 83
+   at Appointment_System.Application.Services.Implementaions.PatientService.GetPatientsAsync(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Application\Services\Implementaions\PatientService.cs:line 21
+   at Appointment_System.Presentation.Controllers.PatientController.GetPatients(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Presentation\Controllers\PatientController.cs:line 26
+   at lambda_method320(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at ExceptionHandlingMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Presentation\Middlewares\ExceptionHandlingMiddleware.cs:line 28
+2025-04-20 14:27:13.008 +02:00 [INF] Request GET /api/Patient completed at "2025-04-20T12:27:13.0082207Z"
+2025-04-20 14:27:13.009 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - null null
+2025-04-20 14:27:13.010 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - 500 null null 570.6537ms
+2025-04-20 14:27:13.016 +02:00 [INF] Request GET /api/Patient started at "2025-04-20T12:27:13.0164168Z"
+2025-04-20 14:27:13.023 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:27:13.026 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation)'
+2025-04-20 14:27:13.030 +02:00 [INF] Route matched with {action = "GetPatients", controller = "Patient"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[Appointment_System.Application.DTOs.Patient.PagedResult`1[Appointment_System.Application.DTOs.Patient.PatientDto]]] GetPatients(Appointment_System.Application.DTOs.Patient.PatientQueryParams) on controller Appointment_System.Presentation.Controllers.PatientController (Appointment_System.Presentation).
+2025-04-20 14:27:13.040 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [a].[Id]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[Name] = N'Patient'
+2025-04-20 14:27:13.155 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation) in 119.8132ms
+2025-04-20 14:27:13.157 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.PatientController.GetPatients (Appointment_System.Presentation)'
+2025-04-20 14:27:13.182 +02:00 [ERR] Unhandled exception: The LINQ expression 'DbSet<ApplicationUser>()
+    .Where(a => DbSet<IdentityUserRole<string>>()
+        .Any(i => i.UserId == a.Id && i.RoleId == __patientRoleId_0))
+    .OrderBy(a => a.ToDomain().FullName)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+System.InvalidOperationException: The LINQ expression 'DbSet<ApplicationUser>()
+    .Where(a => DbSet<IdentityUserRole<string>>()
+        .Any(i => i.UserId == a.Id && i.RoleId == __patientRoleId_0))
+    .OrderBy(a => a.ToDomain().FullName)' could not be translated. Either rewrite the query in a form that can be translated, or switch to client evaluation explicitly by inserting a call to 'AsEnumerable', 'AsAsyncEnumerable', 'ToList', or 'ToListAsync'. See https://go.microsoft.com/fwlink/?linkid=2101038 for more information.
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.Translate(Expression expression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.CountAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Appointment_System.Infrastructure.Repositories.PatientRepository.GetPatientsAsync(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Infrastructure\Repositories\PatientRepository.cs:line 83
+   at Appointment_System.Application.Services.Implementaions.PatientService.GetPatientsAsync(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Application\Services\Implementaions\PatientService.cs:line 21
+   at Appointment_System.Presentation.Controllers.PatientController.GetPatients(PatientQueryParams queryParams) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Presentation\Controllers\PatientController.cs:line 26
+   at lambda_method320(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at ExceptionHandlingMiddleware.InvokeAsync(HttpContext context, RequestDelegate next) in C:\Users\CS\Desktop\My projects\Appointment_Management_System_FullStack\Appointment_Management_System_Backend\src\Appointment_System.Presentation\Middlewares\ExceptionHandlingMiddleware.cs:line 28
+2025-04-20 14:27:13.236 +02:00 [INF] Request GET /api/Patient completed at "2025-04-20T12:27:13.2363989Z"
+2025-04-20 14:27:13.240 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Patient?pageNumber=1&pageSize=2&search=&sortBy=&isDescending=false - 500 null null 230.2415ms
+2025-04-20 14:36:27.461 +02:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:36:27.472 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData started at "2025-04-20T12:36:27.4721039Z"
+2025-04-20 14:36:27.474 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:36:27.475 +02:00 [INF] Request OPTIONS /api/Doctor/doctorsBasicData completed at "2025-04-20T12:36:27.4750800Z"
+2025-04-20 14:36:27.476 +02:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:7000/api/Doctor/doctorsBasicData - 204 null null 14.9782ms
+2025-04-20 14:36:27.477 +02:00 [INF] Request starting HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - null null
+2025-04-20 14:36:27.483 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData started at "2025-04-20T12:36:27.4833125Z"
+2025-04-20 14:36:27.484 +02:00 [INF] CORS policy execution successful.
+2025-04-20 14:36:27.487 +02:00 [INF] Executing endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:36:27.488 +02:00 [INF] Route matched with {action = "GetAllDoctorsBasicData", controller = "Doctor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllDoctorsBasicData() on controller Appointment_System.Presentation.Controllers.DoctorController (Appointment_System.Presentation).
+2025-04-20 14:36:27.534 +02:00 [INF] Executed DbCommand (3ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(2) [a].[Id], [a].[ConcurrencyStamp], [a].[Name], [a].[NormalizedName]
+FROM [AspNetRoles] AS [a]
+WHERE [a].[NormalizedName] = @__normalizedRoleName_0
+2025-04-20 14:36:27.539 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[@__role_Id_0='?' (Size = 450)], CommandType='"Text"', CommandTimeout='30']
+SELECT [a0].[Id], [a0].[AccessFailedCount], [a0].[Address], [a0].[ConcurrencyStamp], [a0].[ConsultationFee], [a0].[CreatedAt], [a0].[DateOfBirth], [a0].[Email], [a0].[EmailConfirmed], [a0].[FullName], [a0].[Gender], [a0].[LicenseNumber], [a0].[LockoutEnabled], [a0].[LockoutEnd], [a0].[NormalizedEmail], [a0].[NormalizedUserName], [a0].[PasswordHash], [a0].[PhoneNumber], [a0].[PhoneNumberConfirmed], [a0].[ProfilePictureUrl], [a0].[SecurityStamp], [a0].[Specialization], [a0].[TotalRatingScore], [a0].[TotalRatingsGiven], [a0].[TwoFactorEnabled], [a0].[UserName], [a0].[WorkplaceType], [a0].[YearsOfExperience]
+FROM [AspNetUserRoles] AS [a]
+INNER JOIN [AspNetUsers] AS [a0] ON [a].[UserId] = [a0].[Id]
+WHERE [a].[RoleId] = @__role_Id_0
+2025-04-20 14:36:27.544 +02:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[Appointment_System.Application.DTOs.Doctor.DoctorsBasicDataDto, Appointment_System.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-04-20 14:36:27.547 +02:00 [INF] Executed action Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation) in 56.2598ms
+2025-04-20 14:36:27.551 +02:00 [INF] Executed endpoint 'Appointment_System.Presentation.Controllers.DoctorController.GetAllDoctorsBasicData (Appointment_System.Presentation)'
+2025-04-20 14:36:27.552 +02:00 [INF] Request GET /api/Doctor/doctorsBasicData completed at "2025-04-20T12:36:27.5524891Z"
+2025-04-20 14:36:27.553 +02:00 [INF] Request finished HTTP/2 GET https://localhost:7000/api/Doctor/doctorsBasicData - 200 null application/json; charset=utf-8 76.3987ms

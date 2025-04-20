@@ -5,6 +5,7 @@ using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
 using System.Numerics;
 using Appointment_System.Application.Interfaces.Repositories;
+using Appointment_System.Application.Interfaces;
 
 namespace Appointment_System.Application.Tests
 {
@@ -13,6 +14,7 @@ namespace Appointment_System.Application.Tests
     {
         private Mock<IDoctorAvailabilityRepository> _availabilityRepoMock;
         private Mock<IDoctorRepository> _doctorRepoMock;
+        private Mock<IUnitOfWork> _unitOfWorkMock;
         private DoctorAvailabilityService _service;
 
         [SetUp]
@@ -20,8 +22,15 @@ namespace Appointment_System.Application.Tests
         {
             _availabilityRepoMock = new Mock<IDoctorAvailabilityRepository>();
             _doctorRepoMock = new Mock<IDoctorRepository>();
-            _service = new DoctorAvailabilityService(_availabilityRepoMock.Object, _doctorRepoMock.Object);
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            // Setup the unit of work to return the mocked repositories
+            _unitOfWorkMock.Setup(u => u.AvailabilityRepository).Returns(_availabilityRepoMock.Object);
+            _unitOfWorkMock.Setup(u => u.Doctors).Returns(_doctorRepoMock.Object);
+
+            _service = new DoctorAvailabilityService(_unitOfWorkMock.Object);
         }
+
 
         // Add Tests
         #region AddAsync Tests

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.DTOs.Captcha;
+using Appointment_System.Application.Interfaces.Services;
 using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Domain.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -16,19 +17,13 @@ namespace Appointment_System.Presentation.Controllers
     {
         private readonly IAuthenticationService _authService;
         private readonly RecaptchaSettings _recaptchaSettings;
+        private readonly ICaptchaValidatorService _captchaValidatorService;
 
-        public AuthenticationController(IAuthenticationService authService, IOptions<RecaptchaSettings> recaptchaSettings)
+        public AuthenticationController(IAuthenticationService authService, ICaptchaValidatorService captchaValidatorService)
         {
             _authService = authService;
-            _recaptchaSettings = recaptchaSettings.Value;
+            _captchaValidatorService = captchaValidatorService;
         }
-
-        [HttpOptions]
-        public IActionResult Preflight()
-        {
-            return NoContent(); // Respond with 204 No Content
-        }
-
 
         [HttpPost("register")]
         public async Task<ActionResult<Response>> Register(RegisterDTO appUserDTO)
@@ -51,27 +46,14 @@ namespace Appointment_System.Presentation.Controllers
         [HttpPost("verify-captcha")]
         public async Task<IActionResult> VerifyCaptcha([FromBody] CaptchaRequest request)
         {
-            var secretKey = _recaptchaSettings.SecretKey; // Read from appsettings.json
-            var googleVerifyUrl = $"https://www.google.com/recaptcha/api/siteverify?secret={secretKey}&response={request.RecaptchaToken}";
+            var isValid = await _captchaValidatorService.ValidateCaptchaAsync(request.RecaptchaToken);
 
-            using var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync(googleVerifyUrl, null);
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var captchaResult = JsonSerializer.Deserialize<CaptchaResponse>(jsonResponse, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            if (captchaResult?.Success == true)
-            {
+            if (isValid)
                 return Ok(new { message = "Captcha verified successfully" });
-            }
-            else
-            {
-                return BadRequest(new { message = "Captcha verification failed" });
-            }
+
+            return BadRequest(new { message = "Captcha verification failed" });
         }
+
 
 
     }

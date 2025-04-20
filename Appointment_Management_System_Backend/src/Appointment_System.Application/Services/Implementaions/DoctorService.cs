@@ -1,59 +1,45 @@
 ﻿using Appointment_System.Application.DTOs.Doctor;
+using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
-using Appointment_System.Domain.Entities;
 
 
 namespace Appointment_System.Application.Services.Implementaions
 {
     public class DoctorService: IDoctorService
     {
-        private readonly IDoctorRepository _doctorRepository;
-      
-        public DoctorService(IDoctorRepository doctorRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public DoctorService(IUnitOfWork unitOfWork)
         {
-            _doctorRepository = doctorRepository;
+            _unitOfWork = unitOfWork;
         }
 
         // Get Dcotor by Id 
         public async Task<DoctorDto?> GetDoctorByIdAsync(string doctorId)
         {
-            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(doctorId);
             return doctor == null ? null : new DoctorDto(doctor);
         }
-
-
 
         // Create Docotor
         public async Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto)
         {
-            return await _doctorRepository.CreateDoctorAsync(dto);
+            return await _unitOfWork.Doctors.CreateDoctorAsync(dto);
         }
-
 
         // Get All Doctors basic Data
         public async Task<List<DoctorsBasicDataDto>> GetAllDoctorsBasicDataAsync()
         {
-            var doctors = await _doctorRepository.GetAllDoctorsBasicDataAsync();
+            var doctors = await _unitOfWork.Doctors.GetAllDoctorsBasicDataAsync();
 
-            return doctors.Select(d => new DoctorsBasicDataDto(
-                Id: d.Id,
-                FullName: d.FullName,
-                Email: d.Email,
-                YearsOfExperience: d.YearsOfExperience,
-                Specialization: d.Specialization,
-                LicenseNumber: d.LicenseNumber,
-                ConsultationFee: d.ConsultationFee,
-                WorkplaceType: d.WorkplaceType,
-                TotalRatingScore: d.TotalRatingScore,
-                TotalRatingsGiven: d.TotalRatingsGiven
-            )).ToList();
+            return doctors.Select(d => new DoctorsBasicDataDto(d)).ToList();
         }
 
         // Get All Doctors
         public async Task<List<DoctorDto>> GetAllDoctorsAsync()
         {
-            var doctors = await _doctorRepository.GetAllDoctorsAsync();
+            var doctors = await _unitOfWork.Doctors.GetAllDoctorsAsync();
 
             return doctors.Select(d => new DoctorDto(d)).ToList();
         }
@@ -61,7 +47,7 @@ namespace Appointment_System.Application.Services.Implementaions
         //Update Doctor
         public async Task<bool> UpdateDoctorAsync(string doctorId, DoctorUpdateDto dto)
         {
-            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(doctorId);
             if (doctor == null)
                 return false;
 
@@ -76,17 +62,17 @@ namespace Appointment_System.Application.Services.Implementaions
             doctor.TotalRatingsGiven = dto.TotalRatingsGiven;
             doctor.TotalRatingScore = dto.TotalRatingScore;
 
-            return await _doctorRepository.UpdateDoctorAsync(doctor);
+            return await _unitOfWork.Doctors.UpdateDoctorAsync(doctor);
         }
 
         // Delete Doctor
         public async Task<bool> DeleteDoctorAsync(string doctorId)
         {
-            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
+            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(doctorId);
             if (doctor == null)
                 return false;
 
-            return await _doctorRepository.DeleteDoctorAsync(doctor);
+            return await _unitOfWork.Doctors.DeleteDoctorAsync(doctor);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
 
@@ -6,15 +7,11 @@ namespace Appointment_System.Application.Services.Implementaions
 {
     public class DoctorQualificationService : IDoctorQualificationService
     {
-        private readonly IDoctorQualificationRepository _repository;
-        private readonly IDoctorRepository _doctorRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DoctorQualificationService(
-            IDoctorQualificationRepository repository,
-            IDoctorRepository doctorRepository)
+        public DoctorQualificationService(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _doctorRepository = doctorRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<DoctorQualificationDto>> GetByDoctorIdAsync(string doctorId)
@@ -22,7 +19,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (string.IsNullOrWhiteSpace(doctorId))
                 throw new ArgumentException("Doctor ID cannot be null or empty");
 
-            var qualifications = await _repository.GetByDoctorIdAsync(doctorId);
+            var qualifications = await _unitOfWork.QualificationRepository.GetByDoctorIdAsync(doctorId);
             return qualifications.Select(q => new DoctorQualificationDto(q)).ToList();
         }
 
@@ -31,7 +28,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (id <= 0)
                 throw new ArgumentException("Invalid ID");
 
-            var qualification = await _repository.GetByIdAsync(id);
+            var qualification = await _unitOfWork.QualificationRepository.GetByIdAsync(id);
             return qualification == null ? null : new DoctorQualificationDto(qualification);
         }
 
@@ -43,7 +40,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (string.IsNullOrWhiteSpace(dto.DoctorId))
                 throw new ArgumentException("Doctor ID is required");
 
-            var doctorExists = await _doctorRepository.GetDoctorByIdAsync(dto.DoctorId);
+            var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(dto.DoctorId);
             if (doctorExists == null)
                 throw new KeyNotFoundException("Doctor not found");
 
@@ -51,7 +48,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 throw new ArgumentOutOfRangeException(nameof(dto.YearEarned), "YearEarned must be between 1900 and the current year.");
 
             var qualification = dto.ToEntity();
-            qualification.Id = await _repository.AddAsync(qualification);
+            qualification.Id = await _unitOfWork.QualificationRepository.AddAsync(qualification);
 
             return new DoctorQualificationDto(qualification);
         }
@@ -64,7 +61,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var qualification = await _repository.GetByIdAsync(id);
+            var qualification = await _unitOfWork.QualificationRepository.GetByIdAsync(id);
             if (qualification == null)
                 throw new KeyNotFoundException("Doctor qualification not found");
 
@@ -72,7 +69,7 @@ namespace Appointment_System.Application.Services.Implementaions
                 throw new ArgumentOutOfRangeException(nameof(dto.YearEarned), "YearEarned must be between 1900 and the current year.");
 
             dto.UpdateEntity(qualification);
-            await _repository.UpdateAsync(qualification);
+            await _unitOfWork.QualificationRepository.UpdateAsync(qualification);
         }
 
         public async Task DeleteAsync(int id)
@@ -80,11 +77,11 @@ namespace Appointment_System.Application.Services.Implementaions
             if (id <= 0)
                 throw new ArgumentException("Invalid ID");
 
-            var qualification = await _repository.GetByIdAsync(id);
+            var qualification = await _unitOfWork.QualificationRepository.GetByIdAsync(id);
             if (qualification == null)
                 throw new KeyNotFoundException("Doctor qualification not found");
 
-            await _repository.DeleteAsync(id);
+            await _unitOfWork.QualificationRepository.DeleteAsync(id);
         }
     }
 

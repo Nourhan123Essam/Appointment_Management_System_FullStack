@@ -7,7 +7,10 @@ namespace Appointment_System.Application.Interfaces
     {
         IDoctorRepository Doctors { get; }
         IPatientRepository Patients { get; }
+        IAuthenticationRepository Authentication { get; }
         IDoctorAvailabilityRepository AvailabilityRepository { get; }
-        IDoctorQualificationRepository doctorQualificationRepository { get; }
+        IDoctorQualificationRepository QualificationRepository { get; }
+
+        Task<int> SaveChangesAsync();
     }
 }

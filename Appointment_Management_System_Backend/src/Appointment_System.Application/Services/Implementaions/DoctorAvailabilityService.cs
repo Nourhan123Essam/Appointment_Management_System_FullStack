@@ -1,4 +1,5 @@
 ﻿using Appointment_System.Application.DTOs.DoctorAvailability;
+using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Services.Interfaces;
 
@@ -7,19 +8,17 @@ namespace Appointment_System.Application.Services.Implementaions
 
     public class DoctorAvailabilityService : IDoctorAvailabilityService
     {
-        private readonly IDoctorAvailabilityRepository _availabilityRepository;
-        private readonly IDoctorRepository _doctorRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DoctorAvailabilityService(IDoctorAvailabilityRepository availabilityRepository, IDoctorRepository doctorRepository)
+        public DoctorAvailabilityService(IUnitOfWork unitOfWork)
         {
-            _availabilityRepository = availabilityRepository;
-            _doctorRepository = doctorRepository;
+           _unitOfWork = unitOfWork;
         }
 
 
         public async Task<DoctorAvailabilityDto?> GetByIdAsync(int id)
         {
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _unitOfWork.AvailabilityRepository.GetByIdAsync(id);
             return availability == null ? null : new DoctorAvailabilityDto(availability);
         }
 
@@ -28,11 +27,11 @@ namespace Appointment_System.Application.Services.Implementaions
             if (string.IsNullOrWhiteSpace(doctorId))
                 throw new ArgumentNullException(nameof(doctorId), "DoctorId cannot be null or empty.");
 
-            var doctorExists = await _doctorRepository.GetDoctorByIdAsync(doctorId) != null;
+            var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(doctorId) != null;
             if (!doctorExists)
                 throw new KeyNotFoundException($"Doctor with ID {doctorId} does not exist.");
 
-            var availabilities = await _availabilityRepository.GetByDoctorIdAsync(doctorId);
+            var availabilities = await _unitOfWork.AvailabilityRepository.GetByDoctorIdAsync(doctorId);
             return availabilities.Select(a => new DoctorAvailabilityDto(a));
         }
 
@@ -44,7 +43,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (string.IsNullOrWhiteSpace(dto.DoctorId))
                 throw new ArgumentException("DoctorId is required.", nameof(dto.DoctorId));
 
-            var doctorExists = await _doctorRepository.GetDoctorByIdAsync(dto.DoctorId) != null;
+            var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(dto.DoctorId) != null;
             if (!doctorExists)
                 throw new KeyNotFoundException($"Doctor with ID {dto.DoctorId} does not exist.");
 
@@ -54,17 +53,17 @@ namespace Appointment_System.Application.Services.Implementaions
 
             var availability = dto.ToEntity();
 
-            availability.Id = await _availabilityRepository.AddAsync(availability);
+            availability.Id = await _unitOfWork.AvailabilityRepository.AddAsync(availability);
             return new DoctorAvailabilityDto(availability);
         }
 
         public async Task DeleteAsync(int id)
         {
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _unitOfWork.AvailabilityRepository.GetByIdAsync(id);
             if (availability == null)
                 throw new KeyNotFoundException($"Doctor availability with ID {id} not found.");
 
-            await _availabilityRepository.DeleteAsync(id);
+            await _unitOfWork.AvailabilityRepository.DeleteAsync(id);
         }
 
         public async Task UpdateAsync(int id, UpdateDoctorAvailabilityDto dto)
@@ -75,7 +74,7 @@ namespace Appointment_System.Application.Services.Implementaions
             if (dto.StartTime >= dto.EndTime)
                 throw new ArgumentException("StartTime must be earlier than EndTime");
 
-            var availability = await _availabilityRepository.GetByIdAsync(id);
+            var availability = await _unitOfWork.AvailabilityRepository.GetByIdAsync(id);
             if (availability == null)
                 throw new KeyNotFoundException("Doctor availability not found.");
 
@@ -83,7 +82,7 @@ namespace Appointment_System.Application.Services.Implementaions
             availability.StartTime = dto.StartTime;
             availability.EndTime = dto.EndTime;
 
-            await _availabilityRepository.UpdateAsync(availability);
+            await _unitOfWork.AvailabilityRepository.UpdateAsync(availability);
         }
     }
 

@@ -9,44 +9,52 @@ using Appointment_System.Domain.Enums;
 
 public class ExceptionHandlingMiddleware : IMiddleware
 {
-    public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly IWebHostEnvironment _env;
+
+    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger, IWebHostEnvironment env)
+    {
+        _logger = logger;
+        _env = env;
+    }
+
+    // Logs and handles unhandled exceptions globally.
+    // Logs the error via Serilog for developer diagnostics.
+    // Responds with safe structured JSON message to clients.
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         try
         {
-            await next(httpContext);
+            await next(context);
         }
         catch (Exception ex)
         {
-            await HandleException(httpContext, ex);
+            _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
+            await HandleException(context, ex);
         }
     }
 
     private Task HandleException(HttpContext context, Exception ex)
     {
-        var statusCode = HttpStatusCode.InternalServerError;
-
-        if (ex is ArgumentNullException)
-            statusCode = HttpStatusCode.BadRequest;
-        else if (ex is ArgumentException)
-            statusCode = HttpStatusCode.BadRequest;
-        else if (ex is KeyNotFoundException)
-            statusCode = HttpStatusCode.NotFound;
-        else if (ex is ArgumentOutOfRangeException)
-            statusCode = HttpStatusCode.BadRequest; 
+        var statusCode = ex switch
+        {
+            ArgumentException or ArgumentNullException or ArgumentOutOfRangeException => HttpStatusCode.BadRequest,
+            KeyNotFoundException => HttpStatusCode.NotFound,
+            _ => HttpStatusCode.InternalServerError
+        };
 
         context.Response.StatusCode = (int)statusCode;
-        context.Response.ContentType = "application/json";
+        //context.Response.ContentType = "application/json";
 
         var response = new ResponseBase<object>(
             (int)statusCode,
-            ex.Message,
+            _env.IsDevelopment() ? ex.Message : "Something went wrong.",
             ResponseStatus.ERROR.ToString(),
-            ex.InnerException?.Message
+            _env.IsDevelopment() ? ex.InnerException?.Message : null
         );
 
         var json = JsonConvert.SerializeObject(response);
         return context.Response.WriteAsync(json);
     }
-
-
 }
+
