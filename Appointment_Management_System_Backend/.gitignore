@@ -2,3 +2,7 @@
 .vs/
 bin/
 obj/
+
+# Ignore log files/folder
+logs/  
+*.logs

@@ -1,8 +1,9 @@
 ﻿using Appointment_System.Application.DTOs.Appointment;
 using Appointment_System.Application.DTOs.Patient;
-using Appointment_System.Application.Services.Interfaces;
+using Appointment_System.Application.Features.Patient.Commands;
+using Appointment_System.Application.Features.Patient.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointment_System.Presentation.Controllers
@@ -12,18 +13,18 @@ namespace Appointment_System.Presentation.Controllers
     [Authorize(Roles = "Admin")] // Default: Admin only
     public class PatientController : ControllerBase
     {
-        private readonly IPatientService _patientService;
+        private readonly IMediator _mediator;
 
-        public PatientController(IPatientService patientService)
+        public PatientController(IMediator mediator)
         {
-            _patientService = patientService;
+            _mediator = mediator;
         }
 
         // GET: api/patient
         [HttpGet]
         public async Task<ActionResult<PagedResult<PatientDto>>> GetPatients([FromQuery] PatientQueryParams queryParams)
         {
-            var result = await _patientService.GetPatientsAsync(queryParams);
+            var result = await _mediator.Send(new GetPatientsQuery(queryParams));
             return Ok(result);
         }
 
@@ -31,17 +32,16 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PatientDto>> GetPatientById(string id)
         {
-            var patient = await _patientService.GetPatientByIdAsync(id);
-            if (patient == null) return NotFound();
-            return Ok(patient);
+            var result = await _mediator.Send(new GetPatientByIdQuery(id));
+            return result == null ? NotFound() : Ok(result);
         }
 
         // DELETE: api/patient/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePatient(string id)
         {
-            await _patientService.DeletePatientAsync(id);
-            return NoContent();
+            var success = await _mediator.Send(new DeletePatientCommand(id));
+            return success ? NoContent() : NotFound();
         }
 
         // GET: api/patient/{id}/appointments
@@ -49,7 +49,7 @@ namespace Appointment_System.Presentation.Controllers
         [Authorize(Roles = "Admin,Doctor")] // Allow Doctor & Admin
         public async Task<ActionResult<List<AppointmentDto>>> GetPatientAppointments(string id)
         {
-            var appointments = await _patientService.GetPatientAppointmentsAsync(id);
+            var appointments = await _mediator.Send(new GetPatientAppointmentsQuery(id));
             return Ok(appointments);
         }
     }

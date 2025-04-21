@@ -1,9 +1,8 @@
-using Appointment_System.Application.Services.Implementaions;
-using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Infrastructure;
 using Appointment_System.Infrastructure.Data;
 using Appointment_System.Presentation.Middlewares;
 using Serilog;
+using Appointment_System.Application;
 
 
 // Configure Serilog
@@ -20,15 +19,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Application layer services
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddScoped<IDoctorAvailabilityService, DoctorAvailabilityService>();
-builder.Services.AddScoped<IDoctorQualificationService, DoctorQualificationService>();
-builder.Services.AddScoped<IDoctorService, DoctorService>();
-builder.Services.AddScoped<IPatientService, PatientService>();
-
 // Cleanly register infrastructure layer services
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// Cleanly register application layer services
+builder.Services.AddApplicationServices();
 
 // Add Serilog to the DI container and configure it as the logging provider
 builder.Host.UseSerilog();

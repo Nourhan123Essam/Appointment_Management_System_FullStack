@@ -6,6 +6,12 @@ using System;
 using Appointment_System.Domain.Responses;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Appointment_System.Domain.Enums;
+using System.Net.Http;
+using System.Threading;
+using System.ComponentModel.DataAnnotations;
+using FluentValidation;
+using ValidationException = FluentValidation.ValidationException;
+
 
 public class ExceptionHandlingMiddleware : IMiddleware
 {
@@ -36,6 +42,23 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
     private Task HandleException(HttpContext context, Exception ex)
     {
+        context.Response.ContentType = "application/json";
+
+        if (ex is ValidationException validationException)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+            var res = new ResponseBase<object>(
+                StatusCodes.Status400BadRequest,
+                "Validation failed.",
+                ResponseStatus.ERROR.ToString(),
+                validationException.Message // This will be a validation failure message
+            );
+
+            var json2 = JsonConvert.SerializeObject(res);
+            return context.Response.WriteAsync(json2);
+        }
+
         var statusCode = ex switch
         {
             ArgumentException or ArgumentNullException or ArgumentOutOfRangeException => HttpStatusCode.BadRequest,

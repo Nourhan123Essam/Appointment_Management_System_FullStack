@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces.Services;
-using Appointment_System.Application.Services.Implementaions;
-using Appointment_System.Application.Services.Interfaces;
 using Appointment_System.Infrastructure.Data;
 using Appointment_System.Infrastructure.Repositories;
 using Appointment_System.Infrastructure.Services;

@@ -1,16 +1,12 @@
 ﻿using NUnit.Framework;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Appointment_System.Application.DTOs.DoctorQualification;
-using Appointment_System.Application.DTOs.Doctor;
-using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
 using System.Numerics;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces;
+using Appointment_System.Application.Features.DoctorQualifications.Queries;
+using Appointment_System.Application.Features.DoctorQualifications.Commands;
 
 namespace Appointment_System.Application.Tests
 {
@@ -21,7 +17,6 @@ namespace Appointment_System.Application.Tests
         private Mock<IDoctorQualificationRepository> _mockRepo;
         private Mock<IDoctorRepository> _mockDoctorRepo;
         private Mock<IUnitOfWork> _mockUnitOfWork;
-        private DoctorQualificationService _service;
 
         [SetUp]
         public void Setup()
@@ -33,8 +28,6 @@ namespace Appointment_System.Application.Tests
             // Set up the UnitOfWork to return the mocked repositories
             _mockUnitOfWork.Setup(u => u.QualificationRepository).Returns(_mockRepo.Object);
             _mockUnitOfWork.Setup(u => u.Doctors).Returns(_mockDoctorRepo.Object);
-
-            _service = new DoctorQualificationService(_mockUnitOfWork.Object);
         }
 
 
@@ -43,7 +36,9 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void GetByDoctorIdAsync_WithNullId_ThrowsArgumentException()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _service.GetByDoctorIdAsync(null));
+            var handler = new GetDoctorQualificationsByDoctorIdHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentException>(() => 
+                handler.Handle(new GetDoctorQualificationsByDoctorIdQuery(null), CancellationToken.None));
         }
 
         [Test]
@@ -55,7 +50,8 @@ namespace Appointment_System.Application.Tests
                 new DoctorQualification { Id = 1, QualificationName = "MBBS", DoctorId = doctorId }
             });
 
-            var result = await _service.GetByDoctorIdAsync(doctorId);
+            var handler = new GetDoctorQualificationsByDoctorIdHandler(_mockUnitOfWork.Object);
+            var result = await handler.Handle(new GetDoctorQualificationsByDoctorIdQuery(doctorId), CancellationToken.None);
             Assert.That(result.Count, Is.EqualTo(1));
         }
         //***********************************************************************
@@ -64,14 +60,17 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void GetByIdAsync_WithInvalidId_ThrowsArgumentException()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _service.GetByIdAsync(0));
+            var handler = new GetDoctorQualificationByIdHandler(_mockUnitOfWork.Object);                                                                
+            Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(new GetDoctorQualificationByIdQuery(0), CancellationToken.None));
         }
 
         [Test]
         public async Task GetByIdAsync_ReturnsNull_WhenNotFound()
         {
             _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((DoctorQualification)null);
-            var result = await _service.GetByIdAsync(1);
+
+            var handler = new GetDoctorQualificationByIdHandler(_mockUnitOfWork.Object);
+            var result = await handler.Handle(new GetDoctorQualificationByIdQuery(1), CancellationToken.None);
             Assert.That(result, Is.Null);
         }
         //************************************************************************
@@ -93,7 +92,8 @@ namespace Appointment_System.Application.Tests
             _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new User());
             _mockRepo.Setup(r => r.AddAsync(It.IsAny<DoctorQualification>())).ReturnsAsync(1);
 
-            var result = await _service.AddAsync(dto);
+            var handler = new CreateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            var result = await handler.Handle(new CreateDoctorQualificationCommand(dto), CancellationToken.None);
 
             Assert.That(result.Id, Is.EqualTo(1));
             Assert.That(result.QualificationName, Is.EqualTo(dto.QualificationName));
@@ -102,7 +102,9 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void AddAsync_WithNullDto_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.AddAsync(null));
+            var handler = new CreateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() => 
+                handler.Handle(new CreateDoctorQualificationCommand(null), CancellationToken.None));
         }
 
         [Test]
@@ -111,7 +113,9 @@ namespace Appointment_System.Application.Tests
             var dto = new CreateDoctorQualificationDto { DoctorId = "x" };
             _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync((User)null);
 
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.AddAsync(dto));
+            var handler = new CreateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() => 
+                handler.Handle(new CreateDoctorQualificationCommand(dto), CancellationToken.None));
         }
 
         [Test]
@@ -127,7 +131,9 @@ namespace Appointment_System.Application.Tests
             // Mock the doctor repository to return true (simulate doctor exists)
             _mockDoctorRepo.Setup(d => d.GetDoctorByIdAsync(dto.DoctorId)).ReturnsAsync(new User());
 
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _service.AddAsync(dto));
+            var handler = new CreateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => 
+                handler.Handle(new CreateDoctorQualificationCommand(dto), CancellationToken.None));
         }
 
         //************************************************************************
@@ -136,20 +142,30 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void UpdateAsync_WithInvalidId_ThrowsArgumentException()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateAsync(0, new UpdateDoctorQualificationDto()));
+            var handler = new UpdateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentException>(() => 
+                handler.Handle(new UpdateDoctorQualificationCommand(0, new UpdateDoctorQualificationDto()), 
+                    CancellationToken.None));
         }
 
         [Test]
         public void UpdateAsync_WithNullDto_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.UpdateAsync(1, null));
+            var handler = new UpdateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() => 
+                handler.Handle(new UpdateDoctorQualificationCommand(1, null),
+                    CancellationToken.None));
         }
 
         [Test]
         public void UpdateAsync_WhenNotFound_ThrowsKeyNotFoundException()
         {
             _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((DoctorQualification)null);
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.UpdateAsync(1, new UpdateDoctorQualificationDto()));
+
+            var handler = new UpdateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                handler.Handle(new UpdateDoctorQualificationCommand(1, new UpdateDoctorQualificationDto()),
+                    CancellationToken.None));
         }
 
         [Test]
@@ -166,7 +182,9 @@ namespace Appointment_System.Application.Tests
                 YearEarned = 2022
             };
 
-            await _service.UpdateAsync(1, dto);
+            var handler = new UpdateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            await handler.Handle(new UpdateDoctorQualificationCommand(1, dto),
+                    CancellationToken.None);
             Assert.That(existing.QualificationName, Is.EqualTo("New"));
         }
 
@@ -187,7 +205,10 @@ namespace Appointment_System.Application.Tests
                 QualificationName = "Old"
             });
 
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _service.UpdateAsync(1, dto));
+            var handler = new UpdateDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+                handler.Handle(new UpdateDoctorQualificationCommand(1, dto),
+                    CancellationToken.None));
         }
 
         //************************************************************************
@@ -196,14 +217,19 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void DeleteAsync_WithInvalidId_ThrowsArgumentException()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _service.DeleteAsync(0));
+            var handler = new DeleteDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<ArgumentException>(() => 
+                handler.Handle(new DeleteDoctorQualificationCommand(0), CancellationToken.None));
         }
 
         [Test]
         public void DeleteAsync_WhenNotFound_ThrowsKeyNotFoundException()
         {
             _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((DoctorQualification)null);
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.DeleteAsync(1));
+
+            var handler = new DeleteDoctorQualificationHandler(_mockUnitOfWork.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                handler.Handle(new DeleteDoctorQualificationCommand(1), CancellationToken.None));
         }
 
         [Test]
@@ -212,7 +238,8 @@ namespace Appointment_System.Application.Tests
             _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(new DoctorQualification { Id = 1 });
             _mockRepo.Setup(r => r.DeleteAsync(1)).Returns(Task.CompletedTask);
 
-            await _service.DeleteAsync(1);
+            var handler = new DeleteDoctorQualificationHandler(_mockUnitOfWork.Object);
+            await handler.Handle(new DeleteDoctorQualificationCommand(1), CancellationToken.None);
             Assert.Pass();
         }
     }

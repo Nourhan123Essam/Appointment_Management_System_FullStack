@@ -1,11 +1,11 @@
 ﻿using NUnit.Framework;
 using Moq;
 using Appointment_System.Application.DTOs.DoctorAvailability;
-using Appointment_System.Application.Services.Implementaions;
 using Appointment_System.Domain.Entities;
-using System.Numerics;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces;
+using Appointment_System.Application.Features.DoctorAvailabilities.Commands;
+using Appointment_System.Application.Features.DoctorAvailabilities.Queries;
 
 namespace Appointment_System.Application.Tests
 {
@@ -15,7 +15,6 @@ namespace Appointment_System.Application.Tests
         private Mock<IDoctorAvailabilityRepository> _availabilityRepoMock;
         private Mock<IDoctorRepository> _doctorRepoMock;
         private Mock<IUnitOfWork> _unitOfWorkMock;
-        private DoctorAvailabilityService _service;
 
         [SetUp]
         public void Setup()
@@ -27,8 +26,6 @@ namespace Appointment_System.Application.Tests
             // Setup the unit of work to return the mocked repositories
             _unitOfWorkMock.Setup(u => u.AvailabilityRepository).Returns(_availabilityRepoMock.Object);
             _unitOfWorkMock.Setup(u => u.Doctors).Returns(_doctorRepoMock.Object);
-
-            _service = new DoctorAvailabilityService(_unitOfWorkMock.Object);
         }
 
 
@@ -38,7 +35,9 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void AddAsync_NullDto_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.AddAsync(null));
+            var hadler = new CreateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() => 
+                hadler.Handle(new CreateDoctorAvailabilityCommand(null), CancellationToken.None));
         }
 
         [Test]
@@ -52,7 +51,9 @@ namespace Appointment_System.Application.Tests
                 DayOfWeek = DayOfWeek.Monday
             };
 
-            Assert.ThrowsAsync<ArgumentException>(() => _service.AddAsync(dto));
+            var hadler = new CreateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentException>(() => 
+                hadler.Handle(new CreateDoctorAvailabilityCommand(dto), CancellationToken.None));
         }
 
         [Test]
@@ -68,7 +69,9 @@ namespace Appointment_System.Application.Tests
 
             _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new User());
 
-            Assert.ThrowsAsync<ArgumentException>(() => _service.AddAsync(dto));
+            var hadler = new CreateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentException>(() => 
+                hadler.Handle(new CreateDoctorAvailabilityCommand(dto), CancellationToken.None));
         }
 
         [Test]
@@ -84,7 +87,9 @@ namespace Appointment_System.Application.Tests
 
             _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("notfound")).ReturnsAsync((User)null);
 
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.AddAsync(dto));
+            var hadler = new CreateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() => 
+                hadler.Handle(new CreateDoctorAvailabilityCommand(dto), CancellationToken.None));
         }
 
         [Test]
@@ -110,7 +115,8 @@ namespace Appointment_System.Application.Tests
             _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync("doc1")).ReturnsAsync(new User());
             _availabilityRepoMock.Setup(r => r.AddAsync(It.IsAny<DoctorAvailability>())).ReturnsAsync(1);
 
-            var result = await _service.AddAsync(dto);
+            var hadler = new CreateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            var result = await hadler.Handle(new CreateDoctorAvailabilityCommand(dto), CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
@@ -135,7 +141,8 @@ namespace Appointment_System.Application.Tests
 
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(availability);
 
-            var result = await _service.GetByIdAsync(1);
+            var handler = new GetDoctorAvailabilityByIdHandler(_unitOfWorkMock.Object);
+            var result = await handler.Handle(new GetDoctorAvailabilityByIdQuery(1), CancellationToken.None);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Id, Is.EqualTo(1));
@@ -146,7 +153,8 @@ namespace Appointment_System.Application.Tests
         {
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((DoctorAvailability)null);
 
-            var result = await _service.GetByIdAsync(1);
+            var handler = new GetDoctorAvailabilityByIdHandler(_unitOfWorkMock.Object);
+            var result = await handler.Handle(new GetDoctorAvailabilityByIdQuery(1), CancellationToken.None);
 
             Assert.That(result, Is.Null);
         }
@@ -157,13 +165,17 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void GetByDoctorIdAsync_ShouldThrow_WhenDoctorIdIsNull()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.GetByDoctorIdAsync(null));
+            var handler = new GetDoctorAvailabilitiesByDoctorIdHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() => 
+                handler.Handle(new GetDoctorAvailabilitiesByDoctorIdQuery(null), CancellationToken.None));
         }
 
         [Test]
         public void GetByDoctorIdAsync_ShouldThrow_WhenDoctorIdIsEmpty()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.GetByDoctorIdAsync(" "));
+            var handler = new GetDoctorAvailabilitiesByDoctorIdHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                handler.Handle(new GetDoctorAvailabilitiesByDoctorIdQuery(" "), CancellationToken.None));
         }
         [Test]
         public async Task GetByDoctorIdAsync_ExistingDoctorId_ReturnsListOfDtos()
@@ -191,7 +203,8 @@ namespace Appointment_System.Application.Tests
             _doctorRepoMock.Setup(r => r.GetDoctorByIdAsync(doctorId)).ReturnsAsync(new User { Id = doctorId });
             _availabilityRepoMock.Setup(r => r.GetByDoctorIdAsync(doctorId)).ReturnsAsync(availabilitys);
 
-            var result = await _service.GetByDoctorIdAsync(doctorId);
+            var handler = new GetDoctorAvailabilitiesByDoctorIdHandler(_unitOfWorkMock.Object);
+            var result = await handler.Handle(new GetDoctorAvailabilitiesByDoctorIdQuery(doctorId), CancellationToken.None);
             Assert.That(result.Count, Is.EqualTo(2));
         }
         #endregion
@@ -203,7 +216,9 @@ namespace Appointment_System.Application.Tests
         {
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((DoctorAvailability)null);
 
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.DeleteAsync(1));
+            var handler = new DeleteDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() => 
+                handler.Handle(new DeleteDoctorAvailabilityCommand(1), CancellationToken.None));
         }
 
         [Test]
@@ -211,7 +226,8 @@ namespace Appointment_System.Application.Tests
         {
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(new DoctorAvailability());
 
-            await _service.DeleteAsync(1);
+            var handler = new DeleteDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            await handler.Handle(new DeleteDoctorAvailabilityCommand(1), CancellationToken.None);
 
             _availabilityRepoMock.Verify(r => r.DeleteAsync(1), Times.Once);
         }
@@ -222,7 +238,9 @@ namespace Appointment_System.Application.Tests
         [Test]
         public void UpdateAsync_ShouldThrow_WhenDtoIsNull()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _service.UpdateAsync(1, null));
+            var handler = new UpdateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentNullException>(() => 
+                handler.Handle(new UpdateDoctorAvailabilityCommand(1, null), CancellationToken.None));
         }
 
         [Test]
@@ -234,7 +252,9 @@ namespace Appointment_System.Application.Tests
                 EndTime = TimeSpan.FromHours(9)
             };
 
-            Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateAsync(1, dto));
+            var handler = new UpdateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                handler.Handle(new UpdateDoctorAvailabilityCommand(1, dto), CancellationToken.None));
         }
 
         [Test]
@@ -248,7 +268,9 @@ namespace Appointment_System.Application.Tests
 
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync((DoctorAvailability)null);
 
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _service.UpdateAsync(1, dto));
+            var handler = new UpdateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            Assert.ThrowsAsync<KeyNotFoundException>(() =>
+                handler.Handle(new UpdateDoctorAvailabilityCommand(1, dto), CancellationToken.None));
         }
 
         [Test]
@@ -265,7 +287,8 @@ namespace Appointment_System.Application.Tests
 
             _availabilityRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(availability);
 
-            await _service.UpdateAsync(1, dto);
+            var handler = new UpdateDoctorAvailabilityCommandHandler(_unitOfWorkMock.Object);
+            await handler.Handle(new UpdateDoctorAvailabilityCommand(1, dto), CancellationToken.None);
 
             _availabilityRepoMock.Verify(r => r.UpdateAsync(It.IsAny<DoctorAvailability>()), Times.Once);
         }

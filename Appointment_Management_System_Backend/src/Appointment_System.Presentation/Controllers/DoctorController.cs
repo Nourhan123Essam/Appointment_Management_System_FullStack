@@ -1,11 +1,15 @@
 ﻿using Appointment_System.Application.DTOs.Doctor;
 using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
-using Appointment_System.Application.Services.Implementaions;
-using Appointment_System.Application.Services.Interfaces;
+using Appointment_System.Application.Features.Doctor.Commands;
+using Appointment_System.Application.Features.Doctor.Queries;
+using Appointment_System.Application.Features.DoctorAvailabilities.Commands;
+using Appointment_System.Application.Features.DoctorAvailabilities.Queries;
+using Appointment_System.Application.Features.DoctorQualifications.Commands;
+using Appointment_System.Application.Features.DoctorQualifications.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Appointment_System.Presentation.Controllers
@@ -15,15 +19,11 @@ namespace Appointment_System.Presentation.Controllers
     [ApiController]
     public class DoctorController : ControllerBase
     {
-        private readonly IDoctorAvailabilityService _service;
-        private readonly IDoctorQualificationService _qualification_service;
-        private readonly IDoctorService _doctorService;
+        private readonly IMediator _mediator;
 
-        public DoctorController(IDoctorAvailabilityService service, IDoctorQualificationService qualification_service, IDoctorService doctorService)
+        public DoctorController(IMediator mediator)
         {
-            _service = service;
-            _qualification_service  = qualification_service;
-            _doctorService = doctorService;
+            _mediator = mediator;
         }
 
         //////////////////////////////// 1 ///////////////////////////////////////
@@ -33,7 +33,7 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(string id)
         {
-            var doctor = await _doctorService.GetDoctorByIdAsync(id);
+            var doctor = await _mediator.Send(new GetDoctorByIdQuery(id));
             if (doctor == null)
                 return NotFound($"Doctor with ID {id} not found.");
 
@@ -45,7 +45,8 @@ namespace Appointment_System.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDoctor([FromBody]DoctorCreateDto doctorDto)
         {
-            var doctor = await _doctorService.CreateDoctorAsync(doctorDto);
+            var doctor = await _mediator.Send(new CreateDoctorCommand(doctorDto));
+
             if (doctor == null)
                 return BadRequest("Failed to create doctor.");
 
@@ -55,14 +56,14 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("doctorsBasicData")]
         public async Task<IActionResult> GetAllDoctorsBasicData()
         {
-            var doctors = await _doctorService.GetAllDoctorsBasicDataAsync();
+            var doctors = await _mediator.Send(new GetAllDoctorsBasicDataQuery());
             return Ok(doctors);
         }
 
         [HttpGet("doctors")]
         public async Task<IActionResult> GetAllDoctors()
         {
-            var doctors = await _doctorService.GetAllDoctorsAsync();
+            var doctors = await _mediator.Send(new GetAllDoctorsQuery());   
             return Ok(doctors);
         }
 
@@ -70,7 +71,7 @@ namespace Appointment_System.Presentation.Controllers
         [HttpPut("{doctorId}")]
         public async Task<IActionResult> UpdateDoctor(string doctorId, [FromBody] DoctorUpdateDto dto)
         {
-            var updated = await _doctorService.UpdateDoctorAsync(doctorId, dto);
+            var updated = await _mediator.Send(new UpdateDoctorCommand(doctorId, dto));   
 
             if (!updated)
                 return NotFound("Doctor not found.");
@@ -82,7 +83,7 @@ namespace Appointment_System.Presentation.Controllers
         [HttpDelete("{doctorId}")]
         public async Task<IActionResult> DeleteDoctor(string doctorId)
         {
-            var deleted = await _doctorService.DeleteDoctorAsync(doctorId);
+            var deleted = await _mediator.Send(new DeleteDoctorCommand(doctorId));                                                                       
 
             if (!deleted)
                 return NotFound("Doctor not found.");
@@ -100,31 +101,34 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("GetQualificationByDoctorId")]
         public async Task<ActionResult<List<DoctorQualificationDto>>> GetQualificationByDoctorId(string doctorId)
         {
-            var qualifications = await _qualification_service.GetByDoctorIdAsync(doctorId);
-            return Ok(qualifications);
+            var result = await _mediator.Send(new GetDoctorQualificationsByDoctorIdQuery(doctorId));
+            return Ok(result);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("GetQualificationById/{id}")]
         public async Task<ActionResult<DoctorQualificationDto>> GetQualificationById(int id)
         {
-            var qualification = await _qualification_service.GetByIdAsync(id);
-            return Ok(qualification);
+            var result = await _mediator.Send(new GetDoctorQualificationByIdQuery(id));
+            if (result == null)
+                return NotFound("Qualification not found");
+
+            return Ok(result);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateQualification")]
         public async Task<IActionResult> CreateQualification(CreateDoctorQualificationDto dto)
         {
-            var newQualification = await _qualification_service.AddAsync(dto);
-            return CreatedAtAction(nameof(GetQualificationByDoctorId), new { doctorId = dto.DoctorId }, newQualification);
+            var result = await _mediator.Send(new CreateDoctorQualificationCommand(dto));
+            return CreatedAtAction(nameof(GetQualificationByDoctorId), new { doctorId = result.DoctorId }, result);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateQualification/{id}")]
         public async Task<IActionResult> UpdateQualification(int id, UpdateDoctorQualificationDto dto)
         {
-            await _qualification_service.UpdateAsync(id, dto);
+            await _mediator.Send(new UpdateDoctorQualificationCommand(id, dto));
             return NoContent();
         }
 
@@ -132,8 +136,8 @@ namespace Appointment_System.Presentation.Controllers
         [HttpDelete("DeleteQualification/{id}")]
         public async Task<IActionResult> DeleteQualification(int id)
         {
-            await _qualification_service.DeleteAsync(id);
-            return NoContent();
+            await _mediator.Send(new DeleteDoctorQualificationCommand(id));
+            return NoContent(); // 204 No Content as confirmation of deletion
         }
         #endregion
         //////////////////////////////// 3 ///////////////////////////////////////
@@ -143,7 +147,11 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("GetAvailabilityById/{id}")]
         public async Task<ActionResult<DoctorAvailabilityDto>> GetAvailabilityById(int id)
         {
-            var availability = await _service.GetByIdAsync(id);
+            var availability = await _mediator.Send(new GetDoctorAvailabilityByIdQuery(id));
+
+            if (availability == null)
+                return NotFound("Doctor availability not found.");
+
             return Ok(availability);
         }
 
@@ -151,31 +159,42 @@ namespace Appointment_System.Presentation.Controllers
         [HttpGet("GetAvailabilityByDoctorId/{doctorId}")]
         public async Task<ActionResult<IEnumerable<DoctorAvailabilityDto>>> GetAvailabilityByDoctorId(string doctorId)
         {
-            return Ok(await _service.GetByDoctorIdAsync(doctorId));
+            var availabilities = await _mediator.Send(new GetDoctorAvailabilitiesByDoctorIdQuery(doctorId));
+            return Ok(availabilities);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("CreateAvailability")]
         public async Task<IActionResult> CreateAvailability(CreateDoctorAvailabilityDto dto)
         {
-            var newAvailability = await _service.AddAsync(dto);
-            return CreatedAtAction(nameof(GetAvailabilityByDoctorId), new { doctorId = dto.DoctorId }, newAvailability);
+            var availabilityDto = await _mediator.Send(new CreateDoctorAvailabilityCommand(dto));
+            return CreatedAtAction(nameof(GetAvailabilityByDoctorId), new { doctorId = availabilityDto.DoctorId }, availabilityDto);
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut("UpdateAvailability/{id}")]
         public async Task<IActionResult> UpdateAvailability(int id, UpdateDoctorAvailabilityDto dto)
         {
-            await _service.UpdateAsync(id, dto);
-            return Ok(new { message = "Updated Successfully!"});
+            var result = await _mediator.Send(new UpdateDoctorAvailabilityCommand(id, dto));
+
+            if (result)
+            {
+                return Ok(new { message = "Updated Successfully!" });
+            }
+
+            return NotFound("Doctor availability not found.");
         }
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteAvailability/{id}")]
         public async Task<IActionResult> DeleteAvailability(int id)
         {
-            await _service.DeleteAsync(id);
-            return Ok(new { message = "Deleted Successfully!" });
+            var result = await _mediator.Send(new DeleteDoctorAvailabilityCommand(id));
+            if (result)
+            {
+                return Ok(new { message = "Deleted Successfully!" });
+            }
+            return NotFound("Doctor availability not found.");
         }
         #endregion
     }

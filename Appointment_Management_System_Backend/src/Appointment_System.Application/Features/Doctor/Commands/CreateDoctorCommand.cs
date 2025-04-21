@@ -1,0 +1,108 @@
+﻿using Appointment_System.Application.DTOs.Doctor;
+using Appointment_System.Application.DTOs.DoctorAvailability;
+using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Application.Interfaces;
+using FluentValidation;
+using MediatR;
+
+namespace Appointment_System.Application.Features.Doctor.Commands
+{
+    //Command
+    public record CreateDoctorCommand(DoctorCreateDto Dto) : IRequest<DoctorDto>;
+
+    //Handler
+    public class CreateDoctorHandler : IRequestHandler<CreateDoctorCommand, DoctorDto>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CreateDoctorHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<DoctorDto> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
+        {
+            if (request.Dto == null)
+                throw new ArgumentNullException(nameof(request.Dto), "Doctor data must be provided.");
+
+            return await _unitOfWork.Doctors.CreateDoctorAsync(request.Dto);
+        }
+    }
+
+
+    // Doctor validator
+    public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorCommand>
+    {
+        public CreateDoctorCommandValidator()
+        {
+            RuleFor(x => x.Dto).NotNull().WithMessage("Doctor information is required.");
+
+            When(x => x.Dto != null, () =>
+            {
+                RuleFor(x => x.Dto.FullName)
+                    .NotEmpty().WithMessage("Full name is required.")
+                    .MaximumLength(100);
+
+                RuleFor(x => x.Dto.Email)
+                    .NotEmpty().WithMessage("Email is required.")
+                    .EmailAddress().WithMessage("Email is not valid.");
+
+                RuleFor(x => x.Dto.Password)
+                    .NotEmpty().WithMessage("Password is required.")
+                    .MinimumLength(6).WithMessage("Password must be at least 6 characters.");
+
+                RuleFor(x => x.Dto.YearsOfExperience)
+                    .GreaterThanOrEqualTo(0).WithMessage("Years of experience must be non-negative.");
+
+                RuleFor(x => x.Dto.Specialization)
+                    .NotEmpty().WithMessage("Specialization is required.");
+
+                RuleFor(x => x.Dto.LicenseNumber)
+                    .NotEmpty().WithMessage("License number is required.");
+
+                RuleFor(x => x.Dto.ConsultationFee)
+                    .GreaterThanOrEqualTo(0).WithMessage("Consultation fee must be non-negative.");
+
+                RuleForEach(x => x.Dto.Availabilities)
+                    .SetValidator(new DoctorAvailabilityDtoValidator());
+
+                RuleForEach(x => x.Dto.Qualifications)
+                    .SetValidator(new DoctorQualificationDtoValidator());
+            });
+        }
+    }
+
+
+    //availability validator
+    public class DoctorAvailabilityDtoValidator : AbstractValidator<DoctorAvailabilityDto>
+    {
+        public DoctorAvailabilityDtoValidator()
+        {
+            RuleFor(x => x.DayOfWeek)
+                .IsInEnum().WithMessage("Invalid day of the week.");
+
+            RuleFor(x => x.StartTime)
+                .LessThan(x => x.EndTime)
+                .WithMessage("Start time must be before end time.");
+        }
+    }
+
+    //qualification validator
+    public class DoctorQualificationDtoValidator : AbstractValidator<DoctorQualificationDto>
+    {
+        public DoctorQualificationDtoValidator()
+        {
+            RuleFor(x => x.QualificationName)
+                .NotEmpty().WithMessage("Qualification name is required.");
+
+            RuleFor(x => x.IssuingInstitution)
+                .NotEmpty().WithMessage("Institution is required.");
+
+            RuleFor(x => x.YearEarned)
+                .InclusiveBetween(1950, DateTime.Now.Year)
+                .WithMessage("Year must be between 1950 and current year.");
+        }
+    }
+
+
+}
