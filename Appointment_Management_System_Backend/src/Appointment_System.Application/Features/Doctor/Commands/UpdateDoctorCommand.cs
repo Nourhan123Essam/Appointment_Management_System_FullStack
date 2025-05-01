@@ -30,10 +30,9 @@ namespace Appointment_System.Application.Features.Doctor.Commands
 
         public async Task<bool> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
         {
-            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(request.DoctorId);
-            if (doctor == null)
-                return false;
+            var doctor = new Domain.Entities.User();
 
+            doctor.Id = request.DoctorId;
             doctor.FullName = request.Dto.FullName;
             doctor.Email = request.Dto.Email;
             doctor.YearsOfExperience = request.Dto.YearsOfExperience;
@@ -53,9 +52,6 @@ namespace Appointment_System.Application.Features.Doctor.Commands
     {
         public UpdateDoctorCommandValidator()
         {
-            RuleFor(x => x.DoctorId)
-                .NotEmpty().WithMessage("Doctor ID is required.");
-
             RuleFor(x => x.Dto.FullName)
                 .NotEmpty().WithMessage("Full name is required.")
                 .MaximumLength(100);
@@ -79,11 +75,7 @@ namespace Appointment_System.Application.Features.Doctor.Commands
             RuleFor(x => x.Dto.WorkplaceType)
                 .IsInEnum().WithMessage("Invalid workplace type.");
 
-            RuleFor(x => x.Dto.TotalRatingsGiven)
-                .GreaterThanOrEqualTo(0);
-
-            RuleFor(x => x.Dto.TotalRatingScore)
-                .GreaterThanOrEqualTo(0);
+            
         }
     }
 

@@ -18,7 +18,7 @@ namespace Appointment_System.Application.DTOs.DoctorAvailability
         {
             return new Domain.Entities.DoctorAvailability()
             {
-                Id = 0,
+                Id = Guid.Empty,
                 DayOfWeek = DayOfWeek,  
                 StartTime = StartTime,
                 EndTime = EndTime,

@@ -105,7 +105,7 @@ namespace Appointment_System.Application.Tests
 
             var availability = new DoctorAvailability
             {
-                Id = 1,
+                Id = Guid.Empty,
                 DoctorId = "doc1",
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,

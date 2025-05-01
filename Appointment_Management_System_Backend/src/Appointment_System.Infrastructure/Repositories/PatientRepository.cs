@@ -19,7 +19,7 @@ namespace Appointment_System.Infrastructure.Repositories
         }
 
         // for filtering, sorting, pagination
-        public IQueryable<User> GetAllPatientsQueryable()
+        public IQueryable<ApplicationUser> GetAllPatientsQueryable()
         {
             var patientRoleId = _context.Roles
                 .Where(r => r.Name == "Patient")
@@ -30,7 +30,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 .Where(u => _context.UserRoles
                     .Any(ur => ur.UserId == u.Id && ur.RoleId == patientRoleId));
 
-            return patients.Select(p => p.ToDomain());
+            return patients;
         }
 
 
@@ -78,7 +78,7 @@ namespace Appointment_System.Infrastructure.Repositories
             };
 
             // Project to DTO before pagination to avoid selecting unnecessary fields
-            var projectedQuery = query.Select(p => new PatientDto(p));
+            var projectedQuery = query.Select(p => new PatientDto(p.ToDomain()));
 
             var totalCount = await projectedQuery.CountAsync();
 

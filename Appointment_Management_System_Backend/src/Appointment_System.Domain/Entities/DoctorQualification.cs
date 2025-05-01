@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Appointment_System.Domain.Entities
 {
-    public class DoctorQualification
+    public class DoctorQualification: BaseEntity
     {
         public int Id { get; set; }
         public string QualificationName { get; set; }

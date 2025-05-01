@@ -28,6 +28,7 @@ services:
       - backend
     networks:
       - app-network
+
   redis:
     container_name: appointment-redis
     image: redis:7
@@ -48,6 +49,7 @@ services:
       - sqlserver_data:/var/opt/mssql
     networks:
       - app-network
+    hostname: "sqlServer"
 
 volumes:
   sqlserver_data: # This ensures data is persistent

@@ -7,7 +7,7 @@ namespace Appointment_System.Application.Interfaces.Repositories
     {
         Task<DoctorAvailability?> GetByIdAsync(int id);
         Task<IEnumerable<DoctorAvailability>> GetByDoctorIdAsync(string doctorId);
-        Task<int> AddAsync(DoctorAvailability availability);
+        Task<Guid> AddAsync(DoctorAvailability availability);
         Task UpdateAsync(DoctorAvailability availability);
         Task DeleteAsync(int id);
     }

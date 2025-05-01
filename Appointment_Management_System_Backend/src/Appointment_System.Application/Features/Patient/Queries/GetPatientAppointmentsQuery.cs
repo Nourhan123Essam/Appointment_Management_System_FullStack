@@ -35,7 +35,7 @@ namespace Appointment_System.Application.Features.Patient.Queries
             return appointments.Select(a => new AppointmentDto
             {
                 Id = a.Id,
-                AppointmentTime = a.AppointmentTime,
+                AppointmentTime = a.DateTime,
                 DoctorName = doctorDict.TryGetValue(a.DoctorId, out var doc) ? doc.FullName : "Unknown"
             }).ToList();
         }

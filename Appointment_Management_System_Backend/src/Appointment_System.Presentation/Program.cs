@@ -3,6 +3,7 @@ using Appointment_System.Infrastructure.Data;
 using Appointment_System.Presentation.Middlewares;
 using Serilog;
 using Appointment_System.Application;
+using System.Threading.RateLimiting;
 
 
 // Configure Serilog
@@ -28,6 +29,33 @@ builder.Services.AddApplicationServices();
 // Add Serilog to the DI container and configure it as the logging provider
 builder.Host.UseSerilog();
 
+// Register built-in rate limiter service
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+    {
+        var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ipAddress, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 100,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        });
+    });
+
+    // return a proper 429 JSON response
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+
+        await context.HttpContext.Response.WriteAsync(
+            "{\"error\": \"Rate limit exceeded. Please try again later.\"}",
+            cancellationToken);
+    };
+});
+
 
 // Add CORS to the container.
 builder.Services.AddCors(options =>
@@ -45,10 +73,11 @@ builder.Services.AddCors(options =>
 
 // Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-//builder.Services.AddScoped<RequestLoggingMiddleware>();
-
 
 var app = builder.Build();
+
+// Activate the rate limiter middleware in the request pipeline
+app.UseRateLimiter();
 
 // Add the custom middlewares to the pipeline
 app.UseMiddleware<RequestLoggingMiddleware>();

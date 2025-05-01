@@ -7,19 +7,34 @@ using Appointment_System.Domain.Enums;
 
 namespace Appointment_System.Domain.Entities
 {
-    public class Appointment
+    public class Appointment : BaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+        public string? PatientId { get; set; }
+        public string DoctorId { get; set; } = null!;
+        public Guid OfficeId { get; set; }
+        public string? GuestName { get; set; }
+        public string? GuestEmail { get; set; }
+        public string? GuestPhone { get; set; }
+        public DateTime DateTime { get; set; }
+        public AppointmentStatus Status { get; set; }
+        public AppointmentType Type { get; set; }
+        public Guid? ParentAppointmentId { get; set; }
+        public Guid? ChatId { get; set; }
+        public Guid? PrescriptionId { get; set; }
+        public string? Notes { get; set; }
+        public string? PaymentId { get; set; }
+        public PaymentStatus? PaymentStatus { get; set; }
 
-        public string PatientId { get; set; } // FK to ApplicationUser
-
-        public string DoctorId { get; set; } // FK to ApplicationUser
-
-        public string? GuestEmail { get; set; } // If the appointment is for a guest
-
-        public DateTime AppointmentTime { get; set; }  // Store only Year-Month-Day Hour
-
-        public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;
+        // Navigation
+        public virtual Patient? Patient { get; set; }
+        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual Office Office { get; set; } = null!;
+        public virtual Appointment? ParentAppointment { get; set; }
+        public virtual ICollection<Appointment> FollowUpAppointments { get; set; } = new List<Appointment>();
+        public virtual Chat? Chat { get; set; }
+        public virtual Prescription? Prescription { get; set; }
+        public virtual Feedback? Feedback { get; set; }
     }
 
 }

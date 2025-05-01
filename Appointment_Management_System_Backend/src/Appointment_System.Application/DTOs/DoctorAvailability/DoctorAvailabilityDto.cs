@@ -9,7 +9,7 @@ namespace Appointment_System.Application.DTOs.DoctorAvailability
 {
     public class DoctorAvailabilityDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DayOfWeek DayOfWeek { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }

@@ -30,13 +30,24 @@ namespace Appointment_System.Infrastructure.Repositories
             _configuration = configuration;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
         {
-            return (await _userManager.FindByEmailAsync(email)).ToDomain();
+            return await _userManager.FindByEmailAsync(email);
         }
         public async Task<bool> Register(User appUser, string password)
         {
-            var user = new ApplicationUser(appUser);
+            //check of email correct
+            var testUser = await _userManager.FindByEmailAsync(appUser.Email);
+            if (testUser != null)
+                return false;
+
+            var user = new ApplicationUser()
+            {
+                Email= appUser.Email,
+                PhoneNumber = appUser.PhoneNumber,
+                FullName = appUser.FullName,
+                UserName = appUser.Email
+            };
             var userResult = await _userManager.CreateAsync(user, password);
             if (!userResult.Succeeded)
                 return false;
@@ -48,11 +59,11 @@ namespace Appointment_System.Infrastructure.Repositories
         }
 
 
-        public async Task<Response> Login(User login, string password)
+        public async Task<Response> Login(string email, string password)
         {
 
             //check of email correct
-            var user = await _userManager.FindByEmailAsync(login.Email);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return new Response(false, "Invalid Email");
 
@@ -64,7 +75,7 @@ namespace Appointment_System.Infrastructure.Repositories
             }
 
             //generate token and return it as the user vervified
-            string token = await GenerateToken(new ApplicationUser(login));
+            string token = await GenerateToken(user);
             return new Response(true, token);
         }
 

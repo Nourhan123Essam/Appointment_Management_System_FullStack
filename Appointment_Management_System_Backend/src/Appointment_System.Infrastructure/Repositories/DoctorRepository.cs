@@ -79,9 +79,24 @@ namespace Appointment_System.Infrastructure.Repositories
         // Update Doctor
         public async Task<bool> UpdateDoctorAsync(User doctor)
         {
-            _context.Users.Update(new ApplicationUser(doctor));
-            return await _context.SaveChangesAsync() > 0;
+            //var Doctor = await GetDoctorByIdAsync(doctor.Id);
+            //if (Doctor == null) { return false; }
+            var updatedDoctor = new ApplicationUser(doctor);
+            _context.Users.Update(updatedDoctor);
+            return (await _context.SaveChangesAsync()) > 0;
         }
+
+            //updatedDoctor.Id = doctor.Id;
+            //updatedDoctor.Email = doctor.Email;
+            //updatedDoctor.PhoneNumber = doctor.PhoneNumber;
+            //updatedDoctor.FullName = doctor.FullName;
+            //updatedDoctor.UserName = doctor.Email;
+            //updatedDoctor.LicenseNumber = doctor.LicenseNumber;
+            //updatedDoctor.Specialization = doctor.Specialization;
+            //updatedDoctor.TotalRatingScore = doctor.TotalRatingScore;
+            //updatedDoctor.TotalRatingsGiven = doctor.TotalRatingsGiven;
+            //updatedDoctor.WorkplaceType = doctor.WorkplaceType;
+            
 
         // Delete Doctor
         public async Task<bool> DeleteDoctorAsync(User doctor)

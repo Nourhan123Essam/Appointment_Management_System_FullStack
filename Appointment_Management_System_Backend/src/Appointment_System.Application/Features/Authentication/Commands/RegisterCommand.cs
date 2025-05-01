@@ -31,11 +31,6 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         public async Task<Response> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var dto = request.RegisterDto;
-
-            var getUser = await _unitOfWork.Authentication.GetUserByEmailAsync(dto.Email);
-            if (getUser is not null)
-                return new Response(false, $"This email is already registered");
-
             var newUser = new User
             {
                 Email = dto.Email,

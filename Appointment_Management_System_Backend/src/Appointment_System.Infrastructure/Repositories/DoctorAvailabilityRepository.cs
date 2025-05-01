@@ -26,7 +26,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> AddAsync(DoctorAvailability availability)
+        public async Task<Guid> AddAsync(DoctorAvailability availability)
         {
             await _context.DoctorAvailabilities.AddAsync(availability);
             await _context.SaveChangesAsync();

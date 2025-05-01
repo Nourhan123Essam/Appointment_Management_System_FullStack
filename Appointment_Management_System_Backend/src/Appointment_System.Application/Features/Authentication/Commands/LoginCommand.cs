@@ -31,11 +31,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         {
             var dto = request.LoginDto;
 
-            var user = await _unitOfWork.Authentication.GetUserByEmailAsync(dto.Email);
-            if (user == null)
-                return new Response(false, "Invalid credentials");
-
-            return await _unitOfWork.Authentication.Login(user, dto.Password);
+            return await _unitOfWork.Authentication.Login(dto.Email, dto.Password);
         }
     }
 

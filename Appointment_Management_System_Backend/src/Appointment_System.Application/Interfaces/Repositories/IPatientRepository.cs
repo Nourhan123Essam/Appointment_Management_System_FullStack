@@ -5,7 +5,6 @@ namespace Appointment_System.Application.Interfaces.Repositories
 {
     public interface IPatientRepository
     {
-        IQueryable<User> GetAllPatientsQueryable(); // for filtering, sorting, pagination
         Task<User?> GetPatientByIdAsync(string patientId);
         Task DeletePatientAsync(User patient);
         Task<List<Appointment>> GetPatientAppointmentsAsync(string patientId);

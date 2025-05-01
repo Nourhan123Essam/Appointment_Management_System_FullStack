@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace Appointment_System.Domain.Entities
 {
-    public class DoctorAvailability
+    public class DoctorAvailability: BaseEntity
     {
-        public int Id { get; set; }
-        public DayOfWeek DayOfWeek { get; set; }  // Enum for Monday, Tuesday, etc.
+        public Guid Id { get; set; }
+        public string DoctorId { get; set; } = null!;
+        public Guid OfficeId { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
 
-        public string DoctorId { get; set; } // FK
+        // Navigation
+        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual Office Office { get; set; } = null!;
+        public virtual ICollection<AvailabilityException> AvailabilityExceptions { get; set; } = new List<AvailabilityException>();
     }
 
 }
