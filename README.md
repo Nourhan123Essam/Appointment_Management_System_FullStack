@@ -58,7 +58,7 @@ A full-stack medical appointment platform built with **.NET 8**, **Angular 17**,
 | Feedback           | 🔁 For Doctor only (via Appointment for validation purposes)                          |
 
 👉 View the full ERD here:
-[View ERD](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ERD.png)
+![View ERD](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ERD.png)
 
 ---
 
@@ -90,7 +90,7 @@ This project marks a strong comeback in my GitHub streak — with solid plans, r
 ---
 ## Random Screens until complete documentation
 **[Rate Limiting]**  
-[Rate Limiting](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Rate%20limiting.png)
+![Rate Limiting](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Rate%20limiting.png)
 
 **[ValidatorBehavior&Exception Middleware work]**  
-[ValidatorBehavior&Exception Middleware work](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ValidatorBehavior%26Exception%20Middleware%20work.png)
+![ValidatorBehavior&Exception Middleware work](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ValidatorBehavior%26Exception%20Middleware%20work.png)
