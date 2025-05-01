@@ -57,8 +57,8 @@ A full-stack medical appointment platform built with **.NET 8**, **Angular 17**,
 | Message            | 🔁 Belongs to Chat, Sender is a User                                                  |
 | Feedback           | 🔁 For Doctor only (via Appointment for validation purposes)                          |
 
-👉 View the full ERD here (open in new tab for full zoom):
-[![View ERD](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ERD.png)
+👉 View the full ERD here:
+[View ERD](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ERD.png)
 
 ---
 
@@ -89,6 +89,8 @@ This project marks a strong comeback in my GitHub streak — with solid plans, r
 
 ---
 ## Random Screens until complete documentation
-[![Rate Limiting](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Rate%20limiting.png)
+**[Rate Limiting]**  
+[Rate Limiting](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Rate%20limiting.png)
 
-[![ValidatorBehavior&Exception Middleware work](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ValidatorBehavior%26Exception%20Middleware%20work.png)
+**[ValidatorBehavior&Exception Middleware work]**  
+[ValidatorBehavior&Exception Middleware work](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ValidatorBehavior%26Exception%20Middleware%20work.png)
