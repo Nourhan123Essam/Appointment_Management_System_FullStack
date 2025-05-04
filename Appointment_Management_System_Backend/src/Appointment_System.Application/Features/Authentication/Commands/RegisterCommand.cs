@@ -31,12 +31,15 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         public async Task<Response> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var dto = request.RegisterDto;
-            var newUser = new User
+            var newUser = new Domain.Entities.Patient
             {
                 Email = dto.Email,
-                UserName = dto.Email,
-                PhoneNumber = dto.TelephoneNumber,
-                FullName = dto.FullName
+                LastName = dto.LastName,
+                Phone = dto.Phone,
+                FirstName = dto.FirstName,
+                Gender = dto.Gender,
+                DateOfBirth = dto.DateOfBirth,
+                Address = dto.Address,
             };
 
             var result = await _unitOfWork.Authentication.Register(newUser, dto.Password);
@@ -52,15 +55,25 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     {
         public RegisterDTOValidator()
         {
-            RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("Full name is required")
-                .MaximumLength(100).WithMessage("Full name must be less than 100 characters, and has no spaces");
+            RuleFor(x => x.FirstName)
+                .NotEmpty().WithMessage("First name is required")
+                .MaximumLength(100).WithMessage("First name must be less than 100 characters");
+
+            RuleFor(x => x.LastName)
+               .NotEmpty().WithMessage("Last name is required")
+               .MaximumLength(100).WithMessage("Last name must be less than 100 characters");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
                 .EmailAddress().WithMessage("A valid email is required");
 
-            RuleFor(x => x.TelephoneNumber)
+            RuleFor(x => x.DateOfBirth)
+               .NotEmpty().WithMessage("Date of birth is required");
+
+            RuleFor(x => x.Gender)
+              .NotEmpty().WithMessage("Gender is required");
+
+            RuleFor(x => x.Phone)
                 .NotEmpty().WithMessage("Telephone number is required (e.g., 01012345678)")
                 .Matches(@"^\+?[0-9]{7,15}$").WithMessage("A valid phone number is required");
 

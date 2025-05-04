@@ -31,7 +31,7 @@ namespace Appointment_System.Presentation.Controllers
         #region Doctor
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDoctorById(string id)
+        public async Task<IActionResult> GetDoctorById(int id)
         {
             var doctor = await _mediator.Send(new GetDoctorByIdQuery(id));
             if (doctor == null)
@@ -81,7 +81,7 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [HttpDelete("{doctorId}")]
-        public async Task<IActionResult> DeleteDoctor(string doctorId)
+        public async Task<IActionResult> DeleteDoctor(int doctorId)
         {
             var deleted = await _mediator.Send(new DeleteDoctorCommand(doctorId));                                                                       
 
@@ -99,7 +99,7 @@ namespace Appointment_System.Presentation.Controllers
         #region Qualifications
         [Authorize(Roles = "Admin")]
         [HttpGet("GetQualificationByDoctorId")]
-        public async Task<ActionResult<List<DoctorQualificationDto>>> GetQualificationByDoctorId(string doctorId)
+        public async Task<ActionResult<List<DoctorQualificationDto>>> GetQualificationByDoctorId(int doctorId)
         {
             var result = await _mediator.Send(new GetDoctorQualificationsByDoctorIdQuery(doctorId));
             return Ok(result);
@@ -157,7 +157,7 @@ namespace Appointment_System.Presentation.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("GetAvailabilityByDoctorId/{doctorId}")]
-        public async Task<ActionResult<IEnumerable<DoctorAvailabilityDto>>> GetAvailabilityByDoctorId(string doctorId)
+        public async Task<ActionResult<IEnumerable<DoctorAvailabilityDto>>> GetAvailabilityByDoctorId(int doctorId)
         {
             var availabilities = await _mediator.Send(new GetDoctorAvailabilitiesByDoctorIdQuery(doctorId));
             return Ok(availabilities);

@@ -25,7 +25,7 @@ namespace Appointment_System.Application.Features.Doctor.Commands
             if (request.Dto == null)
                 throw new ArgumentNullException(nameof(request.Dto), "Doctor data must be provided.");
 
-            return await _unitOfWork.Doctors.CreateDoctorAsync(request.Dto);
+            return await _unitOfWork.Doctors.CreateDoctorAsync(request.Dto, request.Dto.Password);
         }
     }
 
@@ -39,13 +39,36 @@ namespace Appointment_System.Application.Features.Doctor.Commands
 
             When(x => x.Dto != null, () =>
             {
-                RuleFor(x => x.Dto.FullName)
-                    .NotEmpty().WithMessage("Full name is required.")
-                    .MaximumLength(100);
+                RuleFor(x => x.Dto.FirstName)
+                 .NotEmpty().WithMessage("First name is required.")
+                 .MaximumLength(50);
+
+                RuleFor(x => x.Dto.LastName)
+                    .NotEmpty().WithMessage("Last name is required.")
+                    .MaximumLength(50);
 
                 RuleFor(x => x.Dto.Email)
                     .NotEmpty().WithMessage("Email is required.")
-                    .EmailAddress().WithMessage("Email is not valid.");
+                    .EmailAddress().WithMessage("Email must be valid.");
+
+                RuleFor(x => x.Dto.YearsOfExperience)
+                    .GreaterThanOrEqualTo(0);
+
+                RuleFor(x => x.Dto.MaxFollowUps)
+                    .NotEmpty().WithMessage("Number of max follow-ups is required.");
+
+                RuleFor(x => x.Dto.FollowUpFee)
+                    .NotEmpty().WithMessage("Follow-up fee is required.");
+
+                RuleFor(x => x.Dto.InitialFee)
+                    .NotEmpty().WithMessage("Initial fee is required.");
+
+                RuleFor(x => x.Dto.FollowUpFee)
+                    .GreaterThan(0).WithMessage("Follow-up fee must be greater than 0.");
+
+                RuleFor(x => x.Dto.InitialFee)
+                    .GreaterThan(0).WithMessage("Initial fee must be greater than 0.");
+
 
                 RuleFor(x => x.Dto.Password)
                     .NotEmpty().WithMessage("Password is required.")
@@ -53,15 +76,6 @@ namespace Appointment_System.Application.Features.Doctor.Commands
 
                 RuleFor(x => x.Dto.YearsOfExperience)
                     .GreaterThanOrEqualTo(0).WithMessage("Years of experience must be non-negative.");
-
-                RuleFor(x => x.Dto.Specialization)
-                    .NotEmpty().WithMessage("Specialization is required.");
-
-                RuleFor(x => x.Dto.LicenseNumber)
-                    .NotEmpty().WithMessage("License number is required.");
-
-                RuleFor(x => x.Dto.ConsultationFee)
-                    .GreaterThanOrEqualTo(0).WithMessage("Consultation fee must be non-negative.");
 
                 RuleForEach(x => x.Dto.Availabilities)
                     .SetValidator(new DoctorAvailabilityDtoValidator());

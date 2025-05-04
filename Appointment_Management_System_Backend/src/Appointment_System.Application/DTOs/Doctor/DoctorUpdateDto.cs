@@ -1,24 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Appointment_System.Domain.Enums;
+﻿using MediatR;
 
 namespace Appointment_System.Application.DTOs.Doctor
 {
-    public class DoctorUpdateDto
+    public record DoctorUpdateDto
     {
-        public string FullName { get; set; }
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public int DoctorId { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
         public string Email { get; set; }
-        public string Password { get; set; }
-        public int? YearsOfExperience { get; set; }
-        public string? Specialization { get; set; }
-        public string? LicenseNumber { get; set; }
-        public decimal? ConsultationFee { get; set; }
-        public WorkplaceType? WorkplaceType { get; set; }
-        public int? TotalRatingScore { get; set; } = 0;
-        public int? TotalRatingsGiven { get; set; } = 0;
+        public string? Bio { get; set; }
+        public decimal InitialFee { get; set; }
+        public decimal FollowUpFee { get; set; }
+        public int MaxFollowUps { get; set; }
+        public int YearsOfExperience { get; set; }
+        public string Phone {  get; set; }
+
+        public DoctorUpdateDto(){}
+
+        public void ToEnitiy(Domain.Entities.Doctor doctor)
+        {
+            doctor.FirstName = FirstName;
+            doctor.LastName = LastName;
+            doctor.Bio = Bio;
+            doctor.Phone = Phone;
+            doctor.Email = Email;
+            doctor.YearsOfExperience = YearsOfExperience;
+            doctor.InitialFee = InitialFee;
+            doctor.FollowUpFee = FollowUpFee;
+            doctor.MaxFollowUps = MaxFollowUps;
+        }
     }
 
 }

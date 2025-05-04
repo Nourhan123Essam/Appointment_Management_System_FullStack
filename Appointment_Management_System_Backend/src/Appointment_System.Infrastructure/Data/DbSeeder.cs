@@ -15,7 +15,7 @@ namespace Appointment_System.Infrastructure.Data
         {
             using var scope = serviceProvider.CreateScope();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
             string[] roleNames = { "Admin", "Doctor", "Patient" };
 
@@ -40,7 +40,7 @@ namespace Appointment_System.Infrastructure.Data
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                adminUser = new ApplicationUser { UserName = adminEmail, Email = adminEmail, FullName = "" };
+                adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail};
                 try
                 {
                     var result = await userManager.CreateAsync(adminUser, adminPassword);

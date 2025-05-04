@@ -6,9 +6,9 @@ namespace Appointment_System.Application.Features.Patient.Commands
     //Command
     public class DeletePatientCommand : IRequest<bool>
     {
-        public string PatientId { get; }
+        public int PatientId { get; }
 
-        public DeletePatientCommand(string patientId)
+        public DeletePatientCommand(int patientId)
         {
             PatientId = patientId;
         }

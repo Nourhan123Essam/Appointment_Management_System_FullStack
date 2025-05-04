@@ -6,14 +6,14 @@ namespace Appointment_System.Application.Interfaces.Repositories
 {
     public interface IDoctorRepository
     {
-        Task AddDoctorAsync(User doctor);
-        Task AddAvailabilityAsync(List<DoctorAvailability> availabilities);
-        Task AddQualificationsAsync(List<DoctorQualification> qualifications);
-        Task<List<User>> GetAllDoctorsAsync();
-        Task<List<User>> GetAllDoctorsBasicDataAsync();
-        Task<bool> UpdateDoctorAsync(User doctor);
-        Task<User> GetDoctorByIdAsync(string id);
-        Task<bool> DeleteDoctorAsync(User doctor);
-        Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto);
+        Task AddDoctorAsync(Doctor doctor);
+        Task AddAvailabilityAsync(List<Availability> availabilities);
+        Task AddQualificationsAsync(List<Qualification> qualifications);
+        Task<List<Doctor>> GetAllDoctorsAsync();
+        Task<List<Doctor>> GetAllDoctorsBasicDataAsync();
+        Task<bool> UpdateDoctorAsync(Doctor doctor);
+        Task<Doctor> GetDoctorByIdAsync(int id);
+        Task<bool> DeleteDoctorAsync(Doctor doctor);
+        Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto, string password);
     }
 }

@@ -6,7 +6,7 @@ namespace Appointment_System.Application.Interfaces.Repositories
 {
     public interface IAuthenticationRepository
     {
-        public Task<bool> Register(User appUser, string password);
+        public Task<bool> Register(Patient appUser, string password);
         public Task<Response> Login(string email, string password);
     }
 }

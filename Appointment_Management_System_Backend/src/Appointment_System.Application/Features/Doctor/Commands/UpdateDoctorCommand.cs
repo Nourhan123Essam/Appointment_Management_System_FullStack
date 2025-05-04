@@ -30,18 +30,10 @@ namespace Appointment_System.Application.Features.Doctor.Commands
 
         public async Task<bool> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
         {
-            var doctor = new Domain.Entities.User();
+            if(request.Dto == null) return false;
 
-            doctor.Id = request.DoctorId;
-            doctor.FullName = request.Dto.FullName;
-            doctor.Email = request.Dto.Email;
-            doctor.YearsOfExperience = request.Dto.YearsOfExperience;
-            doctor.Specialization = request.Dto.Specialization;
-            doctor.LicenseNumber = request.Dto.LicenseNumber;
-            doctor.ConsultationFee = request.Dto.ConsultationFee;
-            doctor.WorkplaceType = request.Dto.WorkplaceType;
-            doctor.TotalRatingsGiven = request.Dto.TotalRatingsGiven;
-            doctor.TotalRatingScore = request.Dto.TotalRatingScore;
+            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(request.Dto.Id);
+            request.Dto.ToEnitiy(doctor);
 
             return await _unitOfWork.Doctors.UpdateDoctorAsync(doctor);
         }
@@ -52,9 +44,13 @@ namespace Appointment_System.Application.Features.Doctor.Commands
     {
         public UpdateDoctorCommandValidator()
         {
-            RuleFor(x => x.Dto.FullName)
-                .NotEmpty().WithMessage("Full name is required.")
-                .MaximumLength(100);
+            RuleFor(x => x.Dto.FirstName)
+                .NotEmpty().WithMessage("First name is required.")
+                .MaximumLength(50);
+
+            RuleFor(x => x.Dto.LastName)
+                .NotEmpty().WithMessage("Last name is required.")
+                .MaximumLength(50);
 
             RuleFor(x => x.Dto.Email)
                 .NotEmpty().WithMessage("Email is required.")
@@ -63,19 +59,23 @@ namespace Appointment_System.Application.Features.Doctor.Commands
             RuleFor(x => x.Dto.YearsOfExperience)
                 .GreaterThanOrEqualTo(0);
 
-            RuleFor(x => x.Dto.Specialization)
-                .NotEmpty().WithMessage("Specialization is required.");
+            RuleFor(x => x.Dto.MaxFollowUps)
+                .NotEmpty().WithMessage("Number of max follow-ups is required.");
 
-            RuleFor(x => x.Dto.LicenseNumber)
-                .NotEmpty().WithMessage("License number is required.");
+            RuleFor(x => x.Dto.FollowUpFee)
+                .NotEmpty().WithMessage("Follow-up fee is required.");
 
-            RuleFor(x => x.Dto.ConsultationFee)
-                .GreaterThan(0).WithMessage("Consultation fee must be greater than 0.");
+            RuleFor(x => x.Dto.InitialFee)
+                .NotEmpty().WithMessage("Initial fee is required.");
 
-            RuleFor(x => x.Dto.WorkplaceType)
-                .IsInEnum().WithMessage("Invalid workplace type.");
+            RuleFor(x => x.Dto.FollowUpFee)
+                .GreaterThan(0).WithMessage("Follow-up fee must be greater than 0.");
 
-            
+            RuleFor(x => x.Dto.InitialFee)
+                .GreaterThan(0).WithMessage("Initial fee must be greater than 0.");
+
+            RuleFor(x => x.Dto.YearsOfExperience)
+                   .GreaterThanOrEqualTo(0).WithMessage("Years of experience must be non-negative.");
         }
     }
 

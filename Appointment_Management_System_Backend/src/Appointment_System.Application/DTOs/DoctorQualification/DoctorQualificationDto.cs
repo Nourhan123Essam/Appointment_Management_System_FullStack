@@ -16,13 +16,13 @@ namespace Appointment_System.Application.DTOs.DoctorQualification
         public string QualificationName { get; init; }
         public string? IssuingInstitution { get; init; }
         public int YearEarned { get; init; }
-        public string DoctorId { get; init; }
+        public int DoctorId { get; init; }
 
         // Parameterless constructor (needed for deserialization)
         public DoctorQualificationDto() { }
 
         // Constructor for mapping from entity
-        public DoctorQualificationDto(Domain.Entities.DoctorQualification entity)
+        public DoctorQualificationDto(Domain.Entities.Qualification entity)
         {
             Id = entity.Id;
             QualificationName = entity.QualificationName;

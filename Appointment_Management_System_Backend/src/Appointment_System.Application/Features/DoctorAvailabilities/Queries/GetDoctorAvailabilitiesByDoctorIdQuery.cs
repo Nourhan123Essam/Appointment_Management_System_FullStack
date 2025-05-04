@@ -7,9 +7,9 @@ namespace Appointment_System.Application.Features.DoctorAvailabilities.Queries
     //Query
     public class GetDoctorAvailabilitiesByDoctorIdQuery : IRequest<IEnumerable<DoctorAvailabilityDto>>
     {
-        public string DoctorId { get; set; }
+        public int DoctorId { get; set; }
 
-        public GetDoctorAvailabilitiesByDoctorIdQuery(string doctorId)
+        public GetDoctorAvailabilitiesByDoctorIdQuery(int doctorId)
         {
             DoctorId = doctorId;
         }
@@ -27,8 +27,8 @@ namespace Appointment_System.Application.Features.DoctorAvailabilities.Queries
 
         public async Task<IEnumerable<DoctorAvailabilityDto>> Handle(GetDoctorAvailabilitiesByDoctorIdQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.DoctorId))
-                throw new ArgumentNullException(nameof(request.DoctorId), "DoctorId cannot be null or empty.");
+            if (request.DoctorId <= 0)
+                throw new ArgumentException("DoctorId should be greater than 0");
 
             var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(request.DoctorId) != null;
             if (!doctorExists)

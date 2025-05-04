@@ -12,13 +12,13 @@ namespace Appointment_System.Application.DTOs.DoctorAvailability
         public DayOfWeek DayOfWeek { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public string DoctorId { get; set; }
+        public int DoctorId { get; set; }
 
-        public Domain.Entities.DoctorAvailability ToEntity()
+        public Domain.Entities.Availability ToEntity()
         {
-            return new Domain.Entities.DoctorAvailability()
+            return new Domain.Entities.Availability()
             {
-                Id = Guid.Empty,
+                Id = 0,
                 DayOfWeek = DayOfWeek,  
                 StartTime = StartTime,
                 EndTime = EndTime,

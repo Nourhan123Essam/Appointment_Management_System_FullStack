@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
@@ -17,35 +18,36 @@ namespace Appointment_System.Infrastructure.Repositories
 {
     public class AuthenticationRepository : IAuthenticationRepository
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
-
-        public AuthenticationRepository(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IConfiguration configuration)
+        private readonly ApplicationDbContext _context;
+        public AuthenticationRepository(UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IConfiguration configuration,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _context = context;
         }
 
-        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
+        public async Task<IdentityUser> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
         }
-        public async Task<bool> Register(User appUser, string password)
+        public async Task<bool> Register(Patient appUser, string password)
         {
             //check of email correct
             var testUser = await _userManager.FindByEmailAsync(appUser.Email);
             if (testUser != null)
                 return false;
 
-            var user = new ApplicationUser()
+            var user = new IdentityUser()
             {
                 Email= appUser.Email,
-                PhoneNumber = appUser.PhoneNumber,
-                FullName = appUser.FullName,
+                PhoneNumber = appUser.Phone,
                 UserName = appUser.Email
             };
             var userResult = await _userManager.CreateAsync(user, password);
@@ -54,6 +56,12 @@ namespace Appointment_System.Infrastructure.Repositories
 
             // Assign "Patient" role by default
             await _userManager.AddToRoleAsync(user, "Patient");
+
+            appUser.CreatedAt = DateTime.Now;
+            appUser.UserId = user.Id;
+            appUser.IsDeleted = false;
+            await _context.Patients.AddAsync(appUser);
+            await _context.SaveChangesAsync();
 
             return true;
         }
@@ -79,7 +87,7 @@ namespace Appointment_System.Infrastructure.Repositories
             return new Response(true, token);
         }
 
-        private async Task<string> GenerateToken(ApplicationUser user)
+        private async Task<string> GenerateToken(IdentityUser user)
         {
             var claims = new List<Claim>
             {

@@ -19,26 +19,26 @@ namespace Appointment_System.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<DoctorQualification?> GetByIdAsync(int id)
+        public async Task<Qualification?> GetByIdAsync(int id)
         {
             return await _context.DoctorQualifications.FindAsync(id);
         }
 
-        public async Task<IEnumerable<DoctorQualification>> GetByDoctorIdAsync(string doctorId)
+        public async Task<IEnumerable<Qualification>> GetByDoctorIdAsync(int doctorId)
         {
             return await _context.DoctorQualifications
                 .Where(q => q.DoctorId == doctorId)
                 .ToListAsync();
         }
 
-        public async Task<int> AddAsync(DoctorQualification qualification)
+        public async Task<int> AddAsync(Qualification qualification)
         {
             await _context.DoctorQualifications.AddAsync(qualification);
             await _context.SaveChangesAsync();
             return qualification.Id;
         }
 
-        public async Task UpdateAsync(DoctorQualification qualification)
+        public async Task UpdateAsync(Qualification qualification)
         {
             _context.DoctorQualifications.Update(qualification);
             await _context.SaveChangesAsync();

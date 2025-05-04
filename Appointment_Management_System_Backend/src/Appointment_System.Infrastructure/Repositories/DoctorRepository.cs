@@ -11,11 +11,11 @@ namespace Appointment_System.Infrastructure.Repositories
     public class DoctorRepository : IDoctorRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public DoctorRepository(ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
+        UserManager<IdentityUser> userManager,
         RoleManager<IdentityRole> roleManager)
         {
             _context = context;
@@ -24,41 +24,41 @@ namespace Appointment_System.Infrastructure.Repositories
         }
 
         // Get Doctor by Id
-        public async Task<User?> GetDoctorByIdAsync(string doctorId)
+        public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
         {
-            return (await _context.Users
+            return (await _context.Doctors
                 .Include(d => d.Availabilities)
                 .Include(d => d.Qualifications)
-                .FirstOrDefaultAsync(d => d.Id == doctorId)).ToDomain();
+                .FirstOrDefaultAsync(d => d.Id == doctorId));
         }
 
 
         // Create Doctor
-        public async Task AddDoctorAsync(User doctor)
+        public async Task AddDoctorAsync(Doctor doctor)
         {
-            _context.Users.Add(new ApplicationUser(doctor));
+            _context.Doctors.Add(doctor);
         }
 
-        public async Task AddAvailabilityAsync(List<DoctorAvailability> availabilities)
+        public async Task AddAvailabilityAsync(List<Availability> availabilities)
         {
             _context.DoctorAvailabilities.AddRange(availabilities);
         }
 
-        public async Task AddQualificationsAsync(List<DoctorQualification> qualifications)
+        public async Task AddQualificationsAsync(List<Qualification> qualifications)
         {
             _context.DoctorQualifications.AddRange(qualifications);
         }
 
         // Get all Doctors basic Data
-        public async Task<List<User>> GetAllDoctorsBasicDataAsync()
+        public async Task<List<Doctor>> GetAllDoctorsBasicDataAsync()
         {
             // Get doctors using UserManager
-            var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
-            return doctors.Select(d => d.ToDomain()).ToList();
+            var doctors = await _context.Doctors.ToListAsync();
+            return doctors;
         }
 
         // Get all Doctors
-        public async Task<List<User>> GetAllDoctorsAsync()
+        public async Task<List<Doctor>> GetAllDoctorsAsync()
         {
             // Get doctors using UserManager
             var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
@@ -66,75 +66,69 @@ namespace Appointment_System.Infrastructure.Repositories
             // Fetch qualifications & availabilities for the doctors
             var doctorIds = doctors.Select(d => d.Id).ToList();
 
-            var doctorsWithDetails = await _context.Users
-                .Where(d => doctorIds.Contains(d.Id))
+            var doctorsWithDetails = await _context.Doctors
+                .Where(d => doctorIds.Contains(d.UserId))
                 .Include(d => d.Qualifications)  // Include qualifications
                 .Include(d => d.Availabilities)  // Include availabilities
                 .AsNoTracking()
                 .ToListAsync();
 
-            return doctorsWithDetails.Select(d => d.ToDomain()).ToList();
+            return doctorsWithDetails;
         }
 
         // Update Doctor
-        public async Task<bool> UpdateDoctorAsync(User doctor)
+        public async Task<bool> UpdateDoctorAsync(Doctor doctor)
         {
-            //var Doctor = await GetDoctorByIdAsync(doctor.Id);
-            //if (Doctor == null) { return false; }
-            var updatedDoctor = new ApplicationUser(doctor);
-            _context.Users.Update(updatedDoctor);
+            _context.Doctors.Update(doctor);
             return (await _context.SaveChangesAsync()) > 0;
-        }
-
-            //updatedDoctor.Id = doctor.Id;
-            //updatedDoctor.Email = doctor.Email;
-            //updatedDoctor.PhoneNumber = doctor.PhoneNumber;
-            //updatedDoctor.FullName = doctor.FullName;
-            //updatedDoctor.UserName = doctor.Email;
-            //updatedDoctor.LicenseNumber = doctor.LicenseNumber;
-            //updatedDoctor.Specialization = doctor.Specialization;
-            //updatedDoctor.TotalRatingScore = doctor.TotalRatingScore;
-            //updatedDoctor.TotalRatingsGiven = doctor.TotalRatingsGiven;
-            //updatedDoctor.WorkplaceType = doctor.WorkplaceType;
-            
+        }            
 
         // Delete Doctor
-        public async Task<bool> DeleteDoctorAsync(User doctor)
+        public async Task<bool> DeleteDoctorAsync(Doctor doctor)
         {
-            _context.Users.Remove(new ApplicationUser(doctor));
+            _context.Doctors.Remove(doctor);
             return await _context.SaveChangesAsync() > 0;
         }
 
 
         // create with trasaction
-        public async Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto)
+        public async Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto, string password)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                var doctor = new ApplicationUser
+                var user = new IdentityUser
                 {
                     UserName = dto.Email,
                     Email = dto.Email,
-                    FullName = dto.FullName,
-                    YearsOfExperience = dto.YearsOfExperience,
-                    Specialization = dto.Specialization,
-                    LicenseNumber = dto.LicenseNumber,
-                    ConsultationFee = dto.ConsultationFee,
-                    WorkplaceType = dto.WorkplaceType
                 };
 
-                var result = await _userManager.CreateAsync(doctor, dto.Password);
+                var result = await _userManager.CreateAsync(user, password);
                 if (!result.Succeeded) return null;
+
+                var doctor = new Doctor
+                {
+                    FirstName = dto.FirstName,
+                    Email = dto.Email,
+                    LastName = dto.LastName,
+                    YearsOfExperience = dto.YearsOfExperience,
+                    InitialFee = dto.InitialFee,
+                    FollowUpFee = dto.FollowUpFee,
+                    MaxFollowUps = dto.MaxFollowUps,
+                    Bio = dto.Bio
+                };
+
+                var res = await _context.Doctors.AddAsync(doctor);
+                if (res == null) return null;
 
                 if (!await _roleManager.RoleExistsAsync("Doctor"))
                 {
                     await _roleManager.CreateAsync(new IdentityRole("Doctor"));
                 }
-                await _userManager.AddToRoleAsync(doctor, "Doctor");
+                await _userManager.AddToRoleAsync(user, "Doctor");
 
-                var availabilities = dto.Availabilities.Select(a => new DoctorAvailability
+                var availabilities = dto.Availabilities.Select(a => new Availability
                 {
                     DoctorId = doctor.Id,
                     DayOfWeek = a.DayOfWeek,
@@ -143,7 +137,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 }).ToList();
                 await _context.DoctorAvailabilities.AddRangeAsync(availabilities);
 
-                var qualifications = dto.Qualifications.Select(q => new DoctorQualification
+                var qualifications = dto.Qualifications.Select(q => new Qualification
                 {
                     DoctorId = doctor.Id,
                     QualificationName = q.QualificationName,
@@ -156,7 +150,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 await transaction.CommitAsync();
 
                 // Map doctor to DoctorDto or fetch full details if needed
-                return new DoctorDto(doctor.ToDomain()); // Or fetch from DB with includes if needed
+                return new DoctorDto(doctor); // Or fetch from DB with includes if needed
             }
             catch
             {

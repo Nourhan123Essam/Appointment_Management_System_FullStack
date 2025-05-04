@@ -13,13 +13,13 @@ namespace Appointment_System.Application.DTOs.DoctorQualification
         public string QualificationName { get; set; }
         public string IssuingInstitution { get; set; }
         public int YearEarned { get; set; }
-        public string DoctorId { get; set; }
+        public int DoctorId { get; set; }
 
         // Maps this DTO to a new DoctorQualification entity.
         // Keeps mapping logic separate for cleaner service code.
-        public Domain.Entities.DoctorQualification ToEntity()
+        public Domain.Entities.Qualification ToEntity()
         {
-            return new Domain.Entities.DoctorQualification
+            return new Domain.Entities.Qualification
             {
                 QualificationName = QualificationName,
                 IssuingInstitution = IssuingInstitution,

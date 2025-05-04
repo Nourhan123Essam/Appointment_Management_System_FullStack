@@ -1,19 +1,8 @@
 <div class="login-container">
   <div class="login-card">
-    <h3 class="text-center">Login</h3>
+    <h2>Login</h2>
 
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-      <div class="mb-3">
-        <label class="form-label">Select Role</label>
-        <p-selectButton 
-          [(ngModel)]="selectedRole" 
-          [options]="roles" 
-          optionLabel="label"
-          optionValue="value"
-          name="role">
-        </p-selectButton>
-      </div>
-
       <div class="mb-3">
         <label class="form-label">Username</label>
         <input type="text" class="form-control" [(ngModel)]="username" name="username" required />
@@ -24,17 +13,15 @@
         <input type="password" class="form-control" [(ngModel)]="password" name="password" required />
       </div>
 
-      <!-- Show CAPTCHA only for Patients and Doctors -->
-      <div class="mb-3" *ngIf="selectedRole() === 'Patient' || selectedRole() === 'Doctor'">
+      <div class="mb-3">
         <label class="form-label">CAPTCHA Verification</label>
-        <!-- <div class="g-recaptcha" [attr.data-sitekey]="siteKey" data-callback="onCaptchaResolved"></div> -->
         <re-captcha (resolved)="onCaptchaResolved($event)" [siteKey]="siteKey"></re-captcha>
       </div>
 
-      <button class="btn btn-primary w-100" type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button type="submit" [disabled]="loginForm.invalid || !recaptchaToken" class="btn-primary">Login</button>
     </form>
 
-    <p class="text-center mt-3" *ngIf="selectedRole() === 'Patient'">
+    <p class="text-center mt-3">
       Don't have an account? 
       <a [routerLink]="['/register']" style="cursor: pointer;">Register</a>
     </p>

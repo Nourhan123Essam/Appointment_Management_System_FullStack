@@ -1,41 +1,48 @@
 ﻿using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
+using Appointment_System.Application.DTOs.Specialization;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Enums;
 
 namespace Appointment_System.Application.DTOs.Doctor
-{
+{   
     public record DoctorDto
     {
-        public string Id { get; init; }
-        public string FullName { get; init; }
+        public int Id { get; init; }
+        public string UserId { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
         public string Email { get; set; }
         public int? YearsOfExperience { get; init; }
-        public string? Specialization { get; init; }
-        public string? LicenseNumber { get; init; }
-        public decimal? ConsultationFee { get; init; }
-        public WorkplaceType? WorkplaceType { get; init; }
-        public int? TotalRatingScore { get; set; } = 0;
-        public int? TotalRatingsGiven { get; set; } = 0;
+        public string? Bio { get; set; }
+        public decimal InitialFee { get; set; }
+        public decimal FollowUpFee { get; set; }
+        public int MaxFollowUps { get; set; }
+        public int? RatingPoints { get; set; } = 0;
+        public int? NumberOfRatings { get; set; } = 0;
+        public int? FollowUpCount { get; set; } = 0;
         public List<DoctorQualificationDto> Qualifications { get; init; } = new();
         public List<DoctorAvailabilityDto> Availabilities { get; init; } = new();
+        public List<SpecializationDto> DoctorSpecializations { get; set; } = new();
 
         // Empty constructor (for cases where mapping happens in service)
         public DoctorDto() { }
 
         // Constructor that maps from ApplicationUser
-        public DoctorDto(User doctor)
+        public DoctorDto(Domain.Entities.Doctor doctor)
         {
+            UserId = doctor.UserId;
             Id = doctor.Id;
-            FullName = doctor.FullName;
+            FirstName = doctor.FirstName;
+            LastName = doctor.LastName;
             Email = doctor.Email;                 
             YearsOfExperience = doctor.YearsOfExperience;
-            Specialization = doctor.Specialization;
-            LicenseNumber = doctor.LicenseNumber;
-            ConsultationFee = doctor.ConsultationFee;
-            WorkplaceType = doctor.WorkplaceType;
-            TotalRatingScore = doctor.TotalRatingScore;
-            TotalRatingsGiven = doctor.TotalRatingsGiven;
+            InitialFee = doctor.InitialFee;
+            FollowUpFee = doctor.FollowUpFee;                                                                                                                                                                                           
+            RatingPoints = doctor.RatingPoints;
+            MaxFollowUps = doctor.MaxFollowUps;
+            Bio = doctor.Bio;
+            NumberOfRatings = doctor.NumberOfRatings;
             Qualifications = doctor.Qualifications.Select(q => new DoctorQualificationDto(q)).ToList();
             Availabilities = doctor.Availabilities.Select(a => new DoctorAvailabilityDto(a)).ToList();
         }

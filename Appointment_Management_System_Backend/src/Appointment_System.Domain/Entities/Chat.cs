@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Appointment_System.Domain.Entities
+﻿namespace Appointment_System.Domain.Entities
 {
     public class Chat : BaseEntity
     {
-        public Guid Id { get; set; }
-        public Guid AppointmentId { get; set; }
+        public int Id { get; set; }
+        public int AppointmentId { get; set; }
 
-        // Navigation
-        public virtual Appointment Appointment { get; set; } = null!;
-        public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+        // Duplicated from Appointment for fast sender validation and to avoid deep joins during messaging
+        public int DoctorId { get; set; }  // For fast Sender validation
+        public int PatientId { get; set; } // For fast Sender validation
+
+        public Appointment Appointment { get; set; } = null!;
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
     }
+
 }

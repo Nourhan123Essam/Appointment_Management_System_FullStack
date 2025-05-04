@@ -10,49 +10,53 @@ namespace Appointment_System.Infrastructure.Repositories
     public class PatientRepository : IPatientRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public PatientRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public PatientRepository(UserManager<IdentityUser> userManager, ApplicationDbContext context)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        // create patient
+        public async Task AddAsync(Patient patient)
+        {
+            await _context.Patients.AddAsync(patient);
+            await _context.SaveChangesAsync();
+        }
+
         // for filtering, sorting, pagination
-        public IQueryable<ApplicationUser> GetAllPatientsQueryable()
+        public IQueryable<Patient> GetAllPatientsQueryable()
         {
             var patientRoleId = _context.Roles
                 .Where(r => r.Name == "Patient")
                 .Select(r => r.Id)
                 .First();
 
-            var patients = _context.Users.AsNoTracking()
-                .Where(u => _context.UserRoles
-                    .Any(ur => ur.UserId == u.Id && ur.RoleId == patientRoleId));
+            var patients = _context.Patients.AsNoTracking();
 
             return patients;
         }
 
 
-        public async Task<User?> GetPatientByIdAsync(string patientId)
+        public async Task<Patient?> GetPatientByIdAsync(int patientId)
         {
-            return (await _context.Users
+            return await _context.Patients
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == patientId)).ToDomain();
+                .FirstOrDefaultAsync(u => u.Id == patientId);
         }
 
-        public async Task DeletePatientAsync(User patient)
+        public async Task DeletePatientAsync(Patient patient)
         {
-            var user = new ApplicationUser(patient);
-            _context.Users.Remove(user);
+            _context.Patients.Remove(patient);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Appointment>> GetPatientAppointmentsAsync(string patientId)
+        public async Task<List<Appointment>> GetPatientAppointmentsAsync(int patientId)
         {
             return await _context.Appointments
                 .Where(a => a.PatientId == patientId)
-                .OrderByDescending(a => a.AppointmentTime)
+                .OrderByDescending(a => a.DateTime)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -65,20 +69,21 @@ namespace Appointment_System.Infrastructure.Repositories
             if (!string.IsNullOrWhiteSpace(queryParams.Search))
             {
                 query = query.Where(p =>
-                    p.FullName.Contains(queryParams.Search) ||
+                    p.FirstName.Contains(queryParams.Search) ||
+                    p.LastName.Contains(queryParams.Search) ||
                     p.Email.Contains(queryParams.Search));
             }
 
             // Sorting by selected field
             query = queryParams.SortBy?.ToLower() switch
             {
-                "fullname" => queryParams.IsDescending ? query.OrderByDescending(p => p.FullName) : query.OrderBy(p => p.FullName),
+                "fullname" => queryParams.IsDescending ? query.OrderByDescending(p => p.FirstName + p.LastName) : query.OrderBy(p => p.FirstName + p.LastName),
                 "email" => queryParams.IsDescending ? query.OrderByDescending(p => p.Email) : query.OrderBy(p => p.Email),
-                _ => query.OrderBy(p => p.FullName) // Default sort
+                _ => query.OrderBy(p => p.FirstName + p.LastName) // Default sort
             };
 
             // Project to DTO before pagination to avoid selecting unnecessary fields
-            var projectedQuery = query.Select(p => new PatientDto(p.ToDomain()));
+            var projectedQuery = query.Select(p => new PatientDto(p));
 
             var totalCount = await projectedQuery.CountAsync();
 

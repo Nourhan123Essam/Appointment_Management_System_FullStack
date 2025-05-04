@@ -5,6 +5,8 @@ using Serilog;
 using Appointment_System.Application;
 using System.Threading.RateLimiting;
 
+//"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
+
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()

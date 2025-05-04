@@ -1,7 +1,11 @@
 export interface User {
     Id: string;
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
-    telephoneNumber: string;
+    phone: string;
+    dateOfBirth: Date;
+    address?: string;
+    gender: string;
     password: string;
   }

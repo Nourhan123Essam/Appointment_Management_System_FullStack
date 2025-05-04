@@ -7,9 +7,9 @@ namespace Appointment_System.Application.Features.Patient.Queries
     //Query
     public class GetPatientAppointmentsQuery : IRequest<List<AppointmentDto>>
     {
-        public string PatientId { get; }
+        public int PatientId { get; }
 
-        public GetPatientAppointmentsQuery(string patientId)
+        public GetPatientAppointmentsQuery(int patientId)
         {
             PatientId = patientId;
         }
@@ -35,8 +35,8 @@ namespace Appointment_System.Application.Features.Patient.Queries
             return appointments.Select(a => new AppointmentDto
             {
                 Id = a.Id,
-                AppointmentTime = a.DateTime,
-                DoctorName = doctorDict.TryGetValue(a.DoctorId, out var doc) ? doc.FullName : "Unknown"
+                DateTime = a.DateTime,
+                DoctorName = doctorDict.TryGetValue(a.DoctorId, out var doc) ? doc.FirstName : "Unknown"
             }).ToList();
         }
     }

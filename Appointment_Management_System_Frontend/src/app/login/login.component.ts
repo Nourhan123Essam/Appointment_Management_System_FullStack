@@ -22,7 +22,6 @@ import { AuthService } from '../core/services/auth.service';
 export class LoginComponent {
   username = '';
   password = '';
-  selectedRole = signal<string>(''); // Track role selection
 
   recaptchaToken: string = '';
   siteKey = environment.recaptchaSiteKey;
@@ -35,16 +34,9 @@ export class LoginComponent {
   
 
   constructor(private authService: AuthService, private router: Router) {
-    // Effect: Run renderRecaptcha when selectedRole changes
-    effect(() => {
-      console.log(this.selectedRole());
-      
-      if (this.selectedRole() != 'Admin') {
-       // this.renderRecaptcha();
-      }
-    });
-    //this.renderRecaptcha();
+    this.renderRecaptcha();
   }
+
   renderRecaptcha() {
     if (typeof grecaptcha === 'undefined') {
       console.warn("reCAPTCHA script not loaded yet.");
@@ -68,49 +60,29 @@ export class LoginComponent {
   onCaptchaResolved(token: string|null) {
     console.log('Captcha resolved with token:', token);
     if(token){
-      this.handleCaptchaResponse(token);
+      this.recaptchaToken = token; // Store the token received from Google
     }
   }
 
-  handleCaptchaResponse(response: string) {
-    this.recaptchaToken = response; // Store the token received from Google
-  }
-
-  onLogin() {
-    if (this.selectedRole() && this.selectedRole() == 'Admin') {
-      this.authService.login(this.username, this.password).subscribe({
-        next: (response) => {
-          console.log("response when login", response);
-          
-          localStorage.setItem('token', response.message);
-          this.router.navigate(['/appointments']);
-        },
-        error: (error) => {
-          alert('Login failed!')
-        }
-      });
-    }
-    else if (!this.recaptchaToken) {
-      alert('Please complete the reCAPTCHA');
-    }
-    else{
-      this.authService.verifyCapture({ recaptchaToken: this.recaptchaToken }).subscribe({
-        next:(response: any) => {
-          console.log('Captcha Verified', response);
-          this.authService.login(this.username, this.password).subscribe({
-            next: (res) => {
-              localStorage.setItem('token', res.token);
-              this.router.navigate(['/appointments']);
-            },
-            error: (error) => {
-              alert('Login failed!')
-            }
-          });
-        },
-        error: (error) => {
-          alert('Login failed2!')
-        }
-      })
-    }
+  onLogin() {   
+    this.authService.verifyCapture({ recaptchaToken: this.recaptchaToken }).subscribe({
+      next:(response: any) => {
+        console.log('Captcha Verified', response);
+        this.authService.login(this.username, this.password).subscribe({
+          next: (res) => {
+            console.log("message after login" , res);
+            
+            localStorage.setItem('token', res.message);
+            this.router.navigate(['/appointments']);
+          },
+          error: (error) => {
+            alert('Login failed!')
+          }
+        });
+      },
+      error: (error) => {
+        alert('Login failed2!')
+      }
+    });
   }
 }

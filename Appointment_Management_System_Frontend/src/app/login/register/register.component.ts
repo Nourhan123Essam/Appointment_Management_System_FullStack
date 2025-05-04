@@ -2,14 +2,27 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/Interfaces/User';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { environment } from '../../../environments/environment.development';
+import { RecaptchaModule } from "ng-recaptcha";
+
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [
+    FormsModule, 
+    CommonModule, 
+    ReactiveFormsModule,
+    CalendarModule,
+    DropdownModule,
+    RecaptchaModule,
+    RouterLink
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -17,16 +30,62 @@ export class RegisterComponent {
   registerForm!: FormGroup;
   confirmPassword: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+   recaptchaToken: string = '';
+   siteKey = environment.recaptchaSiteKey;
+
+  genders = [
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' }
+  ];
+  
+  maxDate = new Date(); // prevent future dates
+
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService, 
+    private router: Router) {
+      this.renderRecaptcha();
+    }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: ['', [Validators.required, Validators.minLength(3)]],
+      lastName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^01[0-9]{9}$')]], 
+      phone: ['', [Validators.required, Validators.pattern('^01[0-9]{9}$')]], 
       password: ['', [Validators.required, this.passwordValidator]],
       confirmPassword: ['', Validators.required],
+      gender: ['', Validators.required],
+      dateOfBirth: [null, Validators.required],
+      address: [''],
     });
+  }
+
+  renderRecaptcha() {
+    if (typeof grecaptcha === 'undefined') {
+      console.warn("reCAPTCHA script not loaded yet.");
+      setTimeout(() => this.renderRecaptcha(), 500); // Retry after delay
+      return;
+    }
+  
+    const captchaElement = document.querySelector('.g-recaptcha');
+    if (captchaElement) {
+      grecaptcha.render(captchaElement as HTMLElement, {
+        sitekey: this.siteKey,
+        callback: this.onCaptchaResolved.bind(this)
+      });
+    } else {
+      console.warn("reCAPTCHA element not found.");
+    }
+  }
+  
+
+  // Called when CAPTCHA is solved
+  onCaptchaResolved(token: string|null) {
+    console.log('Captcha resolved with token:', token);
+    if(token){
+      this.recaptchaToken = token; // Store the token received from Google
+    }
   }
 
   passwordValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -51,20 +110,33 @@ export class RegisterComponent {
     if (this.registerForm.valid && this.passwordsMatch()) {
       const userData: User = {
         Id: '',
-        fullName: this.registerForm.value.fullName,
+        firstName: this.registerForm.value.firstName,
         email: this.registerForm.value.email,
-        telephoneNumber: this.registerForm.value.phoneNumber,
-        password: this.registerForm.value.password
+        phone: this.registerForm.value.phone,
+        password: this.registerForm.value.password,
+        lastName: this.registerForm.value.lastName,
+        address: this.registerForm.value.address,
+        gender: this.registerForm.value.gender.value,
+        dateOfBirth: this.registerForm.value.dateOfBirth
       };
       
       console.log('Registering user:', userData);
-      this.authService.register(userData).subscribe({
-        next: (res) => {
+
+      this.authService.verifyCapture({ recaptchaToken: this.recaptchaToken }).subscribe({
+        next:(response: any) => {
+          console.log('Captcha Verified', response);
+          this.authService.register(userData).subscribe({
+          next: (res) => {
           alert('Registration successful! Please login.');
           this.router.navigate(['/login']);
+          },
+          error: (error) => {
+          alert('Registration failed!')
+          }
+          });
         },
         error: (error) => {
-          alert('Registration failed!')
+          alert('Login failed2!')
         }
       });
     }

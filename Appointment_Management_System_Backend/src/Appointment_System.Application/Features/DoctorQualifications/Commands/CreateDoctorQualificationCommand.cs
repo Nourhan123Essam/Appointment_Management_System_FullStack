@@ -26,8 +26,8 @@ namespace Appointment_System.Application.Features.DoctorQualifications.Commands
             if (request.Dto == null)
                 throw new ArgumentNullException(nameof(request.Dto), "Doctor qualification data must not be null.");
 
-            if (string.IsNullOrWhiteSpace(dto.DoctorId))
-                throw new ArgumentException("Doctor ID is required");
+            if (dto.DoctorId <= 0)
+                throw new ArgumentException("DoctorId should be greater than 0");
 
             var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(dto.DoctorId);
             if (doctor == null)

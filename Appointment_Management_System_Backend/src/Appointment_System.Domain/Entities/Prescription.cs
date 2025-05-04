@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Appointment_System.Domain.Entities
+﻿namespace Appointment_System.Domain.Entities
 {
     public class Prescription : BaseEntity
     {
-        public Guid AppointmentId { get; set; }
+        public int Id { get; set; }
+        public int AppointmentId { get; set; }
 
-        // Navigation
-        public virtual Appointment Appointment { get; set; } = null!;
-        public virtual ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();
+        // Navigation properties
+        public Appointment Appointment { get; set; } = null!;
+        public ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();
     }
 }

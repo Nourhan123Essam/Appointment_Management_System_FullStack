@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Appointment_System.Domain.Entities
+﻿namespace Appointment_System.Domain.Entities
 {
     public class Medicine : BaseEntity
     {
-        public Guid Id { get; set; }
-        public Guid PrescriptionId { get; set; }
+        public int Id { get; set; }
+
+        // Foreign key to the parent prescription
+        public int PrescriptionId { get; set; }
+
         public string Name { get; set; } = null!;
         public string Dosage { get; set; } = null!;
+
+        // Optional usage instructions
         public string? Instructions { get; set; }
 
-        // Navigation
-        public virtual Prescription Prescription { get; set; } = null!;
+        // Navigation property to parent prescription
+        public Prescription Prescription { get; set; } = null!;
     }
+
 }

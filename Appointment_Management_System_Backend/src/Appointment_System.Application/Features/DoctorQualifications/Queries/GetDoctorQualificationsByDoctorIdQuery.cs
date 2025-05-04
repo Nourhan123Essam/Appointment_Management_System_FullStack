@@ -5,7 +5,7 @@ using MediatR;
 namespace Appointment_System.Application.Features.DoctorQualifications.Queries
 {
     // Query
-    public record GetDoctorQualificationsByDoctorIdQuery(string DoctorId) : IRequest<List<DoctorQualificationDto>>;
+    public record GetDoctorQualificationsByDoctorIdQuery(int DoctorId) : IRequest<List<DoctorQualificationDto>>;
 
     //Handler
     public class GetDoctorQualificationsByDoctorIdHandler : IRequestHandler<GetDoctorQualificationsByDoctorIdQuery, List<DoctorQualificationDto>>
@@ -19,8 +19,9 @@ namespace Appointment_System.Application.Features.DoctorQualifications.Queries
 
         public async Task<List<DoctorQualificationDto>> Handle(GetDoctorQualificationsByDoctorIdQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.DoctorId))
-                throw new ArgumentException("Doctor ID cannot be null or empty");
+
+            if (request.DoctorId <= 0)
+                throw new ArgumentException("DoctorId should be greater than 0");
 
             var qualifications = await _unitOfWork.QualificationRepository.GetByDoctorIdAsync(request.DoctorId);
             return qualifications.Select(q => new DoctorQualificationDto(q)).ToList();

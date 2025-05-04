@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Appointment_System.Domain.Entities
+﻿namespace Appointment_System.Domain.Entities
 {
     public class Specialization : BaseEntity
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
+        public int Id { get; set; } 
+        public string Name { get; set; } = null!; // Name of the specialization (e.g., Cardiologist, Dentist)
 
-        // Navigation
-        public virtual ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
+        // Navigation property
+        public ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
     }
+
 }

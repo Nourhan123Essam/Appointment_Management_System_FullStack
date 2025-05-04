@@ -30,7 +30,7 @@ namespace Appointment_System.Presentation.Controllers
 
         // GET: api/patient/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<PatientDto>> GetPatientById(string id)
+        public async Task<ActionResult<PatientDto>> GetPatientById(int id)
         {
             var result = await _mediator.Send(new GetPatientByIdQuery(id));
             return result == null ? NotFound() : Ok(result);
@@ -38,7 +38,7 @@ namespace Appointment_System.Presentation.Controllers
 
         // DELETE: api/patient/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePatient(string id)
+        public async Task<IActionResult> DeletePatient(int id)
         {
             var success = await _mediator.Send(new DeletePatientCommand(id));
             return success ? NoContent() : NotFound();
@@ -47,7 +47,7 @@ namespace Appointment_System.Presentation.Controllers
         // GET: api/patient/{id}/appointments
         [HttpGet("{id}/appointments")]
         [Authorize(Roles = "Admin,Doctor")] // Allow Doctor & Admin
-        public async Task<ActionResult<List<AppointmentDto>>> GetPatientAppointments(string id)
+        public async Task<ActionResult<List<AppointmentDto>>> GetPatientAppointments(int id)
         {
             var appointments = await _mediator.Send(new GetPatientAppointmentsQuery(id));
             return Ok(appointments);

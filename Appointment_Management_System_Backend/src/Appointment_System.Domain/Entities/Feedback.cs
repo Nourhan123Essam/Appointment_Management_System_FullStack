@@ -8,12 +8,14 @@ namespace Appointment_System.Domain.Entities
 {
     public class Feedback : BaseEntity
     {
-        public Guid Id { get; set; }
-        public string DoctorId { get; set; } = null!;
-        public Guid AppointmentId { get; set; }
+        public int Id { get; set; }
+        public int AppointmentId { get; set; }
         public int Rate { get; set; }
         public string? Message { get; set; }
         public bool? Recommend { get; set; }
+
+        // Denormalized DoctorId to improve query performance when fetching doctor feedbacks.
+        public int DoctorId { get; set; }
 
         // Navigation
         public virtual Doctor Doctor { get; set; } = null!;

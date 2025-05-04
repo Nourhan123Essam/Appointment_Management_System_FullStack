@@ -1,40 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Appointment_System.Domain.Enums;
+﻿using Appointment_System.Domain.Enums;
 
 namespace Appointment_System.Domain.Entities
 {
     public class Appointment : BaseEntity
     {
-        public Guid Id { get; set; }
-        public string? PatientId { get; set; }
-        public string DoctorId { get; set; } = null!;
-        public Guid OfficeId { get; set; }
+        public int Id { get; set; }
+        public int? PatientId { get; set; }
+        public int DoctorId { get; set; }
+        public int OfficeId { get; set; }
         public string? GuestName { get; set; }
         public string? GuestEmail { get; set; }
         public string? GuestPhone { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; set; } // Exact date and time of appointment
         public AppointmentStatus Status { get; set; }
         public AppointmentType Type { get; set; }
-        public Guid? ParentAppointmentId { get; set; }
-        public Guid? ChatId { get; set; }
-        public Guid? PrescriptionId { get; set; }
+        public int? ParentAppointmentId { get; set; }
+        public int? PrescriptionId { get; set; }
         public string? Notes { get; set; }
+
+        // Paypal
         public string? PaymentId { get; set; }
         public PaymentStatus? PaymentStatus { get; set; }
 
-        // Navigation
-        public virtual Patient? Patient { get; set; }
-        public virtual Doctor Doctor { get; set; } = null!;
-        public virtual Office Office { get; set; } = null!;
-        public virtual Appointment? ParentAppointment { get; set; }
-        public virtual ICollection<Appointment> FollowUpAppointments { get; set; } = new List<Appointment>();
-        public virtual Chat? Chat { get; set; }
-        public virtual Prescription? Prescription { get; set; }
-        public virtual Feedback? Feedback { get; set; }
+        // Navigation properties
+        public Patient? Patient { get; set; }
+        public Doctor Doctor { get; set; } = null!;
+        public Office Office { get; set; } = null!;
+        public Appointment? ParentAppointment { get; set; }
+        public ICollection<Appointment> FollowUpAppointments { get; set; } = new List<Appointment>();
+        public Chat? Chat { get; set; }
+        public Prescription? Prescription { get; set; }
+        public Feedback? Feedback { get; set; }
     }
-
 }

@@ -14,11 +14,11 @@ namespace Appointment_System.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<DoctorAvailability?> GetByIdAsync(int id)
+        public async Task<Availability?> GetByIdAsync(int id)
         {
             return await _context.DoctorAvailabilities.FindAsync(id);
         }
-        public async Task<IEnumerable<DoctorAvailability>> GetByDoctorIdAsync(string doctorId)
+        public async Task<IEnumerable<Availability>> GetByDoctorIdAsync(int doctorId)
         {
             return await _context.DoctorAvailabilities
                 .Where(d => d.DoctorId == doctorId)
@@ -26,14 +26,14 @@ namespace Appointment_System.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Guid> AddAsync(DoctorAvailability availability)
+        public async Task<int> AddAsync(Availability availability)
         {
             await _context.DoctorAvailabilities.AddAsync(availability);
             await _context.SaveChangesAsync();
             return availability.Id;
         }
 
-        public async Task UpdateAsync(DoctorAvailability availability)
+        public async Task UpdateAsync(Availability availability)
         {
             _context.DoctorAvailabilities.Update(availability);
             await _context.SaveChangesAsync();

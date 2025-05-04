@@ -33,8 +33,8 @@ namespace Appointment_System.Application.Features.DoctorAvailabilities.Commands
                 throw new ArgumentNullException(nameof(dto), "Doctor availability data must not be null.");
 
 
-            if (string.IsNullOrWhiteSpace(dto.DoctorId))
-                throw new ArgumentException("DoctorId is required.", nameof(dto.DoctorId));
+            if (dto.DoctorId <= 0)
+                throw new ArgumentException("DoctorId should be greater than 0");
 
             var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(dto.DoctorId) != null;
             if (!doctorExists)

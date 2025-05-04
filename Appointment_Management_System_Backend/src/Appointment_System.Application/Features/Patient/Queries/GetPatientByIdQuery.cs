@@ -7,9 +7,9 @@ namespace Appointment_System.Application.Features.Patient.Queries
     //Query
     public class GetPatientByIdQuery : IRequest<PatientDto?>
     {
-        public string PatientId { get; }
+        public int PatientId { get; }
 
-        public GetPatientByIdQuery(string patientId)
+        public GetPatientByIdQuery(int patientId)
         {
             PatientId = patientId;
         }

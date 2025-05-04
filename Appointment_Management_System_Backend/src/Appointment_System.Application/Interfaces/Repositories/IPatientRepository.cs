@@ -5,9 +5,10 @@ namespace Appointment_System.Application.Interfaces.Repositories
 {
     public interface IPatientRepository
     {
-        Task<User?> GetPatientByIdAsync(string patientId);
-        Task DeletePatientAsync(User patient);
-        Task<List<Appointment>> GetPatientAppointmentsAsync(string patientId);
+        Task<Patient?> GetPatientByIdAsync(int patientId);
+        Task DeletePatientAsync(Patient patient); 
+        Task AddAsync(Patient patient);
+        Task<List<Appointment>> GetPatientAppointmentsAsync(int patientId);
         Task<PagedResult<PatientDto>> GetPatientsAsync(PatientQueryParams queryParams);
 
     }
