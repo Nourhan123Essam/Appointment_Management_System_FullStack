@@ -4,6 +4,8 @@ using Appointment_System.Presentation.Middlewares;
 using Serilog;
 using Appointment_System.Application;
 using System.Threading.RateLimiting;
+using StackExchange.Redis;
+using DotNetEnv;
 
 //"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
 
@@ -58,6 +60,10 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
+// Register Redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
+
 
 // Add CORS to the container.
 builder.Services.AddCors(options =>
@@ -88,6 +94,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
 
+// This loads variables from the .env file
+Env.Load(); 
 
 //  Ensure required roles and admin user exist (Seeding)
 using (var scope = app.Services.CreateScope())

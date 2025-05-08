@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
+using Appointment_System.Application.Interfaces.Services;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
+using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -22,21 +25,26 @@ namespace Appointment_System.Infrastructure.Repositories
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
+        private readonly IRedisService _redisService;
+
         public AuthenticationRepository(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IRedisService redisService)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
+            ; _signInManager = signInManager;
             _configuration = configuration;
             _context = context;
+            _redisService = redisService;
         }
 
         public async Task<IdentityUser> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
         }
+
         public async Task<bool> Register(Patient appUser, string password)
         {
             //check of email correct
@@ -66,27 +74,81 @@ namespace Appointment_System.Infrastructure.Repositories
             return true;
         }
 
-
-        public async Task<Response> Login(string email, string password)
+        public async Task<string?> GenerateTokenAsync(string userId)
         {
-
-            //check of email correct
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
-                return new Response(false, "Invalid Email");
+                return null;
 
-            //check if password correct
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-            if (result == null)
-            {
-                return new Response(false, "Invalid Password");
-            }
-
-            //generate token and return it as the user vervified
-            string token = await GenerateToken(user);
-            return new Response(true, token);
+            return await GenerateToken(user);
         }
 
+
+        public async Task<bool> IsUserExist(string userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+            return true;
+        }
+
+        //public async Task<Response> Login(string email, string password)
+        //{
+
+        //    //check of email correct
+        //    var user = await _userManager.FindByEmailAsync(email);
+        //    if (user == null)
+        //        return new Response(false, "Invalid Email");
+
+        //    //check if password correct
+        //    var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+        //    if (result == null)
+        //    {
+        //        return new Response(false, "Invalid Password");
+        //    }
+
+        //    //generate token and return it as the user vervified
+        //    string token = await GenerateToken(user);
+        //    return new Response(true, token);
+        //}
+
+        public async Task<Domain.Responses.Response<LoginResult>> Login(string email, string password)
+        {
+            // 1. Try to find the user by email
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return Domain.Responses.Response<LoginResult>.Fail("Invalid email");
+
+            // 2. Check if the password is correct
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            if (!result.Succeeded)
+                return Domain.Responses.Response<LoginResult>.Fail("Invalid password");
+
+            // 3. Generate the JWT access token (short-lived)
+            string accessToken = await GenerateToken(user);
+
+            // 4. Generate a new secure refresh token (long-lived)
+            string refreshToken = GenerateRefreshToken();
+
+            // 5. Store the refresh token in Redis with expiration (key: "refresh_userId")
+            await _redisService.SetRefreshTokenAsync(
+                user.Id,
+                refreshToken,
+                TimeSpan.FromDays(7)
+            );
+
+            // 6. Prepare the response using the strongly typed LoginResult
+            var loginResult = new LoginResult(
+                AccessToken: accessToken,
+                RefreshToken: refreshToken,
+                ExpiresIn: 86400 // 24 hours in seconds
+            );
+
+            // 7. Return a success response with the tokens
+            return Domain.Responses.Response<LoginResult>.Success(loginResult, "Login successful");
+        }
+
+
+        // Generate Access Token
         private async Task<string> GenerateToken(IdentityUser user)
         {
             var claims = new List<Claim>
@@ -112,12 +174,20 @@ namespace Appointment_System.Infrastructure.Repositories
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(24),
+                expires: DateTime.UtcNow.AddHours(24), // Short expiration
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        // Generate Refresh Token
+        public string GenerateRefreshToken()
+        {
+            var randomBytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
     }
 }

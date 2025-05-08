@@ -34,8 +34,11 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - app-network
+
 
   db:
     container_name: appointment-db
@@ -52,7 +55,9 @@ services:
     hostname: "sqlServer"
 
 volumes:
-  sqlserver_data: # This ensures data is persistent
+  sqlserver_data: # This ensures data is persistent for DB
+    driver: local
+  redis_data: # This ensures data is persistent for Redis
     driver: local
 
 networks:

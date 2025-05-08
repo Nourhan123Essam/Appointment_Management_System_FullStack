@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
+import { Observable } from 'rxjs';
+import { LoginResult } from '../Interfaces/LoginResult';
 
 @Injectable({
   providedIn: 'root'
@@ -24,44 +26,101 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/verify-captcha`, recaptchaToken);
   }
 
+  // Function to call refresh token endpoint
+  refreshToken(): Observable<LoginResult> {
+    console.log("entered to call the api for refresh token");
+  
+    const refreshToken = this.getRefreshToken();
+  
+    // Send it as a raw string in the request body
+    return this.http.post<LoginResult>(
+      `${this.apiUrl}/refresh-token`,
+      JSON.stringify(refreshToken), // Important: convert string to JSON string
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+  
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
+
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('roles');
-    this.userRoles = null; // Clear cached roles
+    this.clearTokens();
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('access_token');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('access_token');
   }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refresh_token');
+  }
+
+  setTokens(access: string, refresh: string) {
+    localStorage.setItem('access_token', access);
+    localStorage.setItem('refresh_token', refresh);
+    this.extractRoles();
+    this.startTokenRefreshMonitor();
+  }
+
+  clearTokens() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('roles');
+  }
+
+  startTokenRefreshMonitor() {
+    // setInterval(() => {
+    //   const token = this.getToken();
+    //   if (token && this.isTokenExpiringSoon(token)) {
+    //     this.refreshToken().subscribe({
+    //       next: () => console.log("Token refreshed"),
+    //       error: () => this.logout()
+    //     });
+    //   }
+    // }, 1 * 60 * 1000); // Every 5 mins
+  }
+  
+  private isTokenExpiringSoon(token: string): boolean {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp;
+    const currentTime = Math.floor(Date.now() / 1000);
+    return exp - currentTime < 300; // Less than 5 minutes left
+  }
+  
 
   private extractRoles(): void {
     if (!this.userRoles) {
       const token = this.getToken();
       if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-        
-        // Handle multiple roles
-        if (payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]) {
-          const roles = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-          
+        try {
+          const payloadStr = atob(token.split('.')[1]);
+          const payload = JSON.parse(payloadStr);
+  
+          // Extract role from the long claim key
+          const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+          const roles = payload[roleClaim];
+  
           // Ensure roles are stored as an array
           this.userRoles = Array.isArray(roles) ? roles : [roles];
   
-          localStorage.setItem('roles', JSON.stringify(this.userRoles)); // Store in local storage
-        } else {
+          localStorage.setItem('roles', JSON.stringify(this.userRoles));
+          console.log("Extracted user roles:", this.userRoles);
+  
+        } catch (error) {
+          console.error("Failed to parse token roles:", error);
           this.userRoles = [];
         }
       } else {
         this.userRoles = [];
       }
     }
-    console.log("Extracted user roles", this.userRoles);
-    
   }
   
   hasRole(role: string): boolean {

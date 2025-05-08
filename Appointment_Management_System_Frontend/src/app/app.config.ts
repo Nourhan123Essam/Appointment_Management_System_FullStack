@@ -8,14 +8,15 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
-
+import { refreshTokenInterceptor } from './core/interceptors/refreshTokenInterceptor';
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes),
+  providers: [
+    provideRouter(routes),
     MessageService,
     ConfirmationService,
     provideAnimations(),
-    provideHttpClient(withInterceptors([authInterceptor])) // Register the interceptor
+    provideHttpClient(withInterceptors([authInterceptor, refreshTokenInterceptor])) // Register the interceptor
   ]
 };

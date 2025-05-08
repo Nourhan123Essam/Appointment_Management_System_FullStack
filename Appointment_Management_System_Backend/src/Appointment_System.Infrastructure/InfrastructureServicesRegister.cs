@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Appointment_System.Application.DTOs.Authentication;
+using Appointment_System.Application.DTOs.Email;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces.Services;
@@ -59,9 +60,16 @@ namespace Appointment_System.Infrastructure
 
             // External Services
 
+            // Redis
+            services.AddScoped<IRedisService, RedisService>();
+
             // Recaptcha
             services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));
             services.AddHttpClient<ICaptchaValidatorService, GoogleCaptchaValidatorService>();
+
+            //Email
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            services.AddScoped<IEmailService, EmailService>();
 
 
             return services;

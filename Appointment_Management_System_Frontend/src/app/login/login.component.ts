@@ -72,7 +72,7 @@ export class LoginComponent {
           next: (res) => {
             console.log("message after login" , res);
             
-            localStorage.setItem('token', res.message);
+            this.authService.setTokens(res.data.accessToken, res.data.refreshToken);
             this.router.navigate(['/appointments']);
           },
           error: (error) => {

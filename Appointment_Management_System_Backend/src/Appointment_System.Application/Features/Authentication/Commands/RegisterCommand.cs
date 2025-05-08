@@ -8,7 +8,7 @@ using MediatR;
 namespace Appointment_System.Application.Features.Authentication.Commands
 {
     //Command
-    public class RegisterCommand : IRequest<Response>
+    public class RegisterCommand : IRequest<Response<string>>
     {
         public RegisterDTO RegisterDto { get; }
 
@@ -19,7 +19,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     }
 
     //Handler
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Response>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Response<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -28,7 +28,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Response> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<Response<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var dto = request.RegisterDto;
             var newUser = new Domain.Entities.Patient
@@ -45,8 +45,8 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             var result = await _unitOfWork.Authentication.Register(newUser, dto.Password);
 
             return result
-                ? new Response(true, "User registered successfully")
-                : new Response(false, "Invalid data provided");
+                ? Response<string>.Success("", "User registered successfully")
+                : Response<string>.Fail("Invalid data provided");
         }
     }
 

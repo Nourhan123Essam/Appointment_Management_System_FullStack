@@ -7,6 +7,10 @@ namespace Appointment_System.Application.Interfaces.Repositories
     public interface IAuthenticationRepository
     {
         public Task<bool> Register(Patient appUser, string password);
-        public Task<Response> Login(string email, string password);
+        public Task<bool> IsUserExist(string userId);
+        public Task<Response<LoginResult>> Login(string email, string password);
+        public Task<string?> GenerateTokenAsync(string userId);
+        public string GenerateRefreshToken();
+
     }
 }

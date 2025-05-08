@@ -8,13 +8,13 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy .csproj before restore to enhanc caching and not to download dependancies with each update to the app
-COPY *.csproj .
+# Copy solution file and project files
+COPY . .
 
 # Restore using the solution file
 RUN dotnet restore Appointment_Management_System_Backend.sln
 
 # Copy everything in the backend folder from this layer I can all the time update my image with the updates of the project 
-COPY . .
 
 # Publish only the API project
 WORKDIR /src/src/Appointment_System.Presentation
