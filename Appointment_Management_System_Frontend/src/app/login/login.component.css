@@ -73,3 +73,7 @@
     font-size: 12px;
     margin-top: 4px;
   }
+
+  .forget:hover{
+    color: #007bff;
+  }

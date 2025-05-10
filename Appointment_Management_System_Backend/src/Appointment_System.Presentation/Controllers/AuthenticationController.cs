@@ -1,6 +1,7 @@
 ﻿using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.DTOs.Captcha;
 using Appointment_System.Application.Features.Authentication.Commands;
+using Appointment_System.Application.Helpers;
 using Appointment_System.Application.Interfaces.Services;
 using Appointment_System.Domain.Responses;
 using MediatR;
@@ -16,10 +17,19 @@ namespace Appointment_System.Presentation.Controllers
         private readonly RecaptchaSettings _recaptchaSettings;
         private readonly ICaptchaValidatorService _captchaValidatorService;
 
-        public AuthenticationController(IMediator mediator, ICaptchaValidatorService captchaValidatorService)
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
+
+
+        public AuthenticationController(IMediator mediator, 
+            ICaptchaValidatorService captchaValidatorService,
+            IEmailService emailService, IConfiguration configuration)
         {
             _mediator = mediator;
             _captchaValidatorService = captchaValidatorService;
+
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -57,11 +67,22 @@ namespace Appointment_System.Presentation.Controllers
             return Ok(result.Data);
         }
 
-        [HttpPost("send-test-email")]
-        public async Task<IActionResult> SendTestEmail([FromServices] IEmailService emailService)
+        [HttpPost("request-reset-password")]
+        public async Task<IActionResult> RequestResetPassword([FromBody] RequestPasswordResetCommand command)
+            => Ok(await _mediator.Send(command));
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+            => Ok(await _mediator.Send(command));
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] string refreshToken)
         {
-            await emailService.SendEmailAsync("nourhan.essam.makhlouf@gmail.com", "Test Email", "This is a test email.");
-            return Ok("Email sent");
+            var result = await _mediator.Send(new LogoutCommand(refreshToken));
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
         }
 
     }

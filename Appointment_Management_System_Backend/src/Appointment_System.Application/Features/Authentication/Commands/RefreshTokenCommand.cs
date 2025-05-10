@@ -49,7 +49,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             await _redis.SetRefreshTokenAsync(newRefreshToken, userId, TimeSpan.FromDays(7));
 
             // 5. Return new token pair
-            const int accessTokenExpiryInSeconds = 86400;
+            const int accessTokenExpiryInSeconds = 900;
             var result = new LoginResult(newAccessToken, newRefreshToken, accessTokenExpiryInSeconds);
             return Response<LoginResult>.Success(result);
         }

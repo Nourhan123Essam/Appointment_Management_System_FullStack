@@ -11,6 +11,9 @@ namespace Appointment_System.Application.Interfaces.Repositories
         public Task<Response<LoginResult>> Login(string email, string password);
         public Task<string?> GenerateTokenAsync(string userId);
         public string GenerateRefreshToken();
+        Task<bool> UpdatePasswordAsync(string userId, string newPassword);
+        public Task<string?>  GetUserIdByEmailAsync(string email);
+
 
     }
 }

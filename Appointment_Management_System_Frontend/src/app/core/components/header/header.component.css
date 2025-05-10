@@ -1,46 +1,83 @@
-/* CSS */
 .main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #3f51b5; /* light grayish background */
-    padding: 10px 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .logo-section {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo {
-    height: 40px;
-    margin-right: 10px;
-    background-color: #97989f;
-    border-radius: 50%;
-  }
-  
-  .logo-text {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: white; /* dark gray-purple */
-  }
-  
-  .nav-links a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: white; /* blue tone */
-    font-weight: 500;
-    transition: color 0.3s ease;
-  }
-  
-  .nav-links a:hover,
-  .nav-links .active-link {
-    color: #c5cae9; /* light purple */
-    border-bottom: 2px solid #c5cae9;
-    padding-bottom: 2px;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3f51b5; /* deep blue */
+  padding: 10px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* LEFT: Logo + App Name */
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 10px;
+  background-color: #97989f;
+  border-radius: 50%;
+}
+
+.logo-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* CENTER: Navigation */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links .active-link {
+  color: #d1c4e9; /* light purple */
+  border-bottom: 2px solid #d1c4e9;
+  padding-bottom: 2px;
+}
+
+/* RIGHT: Auth buttons */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-button {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header-button:hover {
+  background-color: white;
+  color: #3f51b5;
+}
+
+.logout-btn {
+  border-color: #f44336;
+  color: #f44336;
+}
+
+.logout-btn:hover {
+  background-color: #f44336;
+  color: white;
+}

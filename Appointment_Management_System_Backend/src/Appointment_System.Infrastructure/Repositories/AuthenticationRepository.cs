@@ -83,6 +83,14 @@ namespace Appointment_System.Infrastructure.Repositories
             return await GenerateToken(user);
         }
 
+        public async Task<string?> GetUserIdByEmailAsync(string email)
+        {
+            var user = await GetUserByEmailAsync(email);                
+            if (user == null)
+                return null;
+
+            return user.Id;
+        }
 
         public async Task<bool> IsUserExist(string userId)
         {
@@ -91,25 +99,21 @@ namespace Appointment_System.Infrastructure.Repositories
             return true;
         }
 
-        //public async Task<Response> Login(string email, string password)
-        //{
+        public async Task<bool> UpdatePasswordAsync(string userId, string newPassword)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return false;
 
-        //    //check of email correct
-        //    var user = await _userManager.FindByEmailAsync(email);
-        //    if (user == null)
-        //        return new Response(false, "Invalid Email");
+            var passwordHasher = new PasswordHasher<IdentityUser>();
+            user.PasswordHash = passwordHasher.HashPassword(user, newPassword);
 
-        //    //check if password correct
-        //    var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
-        //    if (result == null)
-        //    {
-        //        return new Response(false, "Invalid Password");
-        //    }
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
 
-        //    //generate token and return it as the user vervified
-        //    string token = await GenerateToken(user);
-        //    return new Response(true, token);
-        //}
+            return true;
+        }
+
 
         public async Task<Domain.Responses.Response<LoginResult>> Login(string email, string password)
         {
@@ -140,7 +144,7 @@ namespace Appointment_System.Infrastructure.Repositories
             var loginResult = new LoginResult(
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
-                ExpiresIn: 86400 // 24 hours in seconds
+                ExpiresIn: 900 // 15 Minutes in seconds
             );
 
             // 7. Return a success response with the tokens
@@ -174,7 +178,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(24), // Short expiration
+                expires: DateTime.UtcNow.AddMinutes(15), // Short expiration
                 signingCredentials: credentials
             );
 
@@ -189,5 +193,6 @@ namespace Appointment_System.Infrastructure.Repositories
             rng.GetBytes(randomBytes);
             return Convert.ToBase64String(randomBytes);
         }
+
     }
 }

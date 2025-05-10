@@ -13,6 +13,8 @@ import { AddDoctorComponent } from './doctors/add-doctor/add-doctor.component';
 import { UpdateDoctorComponent } from './doctors/update-doctor/update-doctor.component';
 import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
 import { PatientDetailsComponent } from './patients/patient-details/patient-details.component';
+import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/appointments', pathMatch: 'full' },
@@ -20,6 +22,8 @@ export const routes: Routes = [
     // Authentication
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'reset-password', component: ResetPasswordComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
   
     // Appointments (Accessible to All Authenticated Users)
     { path: 'appointments', component: AppointmentsComponent, canActivate: [authGuard] },

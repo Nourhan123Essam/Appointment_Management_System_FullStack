@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { LoginResult } from '../Interfaces/LoginResult';
 
 @Injectable({
@@ -11,6 +11,11 @@ import { LoginResult } from '../Interfaces/LoginResult';
 export class AuthService {
   private apiUrl = `${environment.ApiBaseUrl}/Authentication`;
   private userRoles: string[] | null = null; // Cache roles in memory
+
+  private loggedIn$ = new BehaviorSubject<boolean>(this.isAuthenticated());
+  private roles$ = new BehaviorSubject<string[] | null>(this.getRoles());
+
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -42,12 +47,35 @@ export class AuthService {
     );
   }
   
+  requestPasswordReset(email: string) {
+    return this.http.post(`${this.apiUrl}/request-reset-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string, confirmPassword: string) {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      resetPassword: {
+        token,
+        newPassword,
+        confirmPassword
+      }
+    });
+  }
+
+  logout() {
+    const refreshToken = this.getRefreshToken();
+    return this.http.post(`${this.apiUrl}/logout`, JSON.stringify(refreshToken), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-  logout() {
-    this.clearTokens();
-    this.router.navigate(['/login']);
+  isLoggedIn(): Observable<boolean> {
+    return this.loggedIn$.asObservable();
+  }
+
+  getRolesStream(): Observable<string[] | null> {
+    return this.roles$.asObservable();
   }
 
   isAuthenticated(): boolean {
@@ -62,31 +90,28 @@ export class AuthService {
     return localStorage.getItem('refresh_token');
   }
 
+  getRoles(): string[] | null{
+    return this.userRoles;
+  }
+
   setTokens(access: string, refresh: string) {
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
     this.extractRoles();
-    this.startTokenRefreshMonitor();
+    this.loggedIn$.next(true);
+    this.roles$.next(this.getRoles());
   }
 
   clearTokens() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('roles');
+    this.userRoles = null;
+    this.loggedIn$.next(false);
+    this.roles$.next(null);
   }
 
-  startTokenRefreshMonitor() {
-    // setInterval(() => {
-    //   const token = this.getToken();
-    //   if (token && this.isTokenExpiringSoon(token)) {
-    //     this.refreshToken().subscribe({
-    //       next: () => console.log("Token refreshed"),
-    //       error: () => this.logout()
-    //     });
-    //   }
-    // }, 1 * 60 * 1000); // Every 5 mins
-  }
-  
+ 
   private isTokenExpiringSoon(token: string): boolean {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const exp = payload.exp;
@@ -96,6 +121,8 @@ export class AuthService {
   
 
   private extractRoles(): void {
+    console.log("user roles", this.userRoles);
+    
     if (!this.userRoles) {
       const token = this.getToken();
       if (token) {

@@ -18,6 +18,10 @@
         <re-captcha (resolved)="onCaptchaResolved($event)" [siteKey]="siteKey"></re-captcha>
       </div>
 
+      <p class="text-end mt-3"> 
+        <a [routerLink]="['/forgot-password']" class="forget" style="cursor: pointer; text-decoration: none; color: gray;">Forget Passowrd?</a>
+      </p>
+
       <button type="submit" [disabled]="loginForm.invalid || !recaptchaToken" class="btn-primary">Login</button>
     </form>
 

@@ -12,6 +12,7 @@ namespace Appointment_System.Infrastructure.Services
             _db = redis.GetDatabase();
         }
 
+        // Refresh token
         public async Task SetRefreshTokenAsync(string userId, string refreshToken, TimeSpan expiry)
         {
             // Key = refreshToken, Value = userId
@@ -28,6 +29,23 @@ namespace Appointment_System.Infrastructure.Services
         {
             await _db.KeyDeleteAsync($"refreshToken:{userId}");
         }
+
+        /////////////////////////////////////////////////////////
+        // Reset password
+        // Set token with token as key and userId as value
+        public Task SetResetPasswordTokenAsync(string token, string userId, TimeSpan expiry) =>
+            _db.StringSetAsync($"resetPasswordToken:{token}", userId, expiry);
+
+        public async Task<string> GetResetPasswordTokenAsync(string token)
+        {
+            return await _db.StringGetAsync($"resetPasswordToken:{token}");
+        }
+
+        public async Task DeleteResetPasswordTokenAsync(string token)
+        {
+            await _db.KeyDeleteAsync($"resetPasswordToken:{token}");
+        }
+
     }
 
 }

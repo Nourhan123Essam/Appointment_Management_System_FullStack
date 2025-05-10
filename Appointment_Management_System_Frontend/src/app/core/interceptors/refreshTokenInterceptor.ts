@@ -6,45 +6,39 @@ import { Router } from "@angular/router";
 import { LoginResult } from "../Interfaces/LoginResult";
 
 export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
-    const authService = inject(AuthService);
-    const http = inject(HttpClient);
-    const router = inject(Router);
-  
-    return next(req).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 && authService.getRefreshToken()) {
-          // Try refreshing the token
-          const refreshToken = authService.getRefreshToken();
-          authService.refreshToken().subscribe({
-            next:(res: LoginResult) => {
-              authService.setTokens(res.accessToken, res.refreshToken);
-  
-              // Clone the original request with new token
-              const newReq = req.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${res.accessToken}`
-                }
-              });
-              console.log("Refresh Token is working!!!!!!!!!!!!!!!!");
-                
-              // Retry the original request
-              return next(newReq);
-            },
-            error: err => {
-              console.log("catch error in refresh token interceptor!");
-              
-              authService.clearTokens();
-              // redirect to login
-              router.navigate(['/login']);
+  const authService = inject(AuthService);
+  const http = inject(HttpClient);
+  const router = inject(Router);
 
-              return throwError(() => err);
-            }
-          });
-        }
-        console.log("look here!!!!!!!!!!!!!!!");
-        
-        return throwError(() => error);
-      })
-    );
-  };
-  
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 && authService.getRefreshToken()) {
+        return authService.refreshToken().pipe(
+          switchMap((res: LoginResult) => {
+            authService.setTokens(res.accessToken, res.refreshToken);
+
+            const newReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${res.accessToken}`
+              }
+            });
+
+            console.log("Refresh Token succeeded and request retried");
+
+            return next(newReq); // Return retried request
+          }),
+          catchError(err => {
+            console.log("Refresh token failed, redirecting to login");
+
+            authService.clearTokens();
+            router.navigate(['/login']);
+            return throwError(() => err);
+          })
+        );
+      }
+
+      console.log("Not a 401 or no refresh token, passing error");
+      return throwError(() => error);
+    })
+  );
+};

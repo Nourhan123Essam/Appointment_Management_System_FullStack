@@ -1,4 +1,4 @@
-﻿namespace Appointment_System.Application.DTOs.Email
+﻿namespace Appointment_System.Application.DTOs
 {
     public class EmailSettings
     {
@@ -9,5 +9,4 @@
         public string Username { get; set; }
         public string Password { get; set; }
     }
-
 }

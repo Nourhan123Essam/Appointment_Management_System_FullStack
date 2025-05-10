@@ -1,6 +1,6 @@
 ﻿using System.Text;
+using Appointment_System.Application.DTOs;
 using Appointment_System.Application.DTOs.Authentication;
-using Appointment_System.Application.DTOs.Email;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces.Services;
