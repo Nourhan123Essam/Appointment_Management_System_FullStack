@@ -71,6 +71,9 @@ namespace Appointment_System.Infrastructure
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             services.AddScoped<IEmailService, EmailService>();
 
+            // Session
+            services.AddScoped<ISessionService, SessionService>();
+
 
             return services;
         }

@@ -3,6 +3,7 @@
     public record LoginResult(
         string AccessToken,
         string RefreshToken,
+        string SessionId,
         int ExpiresIn
     );
 }

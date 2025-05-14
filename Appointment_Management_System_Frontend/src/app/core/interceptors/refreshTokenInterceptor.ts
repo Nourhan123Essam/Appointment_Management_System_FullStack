@@ -38,6 +38,8 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       console.log("Not a 401 or no refresh token, passing error");
+      console.log(error);
+      
       return throwError(() => error);
     })
   );

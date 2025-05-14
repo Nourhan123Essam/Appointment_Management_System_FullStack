@@ -123,7 +123,7 @@ export class AuthService {
   private extractRoles(): void {
     console.log("user roles", this.userRoles);
     
-    if (!this.userRoles) {
+    if (true) {
       const token = this.getToken();
       if (token) {
         try {

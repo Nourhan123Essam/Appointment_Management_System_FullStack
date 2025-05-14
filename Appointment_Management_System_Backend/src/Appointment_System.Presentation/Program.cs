@@ -6,6 +6,7 @@ using Appointment_System.Application;
 using System.Threading.RateLimiting;
 using StackExchange.Redis;
 using DotNetEnv;
+using Microsoft.AspNetCore.Session;
 
 //"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
 
@@ -64,6 +65,24 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 
+// Session
+// 1. Register Redis cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+
+// 2. Register session service
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "AppointCare";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
+// 3. Register the custom session middleware 
+builder.Services.AddTransient<SessionValidationMiddleware>();
 
 // Add CORS to the container.
 builder.Services.AddCors(options =>
@@ -73,11 +92,10 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200") // Your Angular app URL
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials()
-              .SetIsOriginAllowed(origin => true) // Allow dynamic origins
+              .AllowCredentials() // Allow cookies (important!)
               .WithExposedHeaders("Authorization"); // Ensure Angular can access headers
     });
-});
+}); 
 
 // Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
@@ -93,6 +111,9 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
+
+//// Use session
+//app.UseSession();
 
 // This loads variables from the .env file
 Env.Load(); 
@@ -123,8 +144,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication();     // Validates JWT token
+app.UseAuthorization();      // Role policies, etc.
+
+app.UseSession();
+app.UseMiddleware<SessionValidationMiddleware>();  // Validates sessionId
 
 app.MapControllers();
 

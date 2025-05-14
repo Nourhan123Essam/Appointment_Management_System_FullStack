@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment.development';
 import { RecaptchaModule } from "ng-recaptcha";
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AuthService } from '../core/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -33,7 +34,11 @@ export class LoginComponent {
   ];
   
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private messageService: MessageService
+  ) {
     this.renderRecaptcha();
   }
 
@@ -73,15 +78,19 @@ export class LoginComponent {
             console.log("message after login" , res);
             
             this.authService.setTokens(res.data.accessToken, res.data.refreshToken);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login completed successfully!' });
             this.router.navigate(['/appointments']);
           },
           error: (error) => {
-            alert('Login failed!')
+            console.log("error when login", error);
+            
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.message || 'Login failed!' });
           }
         });
       },
       error: (error) => {
-        alert('Login failed2!')
+        console.log("error 2222 when login", error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message || 'Login failed!' });
       }
     });
   }

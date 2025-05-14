@@ -19,21 +19,25 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Response<string>>
     {
         private readonly IRedisService _redis;
+        private readonly ISessionService _sessionService;
 
-        public LogoutCommandHandler(IRedisService redis)
+        public LogoutCommandHandler(IRedisService redis, ISessionService sessionService)
         {
             _redis = redis;
+            _sessionService = sessionService;
         }
 
         public async Task<Response<string>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            // Option 1: You stored refresh token with userId as value
             var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
             if (string.IsNullOrEmpty(userId))
                 return Response<string>.Fail("Invalid or expired refresh token.");
 
             // Remove the refresh token
             await _redis.DeleteRefreshTokenAsync(userId);
+
+            // Remove the sessionId
+            await _sessionService.RemoveSessionAsync(userId);
 
             return Response<string>.Success("Logout successful.");
         }

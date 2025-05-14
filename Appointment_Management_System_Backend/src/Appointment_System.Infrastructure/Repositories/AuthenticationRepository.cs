@@ -12,7 +12,9 @@ using Appointment_System.Application.Interfaces.Services;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
+using Appointment_System.Infrastructure.Services;
 using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -26,18 +28,21 @@ namespace Appointment_System.Infrastructure.Repositories
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly IRedisService _redisService;
+        private readonly ISessionService _sessionService;
 
         public AuthenticationRepository(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
             ApplicationDbContext context,
-            IRedisService redisService)
+            IRedisService redisService,
+            ISessionService sessionService)
         {
             _userManager = userManager;
             ; _signInManager = signInManager;
             _configuration = configuration;
             _context = context;
             _redisService = redisService;
+            _sessionService = sessionService;
         }
 
         public async Task<IdentityUser> GetUserByEmailAsync(string email)
@@ -140,14 +145,18 @@ namespace Appointment_System.Infrastructure.Repositories
                 TimeSpan.FromDays(7)
             );
 
-            // 6. Prepare the response using the strongly typed LoginResult
+            // 6. set session id
+            var sessionId = await _sessionService.CreateSessionAsync(user.Id);
+
+            // 7. Prepare the response using the strongly typed LoginResult
             var loginResult = new LoginResult(
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
+                SessionId: sessionId,
                 ExpiresIn: 900 // 15 Minutes in seconds
             );
 
-            // 7. Return a success response with the tokens
+            // 8. Return a success response with the tokens
             return Domain.Responses.Response<LoginResult>.Success(loginResult, "Login successful");
         }
 
