@@ -33,31 +33,6 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             _sessionService = sessionService;
         }
 
-        //public async Task<Response<LoginResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
-        //{
-        //    // 1. Get user ID from Redis by refresh token
-        //    var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
-        //    if (string.IsNullOrEmpty(userId))
-        //        return Response<LoginResult>.Fail("Refresh token is invalid or expired.");
-
-        //    // 2. Generate new access token (will fail if user doesn't exist)
-        //    var newAccessToken = await _unitOfWork.Authentication.GenerateTokenAsync(userId);
-        //    if (newAccessToken == null)
-        //        return Response<LoginResult>.Fail("User not found.");
-
-        //    // 3. Generate new refresh token
-        //    var newRefreshToken = _unitOfWork.Authentication.GenerateRefreshToken();
-
-        //    // 4. Replace old refresh token in Redis
-        //    await _redis.DeleteRefreshTokenAsync(request.RefreshToken);
-        //    await _redis.SetRefreshTokenAsync(newRefreshToken, userId, TimeSpan.FromDays(7));
-
-        //    // 5. Return new token pair
-        //    const int accessTokenExpiryInSeconds = 900;
-        //    var result = new LoginResult(newAccessToken, newRefreshToken, accessTokenExpiryInSeconds);
-        //    return Response<LoginResult>.Success(result);
-        //}
-
         public async Task<Response<LoginResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             // 1. Get user ID from Redis by refresh token

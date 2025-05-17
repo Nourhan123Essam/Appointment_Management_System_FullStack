@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces.Services;
+using Appointment_System.Application.Localization;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
@@ -29,13 +30,15 @@ namespace Appointment_System.Infrastructure.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IRedisService _redisService;
         private readonly ISessionService _sessionService;
+        private readonly ILocalizationService _localizer;
 
         public AuthenticationRepository(UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
             ApplicationDbContext context,
             IRedisService redisService,
-            ISessionService sessionService)
+            ISessionService sessionService,
+            ILocalizationService localizer)
         {
             _userManager = userManager;
             ; _signInManager = signInManager;
@@ -43,6 +46,7 @@ namespace Appointment_System.Infrastructure.Repositories
             _context = context;
             _redisService = redisService;
             _sessionService = sessionService;
+            _localizer = localizer;
         }
 
         public async Task<IdentityUser> GetUserByEmailAsync(string email)
@@ -125,12 +129,12 @@ namespace Appointment_System.Infrastructure.Repositories
             // 1. Try to find the user by email
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                return Domain.Responses.Response<LoginResult>.Fail("Invalid email");
+                return Domain.Responses.Response<LoginResult>.Fail(_localizer["InvalidEmail"]);
 
             // 2. Check if the password is correct
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
             if (!result.Succeeded)
-                return Domain.Responses.Response<LoginResult>.Fail("Invalid password");
+                return Domain.Responses.Response<LoginResult>.Fail(_localizer["InvalidPassword"]);
 
             // 3. Generate the JWT access token (short-lived)
             string accessToken = await GenerateToken(user);

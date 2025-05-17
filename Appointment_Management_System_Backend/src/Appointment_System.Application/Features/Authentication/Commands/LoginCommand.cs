@@ -1,5 +1,6 @@
 ﻿using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.Interfaces;
+using Appointment_System.Application.Localization;
 using Appointment_System.Domain.Responses;
 using FluentValidation;
 using MediatR;
@@ -39,14 +40,14 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     //Validator
     public class LoginDTOValidator : AbstractValidator<LoginDTO>
     {
-        public LoginDTOValidator()
+        public LoginDTOValidator(ILocalizationService _localizer)
         {
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Enter a valid email address");
+                .NotEmpty().WithMessage(_localizer["EmailRequired"])
+                .EmailAddress().WithMessage(_localizer["InvalidEmail"]);
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required");
+                .NotEmpty().WithMessage(_localizer["PasswordRequired"]);
         }
     }
 

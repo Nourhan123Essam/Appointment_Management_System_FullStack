@@ -1,0 +1,52 @@
+{
+  "login": {
+    "title": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "captcha": "التحقق من كابتشا",
+    "forgetPassword": "هل نسيت كلمة المرور؟",
+    "loginButton": "تسجيل الدخول",
+    "noAccount": "ليس لديك حساب؟",
+    "register": "تسجيل"
+  },
+   "resetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "submit": "إعادة تعيين كلمة المرور"
+  },
+  "register": {
+    "title": "إنشاء حساب",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "firstNameError": "الاسم الأول مطلوب (3 أحرف على الأقل).",
+    "lastNameError": "اسم العائلة مطلوب (3 أحرف على الأقل).",
+    "dateOfBirth": "تاريخ الميلاد",
+    "dateOfBirthError": "تاريخ الميلاد مطلوب.",
+    "gender": "النوع",
+    "genderPlaceholder": "اختر النوع",
+    "genderError": "النوع مطلوب.",
+    "address": "العنوان",
+    "email": "البريد الإلكتروني",
+    "emailError": "يرجى إدخال بريد إلكتروني صحيح.",
+    "phone": "رقم الهاتف",
+    "phoneError": "يرجى إدخال رقم هاتف صحيح (مثل 01012345678).",
+    "password": "كلمة المرور",
+    "passwordError": "كلمة المرور يجب أن تستوفي الشروط.",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordError": "كلمتا المرور غير متطابقتين.",
+    "captcha": "التحقق من CAPTCHA",
+    "submit": "تسجيل",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "loginNow": "تسجيل الدخول الآن"
+  },
+  "forgotPassword": {
+    "title": "نسيت كلمة المرور",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني المسجل",
+    "submit": "إرسال رابط إعادة التعيين",
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صالح.",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "question": "هل تذكرت كلمة المرور؟"
+
+  }
+}

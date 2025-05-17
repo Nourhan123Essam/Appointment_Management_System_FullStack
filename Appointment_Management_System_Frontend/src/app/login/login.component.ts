@@ -10,13 +10,14 @@ import { RecaptchaModule } from "ng-recaptcha";
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AuthService } from '../core/services/auth.service';
 import { MessageService } from 'primeng/api';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule, RouterLink,
-    ButtonModule, InputTextModule, RecaptchaModule,SelectButtonModule, DropdownModule ],
+    ButtonModule, InputTextModule, RecaptchaModule,SelectButtonModule, DropdownModule, TranslateModule ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

@@ -1,0 +1,51 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email Address",
+    "password": "Password",
+    "captcha": "CAPTCHA Verification",
+    "forgetPassword": "Forgot Password?",
+    "loginButton": "Login",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Reset Password"
+  },
+  "register": {
+    "title": "Register",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "firstNameError": "First name is required (min 3 characters).",
+    "lastNameError": "Last name is required (min 3 characters).",
+    "dateOfBirth": "Date of Birth",
+    "dateOfBirthError": "Date of birth is required.",
+    "gender": "Gender",
+    "genderPlaceholder": "Select a Gender",
+    "genderError": "Gender is required.",
+    "address": "Address",
+    "email": "Email",
+    "emailError": "Enter a valid email.",
+    "phone": "Phone Number",
+    "phoneError": "Enter a valid phone number (e.g., 01012345678).",
+    "password": "Password",
+    "passwordError": "Password must meet requirements.",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordError": "Passwords do not match.",
+    "captcha": "CAPTCHA Verification",
+    "submit": "Register",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginNow": "Login Now"
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "emailPlaceholder": "Enter your registered email",
+    "submit": "Send Reset Link",
+    "invalidEmail": "Please enter a valid email address.",
+    "backToLogin": "Back to Login",
+    "question": "Remembered your password?"
+  }
+}

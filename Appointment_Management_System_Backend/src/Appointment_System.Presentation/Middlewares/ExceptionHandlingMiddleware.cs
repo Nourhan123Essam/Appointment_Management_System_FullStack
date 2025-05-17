@@ -1,27 +1,25 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
-using System;
 using Appointment_System.Domain.Responses;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Appointment_System.Domain.Enums;
-using System.Net.Http;
-using System.Threading;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation;
 using ValidationException = FluentValidation.ValidationException;
+using Appointment_System.Presentation.Resources;
+using Microsoft.Extensions.Localization;
 
 
 public class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IWebHostEnvironment _env;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger, IWebHostEnvironment env)
+
+    public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger, 
+        IWebHostEnvironment env, IStringLocalizer<SharedResource> localizer)
     {
         _logger = logger;
         _env = env;
+        _localizer = localizer;
     }
 
     // Logs and handles unhandled exceptions globally.
@@ -50,7 +48,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
             var res = new ResponseBase<object>(
                 StatusCodes.Status400BadRequest,
-                "Validation failed.",
+                _localizer["ValidationFailed"],
                 ResponseStatus.ERROR.ToString(),
                 validationException.Message // This will be a validation failure message
             );
@@ -71,7 +69,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
         var response = new ResponseBase<object>(
             (int)statusCode,
-            _env.IsDevelopment() ? ex.Message : "Something went wrong.",
+            _env.IsDevelopment() ? ex.Message : _localizer["UnexpectedError"], 
             ResponseStatus.ERROR.ToString(),
             _env.IsDevelopment() ? ex.InnerException?.Message : null
         );

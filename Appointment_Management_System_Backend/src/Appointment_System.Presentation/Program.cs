@@ -6,7 +6,8 @@ using Appointment_System.Application;
 using System.Threading.RateLimiting;
 using StackExchange.Redis;
 using DotNetEnv;
-using Microsoft.AspNetCore.Session;
+using Appointment_System.Application.Localization;
+using Appointment_System.Presentation.Localization;
 
 //"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
 
@@ -84,6 +85,12 @@ builder.Services.AddSession(options =>
 // 3. Register the custom session middleware 
 builder.Services.AddTransient<SessionValidationMiddleware>();
 
+// Localizaion
+builder.Services.AddLocalization();
+builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
+
+
+
 // Add CORS to the container.
 builder.Services.AddCors(options =>
 {
@@ -112,8 +119,14 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
 
-//// Use session
-//app.UseSession();
+//Localization
+var supportedCultures = new[] { "en-US", "ar-EG" };
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("en-US")
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+app.UseRequestLocalization(localizationOptions);
 
 // This loads variables from the .env file
 Env.Load(); 

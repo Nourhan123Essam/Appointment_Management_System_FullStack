@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
@@ -8,7 +8,7 @@ import { LoginResult } from '../Interfaces/LoginResult';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnInit {
   private apiUrl = `${environment.ApiBaseUrl}/Authentication`;
   private userRoles: string[] | null = null; // Cache roles in memory
 
@@ -17,7 +17,17 @@ export class AuthService {
 
 
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    var rolestest = this.getRoles();
+    console.log("roles is  auth service", this.getRoles());
+    
+    this.roles$.next(this.getRoles());
+  }
+  ngOnInit(): void {
+    this.roles$.next(this.getRoles());
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////
 
   login(email: string, password: string) {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password });
@@ -91,6 +101,11 @@ export class AuthService {
   }
 
   getRoles(): string[] | null{
+    if(this.userRoles == null){
+      var role = localStorage.getItem('roles');
+      if(role == null)return null;
+      this.userRoles = [role];
+    }
     return this.userRoles;
   }
 
@@ -137,8 +152,8 @@ export class AuthService {
           // Ensure roles are stored as an array
           this.userRoles = Array.isArray(roles) ? roles : [roles];
   
-          localStorage.setItem('roles', JSON.stringify(this.userRoles));
-          console.log("Extracted user roles:", this.userRoles);
+          localStorage.setItem('roles', this.userRoles[0]);
+          console.log("Extracted user roles:", this.userRoles[0]);
   
         } catch (error) {
           console.error("Failed to parse token roles:", error);

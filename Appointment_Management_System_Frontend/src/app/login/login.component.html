@@ -1,33 +1,39 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>Login</h2>
+    <h2>{{ 'login.title' | translate }}</h2>
 
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
       <div class="mb-3">
-        <label class="form-label">Username</label>
+        <label class="form-label">{{ 'login.email' | translate }}</label>
         <input type="text" class="form-control" [(ngModel)]="username" name="username" required />
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Password</label>
+        <label class="form-label">{{ 'login.password' | translate }}</label>
         <input type="password" class="form-control" [(ngModel)]="password" name="password" required />
       </div>
 
       <div class="mb-3">
-        <label class="form-label">CAPTCHA Verification</label>
+        <label class="form-label">{{ 'login.captcha' | translate }}</label>
         <re-captcha (resolved)="onCaptchaResolved($event)" [siteKey]="siteKey"></re-captcha>
       </div>
 
       <p class="text-end mt-3"> 
-        <a [routerLink]="['/forgot-password']" class="forget" style="cursor: pointer; text-decoration: none; color: gray;">Forget Passowrd?</a>
+        <a [routerLink]="['/forgot-password']" class="forget" style="cursor: pointer; text-decoration: none; color: gray;">
+          {{ 'login.forgetPassword' | translate }}
+        </a>
       </p>
 
-      <button type="submit" [disabled]="loginForm.invalid || !recaptchaToken" class="btn-primary">Login</button>
+      <button type="submit" [disabled]="loginForm.invalid || !recaptchaToken" class="btn-primary">
+        {{ 'login.loginButton' | translate }}
+      </button>
     </form>
 
     <p class="text-center mt-3">
-      Don't have an account? 
-      <a [routerLink]="['/register']" style="cursor: pointer;">Register</a>
+      {{ 'login.noAccount' | translate }}
+      <a [routerLink]="['/register']" style="cursor: pointer;">
+        {{ 'login.register' | translate }}
+      </a>
     </p>
   </div>
 </div>

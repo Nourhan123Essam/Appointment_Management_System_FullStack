@@ -9,6 +9,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { environment } from '../../../environments/environment.development';
 import { RecaptchaModule } from "ng-recaptcha";
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
@@ -21,7 +22,8 @@ import { RecaptchaModule } from "ng-recaptcha";
     CalendarModule,
     DropdownModule,
     RecaptchaModule,
-    RouterLink
+    RouterLink,
+    TranslateModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'

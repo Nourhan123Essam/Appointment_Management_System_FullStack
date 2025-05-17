@@ -10,9 +10,21 @@
     <a *ngIf="isAdmin" routerLink="/patients" routerLinkActive="active-link">Patients</a>
   </nav>
 
+  <!-- Language Switcher -->
+  <div class="lang-switch-wrapper">
+    <p-dropdown 
+      [options]="languages" 
+      [(ngModel)]="selectedLangObj" 
+      (onChange)="switchLang($event.value)" 
+      optionLabel="label" 
+      class="lang-dropdown">
+    </p-dropdown>
+  </div>
+
+
   <div class="auth-buttons">
-    <button *ngIf="!isLoggedIn" routerLink="/login" class="header-button">Login</button>
-    <button *ngIf="!isLoggedIn" routerLink="/register" class="header-button">Register</button>
+    <button *ngIf="!isLoggedIn" routerLink="/login" class="header-button">{{"login.title" | translate}}</button>
+    <button *ngIf="!isLoggedIn" routerLink="/register" class="header-button">{{"register.title" | translate}}</button>
     <button *ngIf="isLoggedIn" (click)="logout()" class="header-button logout-btn">Logout</button>
   </div>
 </header>

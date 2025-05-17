@@ -18,7 +18,7 @@
 
 .logo {
   height: 40px;
-  margin-right: 10px;
+  margin: 0 10px;
   background-color: #97989f;
   border-radius: 50%;
 }
@@ -80,4 +80,41 @@
 .logout-btn:hover {
   background-color: #f44336;
   color: white;
+}
+
+
+
+
+/* /////////////////////////////////////////////// */
+
+::ng-deep .lang-dropdown {
+   width: 90px;
+  /* height: 40px; */
+  /* padding: 5px 12px; */
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+::ng-deep .lang-dropdown .p-dropdown {
+  height: 40px;
+  /* width: 120px; */
+  border-radius: 5px;
+  font-weight: 500;
+  background-color: #eee9f9;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .lang-dropdown .p-dropdown-label {
+  padding-left: 8px;
+  line-height: 40px;
+   /* width: 90px; */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3f51b5;
 }
