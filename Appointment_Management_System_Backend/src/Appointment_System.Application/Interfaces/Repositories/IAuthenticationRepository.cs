@@ -8,7 +8,7 @@ namespace Appointment_System.Application.Interfaces.Repositories
     {
         public Task<bool> Register(Patient appUser, string password);
         public Task<bool> IsUserExist(string userId);
-        public Task<Response<LoginResult>> Login(string email, string password);
+        public Task<Result<LoginResult>> Login(string email, string password);
         public Task<string?> GenerateTokenAsync(string userId);
         public string GenerateRefreshToken();
         Task<bool> UpdatePasswordAsync(string userId, string newPassword);

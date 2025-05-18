@@ -42,14 +42,14 @@ namespace Appointment_System.Presentation.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<Response<string>>> Register(RegisterDTO appUserDTO)
+        public async Task<ActionResult<Result<string>>> Register(RegisterDTO appUserDTO)
         {
             var result = await _mediator.Send(new RegisterCommand(appUserDTO));
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<Response<LoginResult>>> Login(LoginDTO loginDTO)
+        public async Task<ActionResult<Result<LoginResult>>> Login(LoginDTO loginDTO)
         {
             var userId = await _mediator.Send(new GetUserIdByEmailQuery(loginDTO.Email));
             if (userId == null)

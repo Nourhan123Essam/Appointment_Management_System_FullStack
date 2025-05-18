@@ -11,14 +11,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const shortLang = appState.getSavedLanguage(); // 'en' or 'ar'
   const langHeader = shortLang === 'ar' ? 'ar-EG' : 'en-US';
 
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   req = req.clone({
     withCredentials: true,
     setHeaders: {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'Accept-Language': langHeader
+      'Accept-Language': langHeader, // Send language header
+      'X-Timezone': timeZone // Send timezone header
     }
   });
 
   return next(req);
 };
+
   

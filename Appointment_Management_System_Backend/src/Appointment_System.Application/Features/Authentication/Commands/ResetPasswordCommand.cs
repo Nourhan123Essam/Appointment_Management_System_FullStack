@@ -9,14 +9,14 @@ namespace Appointment_System.Application.Features.Authentication.Commands
 {
     // Command
     // Command
-    public class ResetPasswordCommand : IRequest<Response<string>>
+    public class ResetPasswordCommand : IRequest<Result<string>>
     {
         public ResetPasswordDto ResetPassword { get; set; }
     }
 
 
     // Handler
-    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Response<string>>
+    public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Result<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRedisService _redis;
@@ -27,23 +27,23 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         }
 
 
-        public async Task<Response<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
             var dto = request.ResetPassword;                                                                                                                                                                                                                            
             if (dto.NewPassword != dto.ConfirmPassword)
-                return Response<string>.Fail("Passwords do not match.");
+                return Result<string>.Fail("Passwords do not match.");
 
             var userId = await _redis.GetResetPasswordTokenAsync(dto.Token);
             if (string.IsNullOrEmpty(userId))
-                return Response<string>.Fail("Invalid or expired token.");
+                return Result<string>.Fail("Invalid or expired token.");
 
             var result = await _unitOfWork.Authentication.UpdatePasswordAsync(userId, dto.NewPassword);
             if (!result)
-                return Response<string>.Fail("User not found.");
+                return Result<string>.Fail("User not found.");
 
             await _redis.DeleteResetPasswordTokenAsync(dto.Token);
 
-            return Response<string>.Success("Password reset successfully.");
+            return Result<string>.Success("Password reset successfully.");
         }
     }
 

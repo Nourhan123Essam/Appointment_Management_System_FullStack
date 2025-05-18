@@ -8,6 +8,7 @@ using StackExchange.Redis;
 using DotNetEnv;
 using Appointment_System.Application.Localization;
 using Appointment_System.Presentation.Localization;
+using Appointment_System.Presentation.Extensions;
 
 //"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
 
@@ -107,12 +108,18 @@ builder.Services.AddCors(options =>
 // Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+
+//*************************************************************************************
+
 var app = builder.Build();
+
+//*************************************************************************************
 
 // Activate the rate limiter middleware in the request pipeline
 app.UseRateLimiter();
 
 // Add the custom middlewares to the pipeline
+app.UseTimeZoneMiddleware(); // using extension method for clean usage
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -121,7 +128,6 @@ app.UseCors("AllowSpecificOrigins");
 
 //Localization
 var supportedCultures = new[] { "en-US", "ar-EG" };
-
 var localizationOptions = new RequestLocalizationOptions()
     .SetDefaultCulture("en-US")
     .AddSupportedCultures(supportedCultures)

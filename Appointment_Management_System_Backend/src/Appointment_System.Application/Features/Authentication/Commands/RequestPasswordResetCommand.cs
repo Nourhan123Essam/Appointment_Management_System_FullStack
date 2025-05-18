@@ -7,10 +7,10 @@ using MediatR;
 namespace Appointment_System.Application.Features.Authentication.Commands
 {
     // Command
-    public record RequestPasswordResetCommand(string Email) : IRequest<Response<string>>;
+    public record RequestPasswordResetCommand(string Email) : IRequest<Result<string>>;
 
     // Hnadler
-    public class RequestPasswordResetHandler : IRequestHandler<RequestPasswordResetCommand, Response<string>>
+    public class RequestPasswordResetHandler : IRequestHandler<RequestPasswordResetCommand, Result<string>>
     {
         private readonly IRedisService _redis;
         private readonly IEmailService _emailService;
@@ -23,11 +23,11 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         }
 
 
-        public async Task<Response<string>> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(RequestPasswordResetCommand request, CancellationToken cancellationToken)
         {
             var userId = await _unitOfWork.Authentication.GetUserIdByEmailAsync(request.Email);
             if (userId == null)
-                return Response<string>.Fail("User not found");
+                return Result<string>.Fail("User not found");
 
             var token = Guid.NewGuid().ToString();
             await _redis.SetResetPasswordTokenAsync(token, userId, TimeSpan.FromMinutes(10));
@@ -37,7 +37,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             var html = EmailTemplateBuilder.BuildResetPasswordEmail(resetUrl);
 
             await _emailService.SendEmailAsync(request.Email, "Reset your password", html);
-            return Response<string>.Success("");
+            return Result<string>.Success("");
         }
     }
 

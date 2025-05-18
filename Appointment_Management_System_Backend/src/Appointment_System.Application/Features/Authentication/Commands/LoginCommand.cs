@@ -8,7 +8,7 @@ using MediatR;
 namespace Appointment_System.Application.Features.Authentication.Commands
 {
     //Command
-    public class LoginCommand : IRequest<Domain.Responses.Response<LoginResult>>
+    public class LoginCommand : IRequest<Domain.Responses.Result<LoginResult>>
     {
         public LoginDTO LoginDto { get; set; }
 
@@ -19,7 +19,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     }
 
     //Handler
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, Domain.Responses.Response<LoginResult>>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResult>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -28,7 +28,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Domain.Responses.Response<LoginResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResult>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var dto = request.LoginDto;
 

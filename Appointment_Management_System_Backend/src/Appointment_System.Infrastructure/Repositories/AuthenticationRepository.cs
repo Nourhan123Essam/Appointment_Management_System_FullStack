@@ -124,17 +124,17 @@ namespace Appointment_System.Infrastructure.Repositories
         }
 
 
-        public async Task<Domain.Responses.Response<LoginResult>> Login(string email, string password)
+        public async Task<Result<LoginResult>> Login(string email, string password)
         {
             // 1. Try to find the user by email
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                return Domain.Responses.Response<LoginResult>.Fail(_localizer["InvalidEmail"]);
+                return Result<LoginResult>.Fail(_localizer["InvalidEmail"]);
 
             // 2. Check if the password is correct
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
             if (!result.Succeeded)
-                return Domain.Responses.Response<LoginResult>.Fail(_localizer["InvalidPassword"]);
+                return Result<LoginResult>.Fail(_localizer["InvalidPassword"]);
 
             // 3. Generate the JWT access token (short-lived)
             string accessToken = await GenerateToken(user);
@@ -161,7 +161,7 @@ namespace Appointment_System.Infrastructure.Repositories
             );
 
             // 8. Return a success response with the tokens
-            return Domain.Responses.Response<LoginResult>.Success(loginResult, "Login successful");
+            return Result<LoginResult>.Success(loginResult, "Login successful");
         }
 
 

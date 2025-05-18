@@ -5,7 +5,7 @@ using MediatR;
 namespace Appointment_System.Application.Features.Authentication.Commands
 {
     // Command
-    public class LogoutCommand : IRequest<Response<string>>
+    public class LogoutCommand : IRequest<Result<string>>
     {
         public string RefreshToken { get; set; }
 
@@ -16,7 +16,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     }
 
     // Hnadler
-    public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Response<string>>
+    public class LogoutCommandHandler : IRequestHandler<LogoutCommand, Result<string>>
     {
         private readonly IRedisService _redis;
         private readonly ISessionService _sessionService;
@@ -27,11 +27,11 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             _sessionService = sessionService;
         }
 
-        public async Task<Response<string>> Handle(LogoutCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
             var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
             if (string.IsNullOrEmpty(userId))
-                return Response<string>.Fail("Invalid or expired refresh token.");
+                return Result<string>.Fail("Invalid or expired refresh token.");
 
             // Remove the refresh token
             await _redis.DeleteRefreshTokenAsync(userId);
@@ -39,7 +39,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             // Remove the sessionId
             await _sessionService.RemoveSessionAsync(userId);
 
-            return Response<string>.Success("Logout successful.");
+            return Result<string>.Success("Logout successful.");
         }
     }
 
