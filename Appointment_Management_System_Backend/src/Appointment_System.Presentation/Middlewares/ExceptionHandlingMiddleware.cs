@@ -5,17 +5,18 @@ using Appointment_System.Domain.Enums;
 using ValidationException = FluentValidation.ValidationException;
 using Appointment_System.Presentation.Resources;
 using Microsoft.Extensions.Localization;
+using Appointment_System.Application.Localization;
 
 
 public class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IWebHostEnvironment _env;
-    private readonly IStringLocalizer<SharedResource> _localizer;
+    private readonly ILocalizationService _localizer;
 
 
     public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger, 
-        IWebHostEnvironment env, IStringLocalizer<SharedResource> localizer)
+        IWebHostEnvironment env, ILocalizationService localizer)
     {
         _logger = logger;
         _env = env;
@@ -46,16 +47,19 @@ public class ExceptionHandlingMiddleware : IMiddleware
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
+            var errorMessages = string.Join(" | ", validationException.Errors.Select(e => e.ErrorMessage));
+
             var res = new ResponseBase<object>(
                 StatusCodes.Status400BadRequest,
                 _localizer["ValidationFailed"],
                 ResponseStatus.ERROR.ToString(),
-                validationException.Message // This will be a validation failure message
+                errorMessages // Just the custom/localized messages
             );
 
             var json2 = JsonConvert.SerializeObject(res);
             return context.Response.WriteAsync(json2);
         }
+
 
         var statusCode = ex switch
         {

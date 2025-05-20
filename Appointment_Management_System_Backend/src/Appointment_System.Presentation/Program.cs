@@ -1,4 +1,4 @@
-using Appointment_System.Infrastructure;
+﻿using Appointment_System.Infrastructure;
 using Appointment_System.Infrastructure.Data;
 using Appointment_System.Presentation.Middlewares;
 using Serilog;
@@ -86,24 +86,22 @@ builder.Services.AddSession(options =>
 // 3. Register the custom session middleware 
 builder.Services.AddTransient<SessionValidationMiddleware>();
 
-// Localizaion
-builder.Services.AddLocalization();
-builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
-
-
-
 // Add CORS to the container.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // Your Angular app URL
+        policy.WithOrigins("http://localhost:4200", "http://appointment-frontend:4200")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials() // Allow cookies (important!)
               .WithExposedHeaders("Authorization"); // Ensure Angular can access headers
     });
-}); 
+});
+
+// Localizaion
+builder.Services.AddLocalization();
+builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
 
 // Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
@@ -114,6 +112,15 @@ builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 var app = builder.Build();
 
 //*************************************************************************************
+
+//Localization
+var supportedCultures = new[] { "en-US", "ar-EG" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture("en-US")
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+app.UseRequestLocalization(localizationOptions);
+
 
 // Activate the rate limiter middleware in the request pipeline
 app.UseRateLimiter();
@@ -126,33 +133,23 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
 
-//Localization
-var supportedCultures = new[] { "en-US", "ar-EG" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture("en-US")
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-app.UseRequestLocalization(localizationOptions);
-
 // This loads variables from the .env file
-Env.Load(); 
+Env.Load();
 
-//  Ensure required roles and admin user exist (Seeding)
+// Apply pending EF Core migrations and seed required roles/admin user
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var config = services.GetRequiredService<IConfiguration>();
-
     try
     {
-        // Seed roles and admin user if they do not exist
-        await DbSeeder.SeedRolesAndAdminAsync(services, config);
+        await DbSeeder.MigrateAndSeedAsync(services);
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"? Error seeding database: {ex.Message}");
+        Console.WriteLine($"❌ Error during DB setup: {ex.Message}");
     }
 }
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

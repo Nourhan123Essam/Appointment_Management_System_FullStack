@@ -41,9 +41,6 @@ namespace Appointment_System.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            // Apply custom relationships
-            //ModelBuilderExtensions.ApplyEntityRelationships(builder);
-
             // Apply entity configurations
             builder.ApplyConfiguration(new DoctorSpecializationConfiguration());
             builder.ApplyConfiguration(new AppointmentConfiguration());

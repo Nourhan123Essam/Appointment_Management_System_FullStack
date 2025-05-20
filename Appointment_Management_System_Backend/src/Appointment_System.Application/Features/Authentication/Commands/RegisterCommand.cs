@@ -1,5 +1,6 @@
 ﻿using Appointment_System.Application.DTOs.Authentication;
 using Appointment_System.Application.Interfaces;
+using Appointment_System.Application.Localization;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using FluentValidation;
@@ -22,10 +23,12 @@ namespace Appointment_System.Application.Features.Authentication.Commands
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<string>>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILocalizationService _localizer;
 
-        public RegisterCommandHandler(IUnitOfWork unitOfWork)
+        public RegisterCommandHandler(IUnitOfWork unitOfWork, ILocalizationService localizer)
         {
             _unitOfWork = unitOfWork;
+            _localizer = localizer;
         }
 
         public async Task<Result<string>> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -44,46 +47,45 @@ namespace Appointment_System.Application.Features.Authentication.Commands
 
             var result = await _unitOfWork.Authentication.Register(newUser, dto.Password);
 
-            return result
-                ? Result<string>.Success("", "User registered successfully")
-                : Result<string>.Fail("Invalid data provided");
+            return result;
         }
     }
 
     //Validator
-    public class RegisterDTOValidator : AbstractValidator<RegisterDTO>
+    public class RegisterDTOValidator : AbstractValidator<RegisterCommand>
     {
-        public RegisterDTOValidator()
+        public RegisterDTOValidator(ILocalizationService localizer)
         {
-            RuleFor(x => x.FirstName)
-                .NotEmpty().WithMessage("First name is required")
-                .MaximumLength(100).WithMessage("First name must be less than 100 characters");
+            RuleFor(x => x.RegisterDto.FirstName)
+                .NotEmpty().WithMessage(localizer["FirstNameRequired"])
+                .MaximumLength(100).WithMessage(localizer["FirstNameMaxLength"]);
 
-            RuleFor(x => x.LastName)
-               .NotEmpty().WithMessage("Last name is required")
-               .MaximumLength(100).WithMessage("Last name must be less than 100 characters");
+            RuleFor(x => x.RegisterDto.LastName)
+                .NotEmpty().WithMessage(localizer["LastNameRequired"])
+                .MaximumLength(100).WithMessage(localizer["LastNameMaxLength"]);
 
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("A valid email is required");
+            RuleFor(x => x.RegisterDto.Email)
+                .NotEmpty().WithMessage(localizer["EmailRequired"])
+                .EmailAddress().WithMessage(localizer["InvalidEmail"]);
 
-            RuleFor(x => x.DateOfBirth)
-               .NotEmpty().WithMessage("Date of birth is required");
+            RuleFor(x => x.RegisterDto.DateOfBirth)
+                .NotEmpty().WithMessage(localizer["DOBRequired"]);
 
-            RuleFor(x => x.Gender)
-              .NotEmpty().WithMessage("Gender is required");
+            RuleFor(x => x.RegisterDto.Gender)
+                .NotEmpty().WithMessage(localizer["GenderRequired"]);
 
-            RuleFor(x => x.Phone)
-                .NotEmpty().WithMessage("Telephone number is required (e.g., 01012345678)")
-                .Matches(@"^\+?[0-9]{7,15}$").WithMessage("A valid phone number is required");
+            RuleFor(x => x.RegisterDto.Phone)
+                .NotEmpty().WithMessage(localizer["PhoneRequired"])
+                .Matches(@"^\+?[0-9]{7,15}$").WithMessage(localizer["PhoneInvalid"]);
 
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required")
-                .MinimumLength(6).WithMessage("Password must be at least 6 characters long")
-                .Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter")
-                .Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter")
-                .Matches(@"\d").WithMessage("Password must contain at least one number")
-                .Matches(@"[^\w\d\s:]").WithMessage("Password must contain at least one special character (e.g. #, $, etc.)");
+            RuleFor(x => x.RegisterDto.Password)
+                .NotEmpty().WithMessage(localizer["PasswordRequired"])
+                .MinimumLength(6).WithMessage(localizer["PasswordMinLength"])
+                .Matches(@"[A-Z]").WithMessage(localizer["PasswordUpper"])
+                .Matches(@"[a-z]").WithMessage(localizer["PasswordLower"])
+                .Matches(@"\d").WithMessage(localizer["PasswordDigit"])
+                .Matches(@"[^\w\d\s:]").WithMessage(localizer["PasswordSpecial"]);
         }
     }
+
 }

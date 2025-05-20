@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Appointment_System.Application.Interfaces;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Application.Interfaces.Services;
@@ -13,9 +9,6 @@ using Appointment_System.Application.Localization;
 using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
-using Appointment_System.Infrastructure.Services;
-using Azure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -31,22 +24,24 @@ namespace Appointment_System.Infrastructure.Repositories
         private readonly IRedisService _redisService;
         private readonly ISessionService _sessionService;
         private readonly ILocalizationService _localizer;
+        private readonly IPatientRepository _patientRepository;
 
-        public AuthenticationRepository(UserManager<IdentityUser> userManager,
+        public AuthenticationRepository(
+            UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
-            ApplicationDbContext context,
             IRedisService redisService,
             ISessionService sessionService,
-            ILocalizationService localizer)
-        {
+            ILocalizationService localizer,
+            IPatientRepository patientRepository
+        ){
             _userManager = userManager;
-            ; _signInManager = signInManager;
+            _signInManager = signInManager;
             _configuration = configuration;
-            _context = context;
             _redisService = redisService;
             _sessionService = sessionService;
             _localizer = localizer;
+            _patientRepository = patientRepository;
         }
 
         public async Task<IdentityUser> GetUserByEmailAsync(string email)
@@ -54,33 +49,41 @@ namespace Appointment_System.Infrastructure.Repositories
             return await _userManager.FindByEmailAsync(email);
         }
 
-        public async Task<bool> Register(Patient appUser, string password)
+        public async Task<Result<string>> Register(Patient appUser, string password)
         {
-            //check of email correct
             var testUser = await _userManager.FindByEmailAsync(appUser.Email);
             if (testUser != null)
-                return false;
+                return Result<string>.Fail(_localizer["EmailAlreadyExists"]);
 
-            var user = new IdentityUser()
+            var identityUser = new IdentityUser()
             {
-                Email= appUser.Email,
+                Email = appUser.Email,
                 PhoneNumber = appUser.Phone,
                 UserName = appUser.Email
             };
-            var userResult = await _userManager.CreateAsync(user, password);
+
+            var userResult = await _userManager.CreateAsync(identityUser, password);
             if (!userResult.Succeeded)
-                return false;
+                return Result<string>.Fail(_localizer["IdentityCreationFailed"]);
 
-            // Assign "Patient" role by default
-            await _userManager.AddToRoleAsync(user, "Patient");
+            var roleResult = await _userManager.AddToRoleAsync(identityUser, "Patient");
+            if (!roleResult.Succeeded)
+                return Result<string>.Fail(_localizer["RoleAssignmentFailed"]);
 
-            appUser.CreatedAt = DateTime.Now;
-            appUser.UserId = user.Id;
-            appUser.IsDeleted = false;
-            await _context.Patients.AddAsync(appUser);
-            await _context.SaveChangesAsync();
+            try
+            {
+                appUser.CreatedAt = DateTime.Now;
+                appUser.UserId = identityUser.Id;
+                appUser.IsDeleted = false;
 
-            return true;
+                await _patientRepository.AddAsync(appUser);
+
+                return Result<string>.Success("", _localizer["UserRegisteredSuccessfully"]);
+            }
+            catch
+            {
+                return Result<string>.Fail(_localizer["DatabaseSaveFailed"]);
+            }
         }
 
         public async Task<string?> GenerateTokenAsync(string userId)
@@ -126,44 +129,36 @@ namespace Appointment_System.Infrastructure.Repositories
 
         public async Task<Result<LoginResult>> Login(string email, string password)
         {
-            // 1. Try to find the user by email
+            // Step 1: Find the user by email
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return Result<LoginResult>.Fail(_localizer["InvalidEmail"]);
 
-            // 2. Check if the password is correct
+            // Step 2: Check if the password is correct
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
             if (!result.Succeeded)
                 return Result<LoginResult>.Fail(_localizer["InvalidPassword"]);
 
-            // 3. Generate the JWT access token (short-lived)
+            // Step 3: Generate access and refresh tokens
             string accessToken = await GenerateToken(user);
-
-            // 4. Generate a new secure refresh token (long-lived)
             string refreshToken = GenerateRefreshToken();
 
-            // 5. Store the refresh token in Redis with expiration (key: "refresh_userId")
-            await _redisService.SetRefreshTokenAsync(
-                user.Id,
-                refreshToken,
-                TimeSpan.FromDays(7)
-            );
+            // Step 4: Save refresh token in Redis
+            await _redisService.SetRefreshTokenAsync(user.Id, refreshToken, TimeSpan.FromDays(7));
 
-            // 6. set session id
+            // Step 5: Create a session ID for this login
             var sessionId = await _sessionService.CreateSessionAsync(user.Id);
 
-            // 7. Prepare the response using the strongly typed LoginResult
+            // Step 6: Prepare the response
             var loginResult = new LoginResult(
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
                 SessionId: sessionId,
-                ExpiresIn: 900 // 15 Minutes in seconds
+                ExpiresIn: 900 // 15 minutes
             );
 
-            // 8. Return a success response with the tokens
             return Result<LoginResult>.Success(loginResult, "Login successful");
         }
-
 
         // Generate Access Token
         private async Task<string> GenerateToken(IdentityUser user)

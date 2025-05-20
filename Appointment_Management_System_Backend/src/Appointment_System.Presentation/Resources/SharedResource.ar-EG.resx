@@ -117,22 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailRequired " xml:space="preserve">
+  <data name="AlreadySignedInOnAnotherDevice" xml:space="preserve">
+    <value>لقد قمت بتسجيل الدخول بالفعل من جهاز آخر.</value>
+  </data>
+  <data name="DatabaseSaveFailed " xml:space="preserve">
+    <value>حدث خطأ أثناء حفظ بيانات المستخدم</value>
+  </data>
+  <data name="DOBRequired" xml:space="preserve">
+    <value>تاريخ الميلاد مطلوب</value>
+  </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>هذا البريد الإلكتروني مسجل مسبقًا</value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
     <value>البريد الإلكتروني مطلوب.</value>
   </data>
-  <data name="InvalidEmail " xml:space="preserve">
+  <data name="FirstNameMaxLength" xml:space="preserve">
+    <value>يجب ألا يزيد الاسم الأول عن 100 حرف</value>
+  </data>
+  <data name="FirstNameRequired " xml:space="preserve">
+    <value>الاسم الأول مطلوب</value>
+  </data>
+  <data name="GenderRequired " xml:space="preserve">
+    <value>النوع مطلوب</value>
+  </data>
+  <data name="IdentityCreationFailed" xml:space="preserve">
+    <value>فشل في إنشاء حساب المستخدم</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
     <value>البريد الإلكتروني غير صالح.</value>
+  </data>
+  <data name="InvalidOrExpiredRefreshToken" xml:space="preserve">
+    <value>رمز التحديث غير صالح أو منتهي الصلاحية.</value>
   </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>كلمة المرور غير صحيحة.</value>
   </data>
+  <data name="InvalidRegistrationData " xml:space="preserve">
+    <value>البيانات المدخلة غير صحيحة</value>
+  </data>
+  <data name="LastNameMaxLength " xml:space="preserve">
+    <value>يجب ألا يزيد الاسم الأخير عن 100 حرف</value>
+  </data>
+  <data name="LastNameRequired " xml:space="preserve">
+    <value>الاسم الأخير مطلوب</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>تم تسجيل الدخول بنجاح.</value>
+  </data>
+  <data name="LogoutSuccessful" xml:space="preserve">
+    <value>تم تسجيل الخروج بنجاح.</value>
+  </data>
+  <data name="PasswordDigit" xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على رقم واحد على الأقل</value>
+  </data>
+  <data name="PasswordLower " xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</value>
+  </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>يجب أن تكون كلمة المرور 6 أحرف على الأقل</value>
+  </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>كلمة المرور مطلوبة.</value>
+  </data>
+  <data name="PasswordResetSuccess " xml:space="preserve">
+    <value>تم إعادة تعيين كلمة المرور بنجاح.</value>
+  </data>
+  <data name="PasswordsDoNotMatch " xml:space="preserve">
+    <value>كلمات المرور غير متطابقة.</value>
+  </data>
+  <data name="PasswordSpecial " xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل (مثل #، $، ...)</value>
+  </data>
+  <data name="PasswordUpper " xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل</value>
+  </data>
+  <data name="PhoneInvalid" xml:space="preserve">
+    <value>يجب إدخال رقم هاتف صحيح</value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>رقم الهاتف مطلوب (مثال: 01012345678)</value>
+  </data>
+  <data name="ResetPasswordButton" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="ResetPasswordHeader" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور الخاصة بك</value>
+  </data>
+  <data name="ResetPasswordIgnoreNote" xml:space="preserve">
+    <value>إذا لم تطلب ذلك، يمكنك تجاهل هذه الرسالة بأمان.</value>
+  </data>
+  <data name="ResetPasswordInstruction" xml:space="preserve">
+    <value>لقد طلبت إعادة تعيين كلمة المرور الخاصة بك. انقر على الزر أدناه للمتابعة:</value>
+  </data>
+  <data name="ResetPasswordSubject" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
+  </data>
+  <data name="RoleAssignmentFailed" xml:space="preserve">
+    <value>فشل في تعيين الدور</value>
+  </data>
+  <data name="SessionExpiredOrInvalid" xml:space="preserve">
+    <value>الجلسة منتهية أو غير صالحة.</value>
   </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>!حدث خطأ ما</value>
   </data>
-  <data name="ValidationFailed " xml:space="preserve">
+  <data name="UserNotFound" xml:space="preserve">
+    <value>المستخدم غير موجود.</value>
+  </data>
+  <data name="UserRegisteredSuccessfully" xml:space="preserve">
+    <value>تم تسجيل المستخدم بنجاح</value>
+  </data>
+  <data name="ValidationFailed" xml:space="preserve">
     <value>فشل التحقق من الصحة.</value>
   </data>
 </root>

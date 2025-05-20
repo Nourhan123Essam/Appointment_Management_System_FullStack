@@ -7,7 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/Interfaces/User';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { RecaptchaModule } from "ng-recaptcha";
 import { TranslateModule } from '@ngx-translate/core';
 

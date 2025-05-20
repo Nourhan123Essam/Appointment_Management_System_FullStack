@@ -7,10 +7,11 @@ services:
       context: ./Appointment_Management_System_Backend
       dockerfile: Dockerfile
     ports:
-      - "7000:7000" # Maps container's 7000 to host's 7000
+        - "7000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=db,1435;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=AppointmentSystemDb;User=sa;Password=#Nour123#;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
     depends_on:
       - db
       - redis
@@ -39,7 +40,6 @@ services:
     networks:
       - app-network
 
-
   db:
     container_name: appointment-db
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -55,9 +55,9 @@ services:
     hostname: "sqlServer"
 
 volumes:
-  sqlserver_data: # This ensures data is persistent for DB
+  sqlserver_data:
     driver: local
-  redis_data: # This ensures data is persistent for Redis
+  redis_data:
     driver: local
 
 networks:

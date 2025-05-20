@@ -117,22 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailRequired " xml:space="preserve">
+  <data name="AlreadySignedInOnAnotherDevice" xml:space="preserve">
+    <value>You are already signed in on another device.</value>
+  </data>
+  <data name="DatabaseSaveFailed " xml:space="preserve">
+    <value>Error saving user data </value>
+  </data>
+  <data name="DOBRequired" xml:space="preserve">
+    <value>Date of birth is required </value>
+  </data>
+  <data name="EmailAlreadyExists" xml:space="preserve">
+    <value>This email is already registered </value>
+  </data>
+  <data name="EmailRequired" xml:space="preserve">
     <value>Email is required. </value>
   </data>
-  <data name="InvalidEmail " xml:space="preserve">
+  <data name="FirstNameMaxLength" xml:space="preserve">
+    <value>First name must be less than 100 characters </value>
+  </data>
+  <data name="FirstNameRequired " xml:space="preserve">
+    <value>First name is required </value>
+  </data>
+  <data name="GenderRequired " xml:space="preserve">
+    <value>Gender is required </value>
+  </data>
+  <data name="IdentityCreationFailed" xml:space="preserve">
+    <value>Failed to create user account </value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
     <value>Invalid email address. </value>
+  </data>
+  <data name="InvalidOrExpiredRefreshToken" xml:space="preserve">
+    <value>Invalid or expired refresh token. </value>
   </data>
   <data name="InvalidPassword" xml:space="preserve">
     <value>Invalid password.</value>
   </data>
+  <data name="InvalidRegistrationData " xml:space="preserve">
+    <value>Invalid data provided </value>
+  </data>
+  <data name="LastNameMaxLength " xml:space="preserve">
+    <value>Last name must be less than 100 characters </value>
+  </data>
+  <data name="LastNameRequired " xml:space="preserve">
+    <value>Last name is required </value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>Logged in successfully.</value>
+  </data>
+  <data name="LogoutSuccessful" xml:space="preserve">
+    <value>Logout successful.</value>
+  </data>
+  <data name="PasswordDigit" xml:space="preserve">
+    <value>Password must contain at least one number </value>
+  </data>
+  <data name="PasswordLower " xml:space="preserve">
+    <value>Password must contain at least one lowercase letter </value>
+  </data>
+  <data name="PasswordMinLength" xml:space="preserve">
+    <value>Password must be at least 6 characters long </value>
+  </data>
   <data name="PasswordRequired" xml:space="preserve">
     <value>Password is required.</value>
+  </data>
+  <data name="PasswordResetSuccess " xml:space="preserve">
+    <value>Password reset successfully.</value>
+  </data>
+  <data name="PasswordsDoNotMatch " xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="PasswordSpecial " xml:space="preserve">
+    <value>Password must contain at least one special character (e.g. #, $, etc.) </value>
+  </data>
+  <data name="PasswordUpper " xml:space="preserve">
+    <value>Password must contain at least one uppercase letter </value>
+  </data>
+  <data name="PhoneInvalid" xml:space="preserve">
+    <value>A valid phone number is required </value>
+  </data>
+  <data name="PhoneRequired" xml:space="preserve">
+    <value>Telephone number is required (e.g., 01012345678) </value>
+  </data>
+  <data name="ResetPasswordButton" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="ResetPasswordHeader" xml:space="preserve">
+    <value>Reset Your Password</value>
+  </data>
+  <data name="ResetPasswordIgnoreNote" xml:space="preserve">
+    <value>If you didn’t request this, you can safely ignore this email.</value>
+  </data>
+  <data name="ResetPasswordInstruction" xml:space="preserve">
+    <value>You requested to reset your password. Click the button below to proceed:</value>
+  </data>
+  <data name="ResetPasswordSubject" xml:space="preserve">
+    <value>Reset your password</value>
+  </data>
+  <data name="RoleAssignmentFailed" xml:space="preserve">
+    <value>Failed to assign role </value>
+  </data>
+  <data name="SessionExpiredOrInvalid" xml:space="preserve">
+    <value>Session expired or invalid. </value>
   </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>Something went wrong!</value>
   </data>
-  <data name="ValidationFailed " xml:space="preserve">
-    <value>Validation failed. </value>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>User not found. </value>
+  </data>
+  <data name="UserRegisteredSuccessfully" xml:space="preserve">
+    <value>User registered successfully </value>
+  </data>
+  <data name="ValidationFailed" xml:space="preserve">
+    <value>Validation failed more and more.</value>
   </data>
 </root>

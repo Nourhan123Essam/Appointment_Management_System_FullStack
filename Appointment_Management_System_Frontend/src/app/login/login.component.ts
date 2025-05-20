@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { RecaptchaModule } from "ng-recaptcha";
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AuthService } from '../core/services/auth.service';

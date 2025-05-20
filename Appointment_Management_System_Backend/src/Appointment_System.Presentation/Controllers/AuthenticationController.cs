@@ -10,6 +10,7 @@ using Appointment_System.Infrastructure.Services;
 using Appointment_System.Application.Features.Authentication.Queries;
 using Microsoft.AspNetCore.Authentication;
 using Appointment_System.Presentation.Middlewares;
+using Appointment_System.Application.Localization;
 
 
 namespace Appointment_System.Presentation.Controllers
@@ -19,26 +20,21 @@ namespace Appointment_System.Presentation.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly RecaptchaSettings _recaptchaSettings;
         private readonly ICaptchaValidatorService _captchaValidatorService;
         private readonly ISessionService _sessionService;
-        private readonly IWebHostEnvironment _env;
-
-        private readonly IEmailService _emailService;
-        private readonly IConfiguration _configuration;
+        private readonly ILocalizationService _localization;
 
 
-        public AuthenticationController(IMediator mediator, 
+        public AuthenticationController(
+            IMediator mediator, 
             ICaptchaValidatorService captchaValidatorService,
-            IEmailService emailService, IConfiguration configuration, 
-            IWebHostEnvironment env, ISessionService sessionService)
-        {
+            ISessionService sessionService,
+            ILocalizationService localization
+        ){
             _mediator = mediator;
             _captchaValidatorService = captchaValidatorService;
             _sessionService = sessionService;
-            _emailService = emailService;
-            _configuration = configuration;
-            _env = env;
+            _localization = localization;
         }
 
         [HttpPost("register")]
@@ -53,14 +49,14 @@ namespace Appointment_System.Presentation.Controllers
         {
             var userId = await _mediator.Send(new GetUserIdByEmailQuery(loginDTO.Email));
             if (userId == null)
-                return BadRequest(new { message = "Invalid email" });
+                return BadRequest(new { message = _localization["InvalidEmail"] });
 
             var sessionExist = await _sessionService.ValidateSessionExistsAsync(userId);
             if(sessionExist)
                 return StatusCode(StatusCodes.Status403Forbidden, new
                 {
                     Status = "Forbidden",
-                    Message = "You are already signed in on another device."
+                    Message = _localization["AlreadySignedInOnAnotherDevice"]
                 });
 
 

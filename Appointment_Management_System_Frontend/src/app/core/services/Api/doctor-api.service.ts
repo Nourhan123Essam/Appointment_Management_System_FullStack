@@ -4,7 +4,7 @@ import { Doctor } from '../../Interfaces/Doctor';
 import { Observable } from 'rxjs';
 import { DoctorQualification } from '../../Interfaces/DoctorQualification';
 import { DoctorAvailability } from '../../Interfaces/DoctorAvailability';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

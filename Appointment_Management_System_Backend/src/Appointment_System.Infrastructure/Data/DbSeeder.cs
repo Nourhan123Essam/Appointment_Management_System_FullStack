@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +7,20 @@ namespace Appointment_System.Infrastructure.Data
 {
     public class DbSeeder
     {
+        public static async Task MigrateAndSeedAsync(IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var services = scope.ServiceProvider;
+
+            var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+            // Automatically apply pending migrations
+            await dbContext.Database.MigrateAsync();
+
+            // hen do the seeding logic
+            var config = services.GetRequiredService<IConfiguration>();
+            await SeedRolesAndAdminAsync(services, config);
+        }
         public static async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider, IConfiguration configuration)
         {
             using var scope = serviceProvider.CreateScope();

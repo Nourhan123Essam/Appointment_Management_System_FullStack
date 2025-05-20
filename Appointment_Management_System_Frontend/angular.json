@@ -54,6 +54,14 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "docker": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -71,6 +79,9 @@
             },
             "development": {
               "buildTarget": "my-angular17-app:build:development"
+            },
+            "docker": {
+              "buildTarget": "my-angular17-app:build:docker"
             }
           },
           "defaultConfiguration": "development"

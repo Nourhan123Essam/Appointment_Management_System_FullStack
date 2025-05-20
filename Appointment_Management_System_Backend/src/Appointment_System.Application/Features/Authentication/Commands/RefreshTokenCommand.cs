@@ -3,6 +3,7 @@ using Appointment_System.Application.Interfaces;
 using Appointment_System.Domain.Responses;
 using MediatR;
 using Appointment_System.Application.Interfaces.Repositories;
+using Appointment_System.Application.Localization;
 
 namespace Appointment_System.Application.Features.Authentication.Commands
 {
@@ -25,12 +26,18 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRedisService _redis;
         private readonly ISessionService _sessionService;
+        private readonly ILocalizationService _localizer;
 
-        public RefreshTokenCommandHandler(IUnitOfWork unitOfWork, IRedisService redis, ISessionService sessionService)
+        public RefreshTokenCommandHandler(
+            IUnitOfWork unitOfWork,
+            IRedisService redis,
+            ISessionService sessionService,
+            ILocalizationService localizer)
         {
             _unitOfWork = unitOfWork;
             _redis = redis;
             _sessionService = sessionService;
+            _localizer = localizer;
         }
 
         public async Task<Result<LoginResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -38,12 +45,12 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             // 1. Get user ID from Redis by refresh token
             var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
             if (string.IsNullOrEmpty(userId))
-                return Result<LoginResult>.Fail("Refresh token is invalid or expired.");
+                return Result<LoginResult>.Fail(_localizer["InvalidOrExpiredRefreshToken"]);
 
             // 2. Generate new access token
             var newAccessToken = await _unitOfWork.Authentication.GenerateTokenAsync(userId);
             if (newAccessToken == null)
-                return Result<LoginResult>.Fail("User not found.");
+                return Result<LoginResult>.Fail(_localizer["UserNotFound"]);
 
             // 3. Generate new refresh token
             var newRefreshToken = _unitOfWork.Authentication.GenerateRefreshToken();
@@ -53,47 +60,40 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             await _redis.SetRefreshTokenAsync(newRefreshToken, userId, TimeSpan.FromDays(7));
 
             // 5. Extend or regenerate session in Redis
-            var currentSessionId = request.SessionId;
             string sessionIdToReturn;
 
-            if (!string.IsNullOrEmpty(currentSessionId))
+            if (!string.IsNullOrEmpty(request.SessionId))
             {
-                var isSessionValid = await _sessionService.ValidateSessionAsync(userId, currentSessionId);
+                var isSessionValid = await _sessionService.ValidateSessionAsync(userId, request.SessionId);
 
                 if (isSessionValid)
                 {
                     var sessionValid = await _sessionService.ValidateAndExtendSessionAsync(userId, request.SessionId);
                     if (!sessionValid)
-                        return Result<LoginResult>.Fail("Session expired or invalid.");
+                        return Result<LoginResult>.Fail(_localizer["SessionExpiredOrInvalid"]);
 
-                    sessionIdToReturn = currentSessionId;
+                    sessionIdToReturn = request.SessionId;
                 }
                 else
                 {
-                    // Session is invalid, so delete old and create new
                     await _sessionService.RemoveSessionAsync(userId);
                     sessionIdToReturn = await _sessionService.CreateSessionAsync(userId);
                 }
             }
             else
             {
-                // No session ID was sent — create a fresh one
                 sessionIdToReturn = await _sessionService.CreateSessionAsync(userId);
             }
 
-
             // 6. Return new token pair
-            const int accessTokenExpiryInSeconds = 900;
-
             var result = new LoginResult(
                 AccessToken: newAccessToken,
                 RefreshToken: newRefreshToken,
                 SessionId: sessionIdToReturn,
-                ExpiresIn: accessTokenExpiryInSeconds
+                ExpiresIn: 900
             );
 
             return Result<LoginResult>.Success(result);
-
         }
     }
 

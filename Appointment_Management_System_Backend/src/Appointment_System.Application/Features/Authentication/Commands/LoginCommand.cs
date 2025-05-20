@@ -38,15 +38,15 @@ namespace Appointment_System.Application.Features.Authentication.Commands
 
 
     //Validator
-    public class LoginDTOValidator : AbstractValidator<LoginDTO>
+    public class LoginDTOValidator : AbstractValidator<LoginCommand>
     {
         public LoginDTOValidator(ILocalizationService _localizer)
         {
-            RuleFor(x => x.Email)
+            RuleFor(x => x.LoginDto.Email)
                 .NotEmpty().WithMessage(_localizer["EmailRequired"])
                 .EmailAddress().WithMessage(_localizer["InvalidEmail"]);
 
-            RuleFor(x => x.Password)
+            RuleFor(x => x.LoginDto.Password)
                 .NotEmpty().WithMessage(_localizer["PasswordRequired"]);
         }
     }

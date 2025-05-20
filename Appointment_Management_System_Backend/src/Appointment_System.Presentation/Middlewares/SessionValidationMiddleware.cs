@@ -1,5 +1,5 @@
-﻿using Appointment_System.Application.DTOs.Authentication;
-using Appointment_System.Application.Interfaces.Services;
+﻿using Appointment_System.Application.Interfaces.Services;
+using Appointment_System.Application.Localization;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -8,10 +8,13 @@ namespace Appointment_System.Presentation.Middlewares
     public class SessionValidationMiddleware : IMiddleware
     {
         private readonly ISessionService _sessionService;
-        private const string SessionCookieName = "SessionId"; 
-        public SessionValidationMiddleware(ISessionService sessionService)
+        private const string SessionCookieName = "SessionId";
+        private readonly ILocalizationService _localizer;
+
+        public SessionValidationMiddleware(ISessionService sessionService, ILocalizationService localizationService)
         {
             _sessionService = sessionService;
+            _localizer = localizationService;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -42,7 +45,7 @@ namespace Appointment_System.Presentation.Middlewares
                     var valid = await _sessionService.ValidateAndExtendSessionAsync(userId, sessionIdFromCookie);
                     if (!valid)
                     {
-                        await RespondForbiddenAsync(context, "Invalid or expired session.");
+                        await RespondForbiddenAsync(context, _localizer["SessionExpiredOrInvalid"]);
                         return;
                     }
                 }
@@ -51,7 +54,7 @@ namespace Appointment_System.Presentation.Middlewares
             if (string.IsNullOrEmpty(sessionIdFromCookie))
             {
                 // Invalid session
-                await RespondForbiddenAsync(context, "You are already signed in on another device.");
+                await RespondForbiddenAsync(context, _localizer["AlreadySignedInOnAnotherDevice"]);
                 return;
             }
 
@@ -62,7 +65,7 @@ namespace Appointment_System.Presentation.Middlewares
                 var valid = await _sessionService.ValidateAndExtendSessionAsync(userId, sessionIdFromCookie);
                 if (!valid)
                 {
-                    await RespondForbiddenAsync(context, "Invalid or expired session.");
+                    await RespondForbiddenAsync(context, _localizer["SessionExpiredOrInvalid"]);
                     return;
                 }
 
@@ -71,7 +74,7 @@ namespace Appointment_System.Presentation.Middlewares
             }
 
             // Invalid session
-            await RespondForbiddenAsync(context, "You are already signed in on another device.");
+            await RespondForbiddenAsync(context, _localizer["AlreadySignedInOnAnotherDevice"]);
         }
 
         public static async Task RespondForbiddenAsync(HttpContext context, string message)
