@@ -55,8 +55,8 @@ namespace Appointment_System.Presentation.Controllers
             if(sessionExist)
                 return StatusCode(StatusCodes.Status403Forbidden, new
                 {
-                    Status = "Forbidden",
-                    Message = _localization["AlreadySignedInOnAnotherDevice"]
+                    status = "Forbidden",
+                    message = _localization["AlreadySignedInOnAnotherDevice"]
                 });
 
 
@@ -118,7 +118,7 @@ namespace Appointment_System.Presentation.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Message);
 
-            return Ok(result.Message);
+            return Ok(new { message = result.Message });
         }
 
     }

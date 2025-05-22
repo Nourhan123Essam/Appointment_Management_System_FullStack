@@ -9,7 +9,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { environment } from '../../../environments/environment';
 import { RecaptchaModule } from "ng-recaptcha";
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -43,6 +44,8 @@ export class RegisterComponent {
   maxDate = new Date(); // prevent future dates
 
   constructor(
+    private translate: TranslateService,
+    private messageService: MessageService,
     private fb: FormBuilder, 
     private authService: AuthService, 
     private router: Router) {
@@ -141,6 +144,39 @@ export class RegisterComponent {
           alert('Login failed2!')
         }
       });
+
+      this.authService.verifyCapture({ recaptchaToken: this.recaptchaToken }).subscribe({
+      next: (response: any) => {
+        console.log('Captcha Verified', response);
+
+        this.authService.register(userData).subscribe({
+          next: (res) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: this.translate.instant('common.success'),
+              detail: res.message
+            });
+            this.router.navigate(['/login']);
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: this.translate.instant('common.error'),
+              detail: error.error.message
+            });
+          }
+        });
+      },
+      error: (error) => {
+        const captchaError = this.translate.instant('register.captchaError');
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translate.instant('common.error'),
+          detail: captchaError
+        });
+      }
+    });
+
     }
   }
 }

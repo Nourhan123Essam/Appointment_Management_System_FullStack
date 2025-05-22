@@ -2,7 +2,7 @@
 .vs/
 bin/
 obj/
-.env
+
 
 
 # Ignore log files/folder

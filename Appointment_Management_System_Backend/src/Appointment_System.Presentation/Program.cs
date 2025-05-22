@@ -146,7 +146,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"❌ Error during DB setup: {ex.Message}");
+        Console.WriteLine($"Error during DB setup: {ex.Message}");
     }
 }
 

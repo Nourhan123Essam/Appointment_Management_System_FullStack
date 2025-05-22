@@ -15,9 +15,13 @@ import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.
 import { PatientDetailsComponent } from './patients/patient-details/patient-details.component';
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
+import { HomeComponent } from './home/home.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { SpecialistsComponent } from './specialists/specialists.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/appointments', pathMatch: 'full' },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
 
     // Authentication
     { path: 'login', component: LoginComponent },
@@ -43,5 +47,9 @@ export const routes: Routes = [
     { path: 'add-doctor', component: AddDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
     { path: 'update-doctor', component: UpdateDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
   
+    { path: 'dashboard', component: DashboardComponent },
+
+    { path: 'specialists', component: SpecialistsComponent },
+
     { path: '**', redirectTo: '/appointments' }
 ];

@@ -1,3 +1,6 @@
 <app-header/>
+@if (isLoggedIn) {
+    <app-secondary-header />
+}
 <p-toast></p-toast>
 <router-outlet></router-outlet>

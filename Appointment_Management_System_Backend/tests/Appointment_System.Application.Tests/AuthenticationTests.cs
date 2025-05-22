@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Appointment_System.Application.Features.Authentication.Commands;
 using Appointment_System.Application.DTOs.Authentication;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Appointment_System.Application.Tests
 {
@@ -35,6 +37,13 @@ namespace Appointment_System.Application.Tests
 
         private AuthenticationRepository _authRepo;
 
+        private ApplicationDbContext _dbContext;
+        [TearDown]
+        public void TearDown()
+        {
+            _dbContext?.Dispose();
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -42,18 +51,20 @@ namespace Appointment_System.Application.Tests
             _signInManagerMock = MockHelpers.MockSignInManager<IdentityUser>();
             _configurationMock = new Mock<IConfiguration>();
             _redisServiceMock = new Mock<IRedisService>();
-            _emailServiceMock = new Mock<IEmailService>();
             _sessionServiceMock = new Mock<ISessionService>();
             _localizerMock = new Mock<ILocalizationService>();
-
             _patientRepositoryMock = new Mock<IPatientRepository>();
             _authenticationRepositoryMock = new Mock<IAuthenticationRepository>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _emailServiceMock = new Mock<IEmailService>();
 
-            // Setup UnitOfWork to return the mocked Repository
-            _unitOfWorkMock.Setup(u => u.Authentication).Returns(_authenticationRepositoryMock.Object);
+            // Create real DbContext with InMemory
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Use unique DB per test
+                .Options;
 
-            // Initialize AuthenticationRepository
+            _dbContext = new ApplicationDbContext(options);
+
             _authRepo = new AuthenticationRepository(
                 _userManagerMock.Object,
                 _signInManagerMock.Object,
@@ -61,10 +72,20 @@ namespace Appointment_System.Application.Tests
                 _redisServiceMock.Object,
                 _sessionServiceMock.Object,
                 _localizerMock.Object,
-                _patientRepositoryMock.Object
+                _patientRepositoryMock.Object,
+                _dbContext // This is your real in-memory ApplicationDbContext
             );
-        }
 
+            // Replace the mocked version with the real instance:
+            _authenticationRepositoryMock = new Mock<IAuthenticationRepository>();
+            _authenticationRepositoryMock.Setup(r => r.GetUserIdByEmailAsync(It.IsAny<string>()))
+                                         .Returns<string>(email => _authRepo.GetUserIdByEmailAsync(email));
+
+
+            // Then:
+            _unitOfWorkMock.Setup(u => u.Authentication).Returns(_authenticationRepositoryMock.Object);
+
+        }
 
         #region Login
         [Test]
@@ -228,7 +249,7 @@ namespace Appointment_System.Application.Tests
         }
 
         [Test]
-        public async Task Register_SaveChangesThrows_ReturnsDatabaseSaveFailed()
+        public async Task Register_AddPatientThrows_ReturnsDatabaseSaveFailed()
         {
             // Arrange
             var patient = new Patient { Email = "test@example.com", Phone = "12345" };
@@ -244,9 +265,6 @@ namespace Appointment_System.Application.Tests
                 .ReturnsAsync(IdentityResult.Success);
 
             _patientRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Patient>()))
-                .Returns(Task.CompletedTask);
-
-            _unitOfWorkMock.Setup(u => u.SaveChangesAsync())
                 .ThrowsAsync(new Exception("DB failed"));
 
             _localizerMock.Setup(l => l["DatabaseSaveFailed"])
@@ -259,6 +277,7 @@ namespace Appointment_System.Application.Tests
             Assert.That(result.Succeeded, Is.False);
             Assert.That(result.Message, Is.EqualTo("Failed to save to database."));
         }
+
 
 
         private Patient GetTestPatient() => new()
@@ -280,7 +299,7 @@ namespace Appointment_System.Application.Tests
         public async Task Logout_InvalidRefreshToken_ReturnsFail()
         {
             var command = new LogoutCommand("invalid_token");
-            _redisServiceMock.Setup(r => r.GetRefreshTokenAsync("invalid_token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByRefreshTokenAsync("invalid_token"))
                 .ReturnsAsync(string.Empty);
 
             _localizerMock.Setup(l => l["InvalidOrExpiredRefreshToken"])
@@ -300,7 +319,7 @@ namespace Appointment_System.Application.Tests
             var command = new LogoutCommand("valid_token");
             var userId = "user123";
 
-            _redisServiceMock.Setup(r => r.GetRefreshTokenAsync("valid_token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByRefreshTokenAsync("valid_token"))
                 .ReturnsAsync(userId);
             _redisServiceMock.Setup(r => r.DeleteRefreshTokenAsync(userId))
                 .Returns(Task.CompletedTask);
@@ -327,7 +346,7 @@ namespace Appointment_System.Application.Tests
         {
             // Arrange
             var command = new RefreshTokenCommand("invalid_token", "session123");
-            _redisServiceMock.Setup(r => r.GetRefreshTokenAsync("invalid_token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByRefreshTokenAsync("invalid_token"))
                 .ReturnsAsync(string.Empty);
 
             _localizerMock.Setup(l => l["InvalidOrExpiredRefreshToken"])
@@ -350,7 +369,7 @@ namespace Appointment_System.Application.Tests
             var command = new RefreshTokenCommand("valid_token", "session123");
             var userId = "user123";
 
-            _redisServiceMock.Setup(r => r.GetRefreshTokenAsync("valid_token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByRefreshTokenAsync("valid_token"))
                 .ReturnsAsync(userId);
 
             _unitOfWorkMock.Setup(u => u.Authentication.GenerateTokenAsync(userId))
@@ -381,7 +400,7 @@ namespace Appointment_System.Application.Tests
 
             var command = new RefreshTokenCommand(refreshToken, sessionId);
 
-            _redisServiceMock.Setup(r => r.GetRefreshTokenAsync(refreshToken))
+            _redisServiceMock.Setup(r => r.GetUserIdByRefreshTokenAsync(refreshToken))
                 .ReturnsAsync(userId);
 
             _unitOfWorkMock.Setup(u => u.Authentication.GenerateTokenAsync(userId))
@@ -450,6 +469,49 @@ namespace Appointment_System.Application.Tests
         }
 
 
+        //[Test]
+        //public async Task Handle_ValidEmail_StoresTokenAndSendsEmail_ReturnsSuccess()
+        //{
+        //    // Arrange
+        //    var email = "test@example.com";
+        //    var userId = "user123";
+        //    var command = new RequestPasswordResetCommand(email);
+        //    var generatedToken = Guid.NewGuid().ToString();
+
+        //    _unitOfWorkMock.Setup(u => u.Authentication.GetUserIdByEmailAsync(email))
+        //        .ReturnsAsync(userId);
+
+        //    _redisServiceMock.Setup(r => r.SetResetPasswordTokenAsync(It.IsAny<string>(), userId, It.IsAny<TimeSpan>()))
+        //        .Returns(Task.CompletedTask);
+
+        //    _emailServiceMock.Setup(e => e.SendEmailAsync(email, It.IsAny<string>(), It.IsAny<string>()))
+        //        .Returns(Task.CompletedTask);
+
+        //    _localizerMock.Setup(l => l["ResetPasswordSubject"])
+        //        .Returns(new LocalizedString("ResetPasswordSubject", "Reset your password"));
+
+        //    Environment.SetEnvironmentVariable("CLIENT_URL", "https://client.com");
+
+        //    var handler = new RequestPasswordResetHandler(
+        //        _unitOfWorkMock.Object,
+        //        _redisServiceMock.Object,
+        //        _emailServiceMock.Object,
+        //        _localizerMock.Object
+        //    );
+
+        //    // Act
+        //    var result = await handler.Handle(command, CancellationToken.None);
+
+        //    // Assert
+        //    Assert.That(result.Succeeded, Is.True);
+        //    Assert.That(result.Data, Is.EqualTo(""));
+
+        //    _redisServiceMock.Verify(r => r.SetResetPasswordTokenAsync(It.IsAny<string>(), userId, TimeSpan.FromMinutes(10)), Times.Once);
+
+        //    _emailServiceMock.Verify(e =>
+        //        e.SendEmailAsync(email, "Reset your password", It.Is<string>(s => s.Contains("reset-password"))), Times.Once);
+        //}
+
         [Test]
         public async Task Handle_ValidEmail_StoresTokenAndSendsEmail_ReturnsSuccess()
         {
@@ -470,6 +532,18 @@ namespace Appointment_System.Application.Tests
 
             _localizerMock.Setup(l => l["ResetPasswordSubject"])
                 .Returns(new LocalizedString("ResetPasswordSubject", "Reset your password"));
+
+            _localizerMock.Setup(l => l["ResetPasswordHeader"])
+                .Returns(new LocalizedString("ResetPasswordHeader", "Reset Your Password"));
+
+            _localizerMock.Setup(l => l["ResetPasswordInstruction"])
+                .Returns(new LocalizedString("ResetPasswordInstruction", "Click the button below to reset your password."));
+
+            _localizerMock.Setup(l => l["ResetPasswordButton"])
+                .Returns(new LocalizedString("ResetPasswordButton", "Reset Password"));
+
+            _localizerMock.Setup(l => l["ResetPasswordIgnoreNote"])
+                .Returns(new LocalizedString("ResetPasswordIgnoreNote", "If you didn't request this, you can ignore this email."));
 
             Environment.SetEnvironmentVariable("CLIENT_URL", "https://client.com");
 
@@ -534,7 +608,7 @@ namespace Appointment_System.Application.Tests
 
             var command = new ResetPasswordCommand(dto);
 
-            _redisServiceMock.Setup(r => r.GetResetPasswordTokenAsync("invalid-token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByResetPasswordTokenAsync("invalid-token"))
                 .ReturnsAsync((string?)null);
 
             _localizerMock.Setup(l => l["InvalidOrExpiredToken"])
@@ -560,7 +634,7 @@ namespace Appointment_System.Application.Tests
 
             var command = new ResetPasswordCommand(dto);
 
-            _redisServiceMock.Setup(r => r.GetResetPasswordTokenAsync("valid-token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByResetPasswordTokenAsync("valid-token"))
                 .ReturnsAsync("user123");
 
             _authenticationRepositoryMock.Setup(a => a.UpdatePasswordAsync("user123", "password123"))
@@ -589,7 +663,7 @@ namespace Appointment_System.Application.Tests
 
             var command = new ResetPasswordCommand(dto);
 
-            _redisServiceMock.Setup(r => r.GetResetPasswordTokenAsync("valid-token"))
+            _redisServiceMock.Setup(r => r.GetUserIdByResetPasswordTokenAsync("valid-token"))
                 .ReturnsAsync("user123");
 
             _authenticationRepositoryMock.Setup(a => a.UpdatePasswordAsync("user123", "password123"))

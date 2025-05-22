@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -21,17 +21,27 @@ export class ForgotPasswordComponent {
   });
 
   constructor(
+    private translate: TranslateService,
     private fb: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService
   ) {}
 
   submit() {
-    if (this.emailForm.invalid) return;
+  if (this.emailForm.invalid) return;
 
-    this.authService.requestPasswordReset(this.emailForm.value.email!).subscribe({
-      next: () => this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Check your email for the reset link.' }),
-      error: err => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message || 'Error sending reset link' })
-    });
-  }
+  this.authService.requestPasswordReset(this.emailForm.value.email!).subscribe({
+    next: () => this.messageService.add({
+      severity: 'success',
+      summary: this.translate.instant('common.success'),
+      detail: this.translate.instant('forgotPassword.success')
+    }),
+    error: err => this.messageService.add({
+      severity: 'error',
+      summary: this.translate.instant('common.error'),
+      detail: err.error.message || this.translate.instant('forgotPassword.failure')
+    })
+  });
+}
+
 }

@@ -6,6 +6,8 @@ services:
     build:
       context: ./Appointment_Management_System_Backend
       dockerfile: Dockerfile
+    env_file:
+      - ./Appointment_Management_System_Backend/src/Appointment_System.Presentation/.env
     ports:
         - "7000:8080"
     environment:

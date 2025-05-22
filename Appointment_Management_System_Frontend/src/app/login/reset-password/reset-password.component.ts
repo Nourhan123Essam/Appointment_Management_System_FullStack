@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reset-password',
@@ -22,6 +22,7 @@ export class ResetPasswordComponent implements OnInit {
   });
 
   constructor(
+    private translate: TranslateService,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private authService: AuthService,
@@ -38,16 +39,23 @@ export class ResetPasswordComponent implements OnInit {
 
   submit() {
     if (this.form.invalid || this.form.value.newPassword !== this.form.value.confirmPassword) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: "Passwords do not match or are invalid."})
+      const errorMessage = this.translate.instant('resetPassword.mismatch');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
       return;
     }
 
     this.authService.resetPassword(this.token, this.form.value.newPassword!, this.form.value.confirmPassword!).subscribe({
       next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Password reset successfully' });
+        const successMessage = this.translate.instant('resetPassword.success');
+        this.messageService.add({ severity: 'success', summary: this.translate.instant('common.success'), detail: successMessage });
         this.router.navigate(['/login']);
-      }, 
-      error: err => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message || 'Error resetting password'})
+      },
+      error: err => {
+        const fallbackError = this.translate.instant('resetPassword.errorFallback');
+        const message = err.error?.message ?? fallbackError;
+        this.messageService.add({ severity: 'error', summary: this.translate.instant('common.error'), detail: message });
+      }
     });
+
   }
 }

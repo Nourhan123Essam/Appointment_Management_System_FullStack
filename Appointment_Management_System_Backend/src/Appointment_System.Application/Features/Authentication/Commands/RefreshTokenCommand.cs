@@ -43,7 +43,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
         public async Task<Result<LoginResult>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             // 1. Get user ID from Redis by refresh token
-            var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
+            var userId = await _redis.GetUserIdByRefreshTokenAsync(request.RefreshToken);
             if (string.IsNullOrEmpty(userId))
                 return Result<LoginResult>.Fail(_localizer["InvalidOrExpiredRefreshToken"]);
 

@@ -3,11 +3,11 @@
     public interface IRedisService
     {
         Task SetRefreshTokenAsync(string userId, string refreshToken, TimeSpan expiry);
-        Task<string?> GetRefreshTokenAsync(string userId);
-        Task DeleteRefreshTokenAsync(string userId);
+        Task<string?> GetUserIdByRefreshTokenAsync(string refreshToken);
+        Task DeleteRefreshTokenAsync(string refreshToken);
 
         public Task SetResetPasswordTokenAsync(string token, string userId, TimeSpan expiry);
-        public Task<string?> GetResetPasswordTokenAsync(string token);
+        public Task<string?> GetUserIdByResetPasswordTokenAsync(string token);
         public Task DeleteResetPasswordTokenAsync(string token);
 
     }

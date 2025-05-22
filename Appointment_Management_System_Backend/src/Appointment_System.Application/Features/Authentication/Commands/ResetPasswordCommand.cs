@@ -45,7 +45,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
             if (dto.NewPassword != dto.ConfirmPassword)
                 return Result<string>.Fail(_localizer["PasswordsDoNotMatch"]);
 
-            var userId = await _redis.GetResetPasswordTokenAsync(dto.Token);
+            var userId = await _redis.GetUserIdByResetPasswordTokenAsync(dto.Token);
             if (string.IsNullOrEmpty(userId))
                 return Result<string>.Fail(_localizer["InvalidOrExpiredToken"]);
 

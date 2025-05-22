@@ -84,8 +84,8 @@ namespace Appointment_System.Presentation.Middlewares
 
             var result = new
             {
-                Status = "Forbidden",
-                Message = message
+                status = "Forbidden",
+                message = message
             };
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(result));

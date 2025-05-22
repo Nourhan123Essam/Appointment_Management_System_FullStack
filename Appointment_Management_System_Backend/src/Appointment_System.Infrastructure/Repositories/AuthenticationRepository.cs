@@ -10,6 +10,7 @@ using Appointment_System.Domain.Entities;
 using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -33,8 +34,10 @@ namespace Appointment_System.Infrastructure.Repositories
             IRedisService redisService,
             ISessionService sessionService,
             ILocalizationService localizer,
-            IPatientRepository patientRepository
-        ){
+            IPatientRepository patientRepository,
+            ApplicationDbContext context
+        )
+        {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
@@ -42,6 +45,7 @@ namespace Appointment_System.Infrastructure.Repositories
             _sessionService = sessionService;
             _localizer = localizer;
             _patientRepository = patientRepository;
+            _context = context;
         }
 
         public async Task<IdentityUser> GetUserByEmailAsync(string email)
@@ -117,16 +121,16 @@ namespace Appointment_System.Infrastructure.Repositories
             if (user == null)
                 return false;
 
+            UserStore<IdentityUser> store = new UserStore<IdentityUser>(_context);
             var passwordHasher = new PasswordHasher<IdentityUser>();
             user.PasswordHash = passwordHasher.HashPassword(user, newPassword);
-
-            _context.Users.Update(user);
+            await store.SetPasswordHashAsync(user, user.PasswordHash);
+            await store.UpdateAsync(user);
             await _context.SaveChangesAsync();
 
             return true;
         }
-
-
+       
         public async Task<Result<LoginResult>> Login(string email, string password)
         {
             // Step 1: Find the user by email
@@ -157,7 +161,7 @@ namespace Appointment_System.Infrastructure.Repositories
                 ExpiresIn: 900 // 15 minutes
             );
 
-            return Result<LoginResult>.Success(loginResult, "Login successful");
+            return Result<LoginResult>.Success(loginResult, _localizer["LoginSuccessful"]);
         }
 
         // Generate Access Token

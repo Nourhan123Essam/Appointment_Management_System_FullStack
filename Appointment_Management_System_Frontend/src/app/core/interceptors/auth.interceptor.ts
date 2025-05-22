@@ -13,6 +13,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  console.log("accepted langaute", langHeader);
+  
   req = req.clone({
     withCredentials: true,
     setHeaders: {

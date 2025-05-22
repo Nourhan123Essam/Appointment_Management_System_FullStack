@@ -20,14 +20,14 @@ namespace Appointment_System.Infrastructure.Services
 
         }
 
-        public async Task<string?> GetRefreshTokenAsync(string refreshToken)
+        public async Task<string?> GetUserIdByRefreshTokenAsync(string refreshToken)
         {
             return await _db.StringGetAsync($"refreshToken:{refreshToken}");
         }
 
-        public async Task DeleteRefreshTokenAsync(string userId)
+        public async Task DeleteRefreshTokenAsync(string refreshToken)
         {
-            await _db.KeyDeleteAsync($"refreshToken:{userId}");
+            await _db.KeyDeleteAsync($"refreshToken:{refreshToken}");
         }
 
         /////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ namespace Appointment_System.Infrastructure.Services
         public Task SetResetPasswordTokenAsync(string token, string userId, TimeSpan expiry) =>
             _db.StringSetAsync($"resetPasswordToken:{token}", userId, expiry);
 
-        public async Task<string> GetResetPasswordTokenAsync(string token)
+        public async Task<string> GetUserIdByResetPasswordTokenAsync(string token)
         {
             return await _db.StringGetAsync($"resetPasswordToken:{token}");
         }

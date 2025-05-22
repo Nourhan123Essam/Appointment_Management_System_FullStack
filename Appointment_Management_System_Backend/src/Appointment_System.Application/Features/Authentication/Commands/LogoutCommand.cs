@@ -32,7 +32,7 @@ namespace Appointment_System.Application.Features.Authentication.Commands
 
         public async Task<Result<string>> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var userId = await _redis.GetRefreshTokenAsync(request.RefreshToken);
+            var userId = await _redis.GetUserIdByRefreshTokenAsync(request.RefreshToken);
             if (string.IsNullOrEmpty(userId))
                 return Result<string>.Fail(_localizer["InvalidOrExpiredRefreshToken"]);
 

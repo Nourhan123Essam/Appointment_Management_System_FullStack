@@ -10,7 +10,7 @@ import { RecaptchaModule } from "ng-recaptcha";
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AuthService } from '../core/services/auth.service';
 import { MessageService } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -36,6 +36,7 @@ export class LoginComponent {
   
 
   constructor(
+    private translate: TranslateService,
     private authService: AuthService, 
     private router: Router,
     private messageService: MessageService
@@ -79,19 +80,19 @@ export class LoginComponent {
             console.log("message after login" , res);
             
             this.authService.setTokens(res.data.accessToken, res.data.refreshToken);
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login completed successfully!' });
+            this.messageService.add({ severity: 'success', summary: this.translate.instant('common.success'), detail: res.message });
             this.router.navigate(['/appointments']);
           },
           error: (error) => {
             console.log("error when login", error);
             
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.message || 'Login failed!' });
+            this.messageService.add({ severity: 'error', summary: this.translate.instant('common.error'), detail: error.error.message || 'Login failed!' });
           }
         });
       },
       error: (error) => {
         console.log("error 2222 when login", error);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message || 'Login failed!' });
+        this.messageService.add({ severity: 'error', summary: this.translate.instant('common.error'), detail: error.error.message || 'Login failed!' });
       }
     });
   }

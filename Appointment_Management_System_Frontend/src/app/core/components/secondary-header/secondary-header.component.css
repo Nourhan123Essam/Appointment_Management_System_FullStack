@@ -1,0 +1,22 @@
+.secondary-header {
+  background-color: #5c6bc0; /* lighter than main */
+  padding: 5px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.icon-button:hover {
+  color: #e3f2fd;
+}

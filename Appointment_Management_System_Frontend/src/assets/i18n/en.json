@@ -13,9 +13,13 @@
     "title": "Reset Password",
     "newPassword": "New Password",
     "confirmPassword": "Confirm Password",
-    "submit": "Reset Password"
+    "submit": "Reset Password",
+    "success": "Password reset successfully",
+    "errorFallback": "Error resetting password",
+    "mismatch": "Passwords do not match or are invalid."
   },
   "register": {
+    "captchaError": "Captcha verification failed. Please try again.",
     "title": "Register",
     "firstName": "First Name",
     "lastName": "Last Name",
@@ -32,7 +36,7 @@
     "phone": "Phone Number",
     "phoneError": "Enter a valid phone number (e.g., 01012345678).",
     "password": "Password",
-    "passwordError": "Password must meet requirements.",
+    "passwordError": "Password must be at least 6 characters long and include uppercase, lowercase, a number, and a special character (e.g. @ or #).",
     "confirmPassword": "Confirm Password",
     "confirmPasswordError": "Passwords do not match.",
     "captcha": "CAPTCHA Verification",
@@ -46,6 +50,19 @@
     "submit": "Send Reset Link",
     "invalidEmail": "Please enter a valid email address.",
     "backToLogin": "Back to Login",
-    "question": "Remembered your password?"
+    "question": "Remembered your password?",
+    "success": "Check your email for the reset link.",
+    "failure": "Error sending reset link"
+  },
+  "common": {
+    "success": "Success",
+    "error": "Error"
+  },
+  "header": {
+    "home": "Home",
+    "specialists": "Specialists",
+    "doctors": "Doctors",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
   }
 }

@@ -20,12 +20,26 @@ export class HeaderComponent implements OnInit {
   isAdmin: boolean = false;
   isLoggedIn: boolean = false;
   authService = inject(AuthService);
+  dropdownOpen = false;
+  activeSection: 'home' | 'specialists' | 'doctors' = 'home';
+  isProfileDropdownOpen = false;
 
+  // Moq data until handle this from API
+  userName = 'Nourhan Essam';
+  userRole = 'Admin'; 
+  userImageUrl = 'https://cdn-icons-png.flaticon.com/512/2922/2922561.png'; 
+
+
+  // Example list until fetch from API
+  specialists = [
+    { id: 1, name: 'Cardiology' },
+    { id: 2, name: 'Neurology' },
+    { id: 3, name: 'Orthopedics' }
+  ];
   languages = [
     { code: 'en', label: 'English' },
     { code: 'ar', label: 'العربية' }
   ];
-
   
   selectedLang = this.translate.getDefaultLang();
   selectedLangObj = {};
@@ -51,6 +65,30 @@ export class HeaderComponent implements OnInit {
     this.appState.setLanguage(this.selectedLang);
 
     this.translate.use(this.selectedLang);
+  }
+
+  toggleProfileDropdown() {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  closeProfileDropdown() {
+    setTimeout(() => {
+      this.isProfileDropdownOpen = false;
+    }, 200);
+  }
+   
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+    console.log(this.dropdownOpen);
+    if(this.dropdownOpen){
+      this.activeSection = 'specialists';
+    }
+  }
+
+  goToSpecialist(specialist: any) {
+    this.dropdownOpen = false;
+    this.activeSection = 'specialists';
+    this.router.navigate(['/specialists'], { queryParams: { type: specialist.name } });
   }
 
   ngOnInit(): void {
@@ -79,12 +117,12 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.authService.logout().subscribe( // Calls backend + clears tokens
       {
-        next: ()=> {
+        next: (res: any)=> {
           this.authService.clearTokens();
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Lougout completed!' });
+          this.messageService.add({ severity: 'success', summary: this.translate.instant('common.success'), detail: res.message });
           this.router.navigate(['/login']);
         },
-        error: err => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.message || 'Error lougout' })
+        error: err => this.messageService.add({ severity: 'error', summary: this.translate.instant('common.error'), detail: err.error.message || 'Error lougout' })
       }
     ); 
   }
