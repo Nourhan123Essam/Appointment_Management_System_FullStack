@@ -118,8 +118,6 @@ Below: Two browsers show how language changes are reflected across layers.
 
 
 **[Forget password]**  
-![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/resetPassword.png)
-
 ![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/ForegetPssword.png)
 
 **[Reset Password — Language from Header]**  
