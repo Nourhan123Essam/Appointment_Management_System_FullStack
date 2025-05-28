@@ -4,19 +4,16 @@ using Appointment_System.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Appointment_System.Infrastructure.Data.Migrations
+namespace Appointment_System.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250504090717_V2_InitialStructure_Rebuild")]
-    partial class V2_InitialStructure_Rebuild
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -474,16 +471,6 @@ namespace Appointment_System.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -494,29 +481,50 @@ namespace Appointment_System.Infrastructure.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("StreetAddress")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Zip")
+                    b.HasKey("Id");
+
+                    b.ToTable("Offices");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.OfficeTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OfficeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StreetAddress", "City");
+                    b.HasIndex("OfficeId");
 
-                    b.ToTable("Offices");
+                    b.ToTable("OfficeTranslations");
                 });
 
             modelBuilder.Entity("Appointment_System.Domain.Entities.Patient", b =>
@@ -1029,6 +1037,39 @@ namespace Appointment_System.Infrastructure.Data.Migrations
                     b.Navigation("Chat");
                 });
 
+            modelBuilder.Entity("Appointment_System.Domain.Entities.OfficeTranslation", b =>
+                {
+                    b.HasOne("Appointment_System.Domain.Entities.Office", "Office")
+                        .WithMany("Translations")
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("Appointment_System.Domain.ValueObjects.Language", "Language", b1 =>
+                        {
+                            b1.Property<int>("OfficeTranslationId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
+                                .HasColumnName("Language");
+
+                            b1.HasKey("OfficeTranslationId");
+
+                            b1.ToTable("OfficeTranslations");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeTranslationId");
+                        });
+
+                    b.Navigation("Language")
+                        .IsRequired();
+
+                    b.Navigation("Office");
+                });
+
             modelBuilder.Entity("Appointment_System.Domain.Entities.Patient", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
@@ -1150,6 +1191,8 @@ namespace Appointment_System.Infrastructure.Data.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("Availabilities");
+
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Appointment_System.Domain.Entities.Patient", b =>

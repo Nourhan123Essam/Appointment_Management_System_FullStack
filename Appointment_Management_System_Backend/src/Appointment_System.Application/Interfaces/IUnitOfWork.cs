@@ -1,5 +1,4 @@
-﻿
-using Appointment_System.Application.Interfaces.Repositories;
+﻿using Appointment_System.Application.Interfaces.Repositories;
 
 namespace Appointment_System.Application.Interfaces
 {
@@ -10,6 +9,7 @@ namespace Appointment_System.Application.Interfaces
         IAuthenticationRepository Authentication { get; }
         IDoctorAvailabilityRepository AvailabilityRepository { get; }
         IDoctorQualificationRepository QualificationRepository { get; }
+        IOfficeRepository OfficeRepository { get; }
 
         Task<int> SaveChangesAsync();
     }

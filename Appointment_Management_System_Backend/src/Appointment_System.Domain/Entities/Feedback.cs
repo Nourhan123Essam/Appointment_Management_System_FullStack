@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Appointment_System.Domain.Common;
 
 namespace Appointment_System.Domain.Entities
 {

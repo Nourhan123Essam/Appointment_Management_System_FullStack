@@ -56,6 +56,8 @@ namespace Appointment_System.Infrastructure
             services.AddScoped<IDoctorQualificationRepository, DoctorQualificationRepository>();
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // External Services

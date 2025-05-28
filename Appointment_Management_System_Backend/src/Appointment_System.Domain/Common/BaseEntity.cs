@@ -1,4 +1,4 @@
-﻿namespace Appointment_System.Domain.Entities
+﻿namespace Appointment_System.Domain.Common
 {
     public abstract class BaseEntity
     {

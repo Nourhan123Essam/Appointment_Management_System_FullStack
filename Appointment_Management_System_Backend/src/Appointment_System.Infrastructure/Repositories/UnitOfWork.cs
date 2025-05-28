@@ -16,20 +16,24 @@ namespace Appointment_System.Infrastructure.Repositories
         public IDoctorAvailabilityRepository AvailabilityRepository { get; }
 
         public IDoctorQualificationRepository QualificationRepository { get; }
+        public IOfficeRepository OfficeRepository { get; }
 
-        public UnitOfWork(ApplicationDbContext context,
-                          IDoctorRepository doctorRepo,
-                          IPatientRepository patientRepo,
-                          IAuthenticationRepository authenticationRepo,
-                          IDoctorAvailabilityRepository doctorAvailabilityRepo,
-                          IDoctorQualificationRepository doctorQualificationRepo)
-        {
+        public UnitOfWork(
+            ApplicationDbContext context,
+            IDoctorRepository doctorRepo,
+            IPatientRepository patientRepo,
+            IAuthenticationRepository authenticationRepo,
+            IDoctorAvailabilityRepository doctorAvailabilityRepo,
+            IDoctorQualificationRepository doctorQualificationRepo,
+            IOfficeRepository officeRepository
+        ){
             _context = context;
             Doctors = doctorRepo;
             Patients = patientRepo;
             Authentication = authenticationRepo;
             AvailabilityRepository = doctorAvailabilityRepo;
             QualificationRepository = doctorQualificationRepo;
+            OfficeRepository = officeRepository;
         }
 
         public Task<int> SaveChangesAsync()

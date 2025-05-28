@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Appointment_System.Domain.Common;
 
 namespace Appointment_System.Domain.Entities
 {

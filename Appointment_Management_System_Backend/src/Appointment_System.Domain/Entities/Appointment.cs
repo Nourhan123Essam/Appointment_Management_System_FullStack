@@ -1,4 +1,5 @@
-﻿using Appointment_System.Domain.Enums;
+﻿using Appointment_System.Domain.Common;
+using Appointment_System.Domain.Enums;
 
 namespace Appointment_System.Domain.Entities
 {

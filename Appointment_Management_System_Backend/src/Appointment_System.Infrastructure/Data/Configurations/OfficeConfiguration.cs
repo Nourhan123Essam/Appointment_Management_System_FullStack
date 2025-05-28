@@ -12,31 +12,27 @@ namespace Appointment_System.Infrastructure.Data.Configurations
             builder.HasKey(o => o.Id);
 
             // Properties
-            builder.Property(o => o.StreetAddress).IsRequired().HasMaxLength(200);
-            builder.Property(o => o.City).IsRequired().HasMaxLength(100);
-            builder.Property(o => o.State).IsRequired().HasMaxLength(100);
-            builder.Property(o => o.Country).IsRequired().HasMaxLength(100);
-            builder.Property(o => o.Zip).IsRequired().HasMaxLength(20);
-            builder.Property(o => o.IsDeleted).HasDefaultValue(false); // Soft delete flag
+            builder.Property(o => o.IsDeleted).HasDefaultValue(false);
             builder.Property(o => o.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
 
             // Relationships
             builder.HasMany(o => o.Availabilities)
                    .WithOne(a => a.Office)
                    .HasForeignKey(a => a.OfficeId)
-                   .OnDelete(DeleteBehavior.Restrict); // If Office is deleted, its related Availabilities are deleted
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(o => o.Appointments)
                    .WithOne(a => a.Office)
                    .HasForeignKey(a => a.OfficeId)
-                   .OnDelete(DeleteBehavior.Restrict); // If Office is deleted, its related Appointments are deleted
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(o => o.Translations)
+                   .WithOne(t => t.Office)
+                   .HasForeignKey(t => t.OfficeId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             // Soft Delete Filter
-            builder.HasQueryFilter(o => !o.IsDeleted); // Soft delete filter
-
-            // Add an index on the combination of StreetAddress and City for better performance on search queries
-            builder.HasIndex(o => new { o.StreetAddress, o.City }).IsUnique(false);
+            builder.HasQueryFilter(o => !o.IsDeleted);
         }
     }
-
 }

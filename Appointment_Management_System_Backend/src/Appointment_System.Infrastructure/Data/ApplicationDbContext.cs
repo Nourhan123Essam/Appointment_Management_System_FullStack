@@ -9,6 +9,8 @@ using Appointment_System.Infrastructure.Data.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using StackExchange.Redis;
 
 namespace Appointment_System.Infrastructure.Data
 {
@@ -30,14 +32,14 @@ namespace Appointment_System.Infrastructure.Data
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Office> Offices { get; set; }                                                          
+        public DbSet<Office> Offices { get; set; }        
+        public DbSet<OfficeTranslation> OfficeTranslations { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Specialization> Specializations { get; set; }
 
-
-        protected override void OnModelCreating(ModelBuilder builder)
+       protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
@@ -52,6 +54,7 @@ namespace Appointment_System.Infrastructure.Data
             builder.ApplyConfiguration(new MedicineConfiguration());
             builder.ApplyConfiguration(new MessageConfiguration());
             builder.ApplyConfiguration(new OfficeConfiguration());
+            builder.ApplyConfiguration(new OfficeTranslationConfiguration());
             builder.ApplyConfiguration(new PatientConfiguration());
             builder.ApplyConfiguration(new PrescriptionConfiguration());
             builder.ApplyConfiguration(new QualificationConfiguration());

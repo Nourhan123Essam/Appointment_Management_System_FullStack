@@ -1,4 +1,6 @@
-﻿namespace Appointment_System.Domain.Entities
+﻿using Appointment_System.Domain.Common;
+
+namespace Appointment_System.Domain.Entities
 {
     public class DoctorSpecialization : BaseEntity
     {

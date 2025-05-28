@@ -127,6 +127,7 @@ app.UseRateLimiter();
 
 // Add the custom middlewares to the pipeline
 app.UseTimeZoneMiddleware(); // using extension method for clean usage
+app.UseLocalizationMiddleware(); // using extension method for clean usage
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -152,11 +153,9 @@ using (var scope = app.Services.CreateScope())
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Use swagger in any environment
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
