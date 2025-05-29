@@ -81,7 +81,7 @@ export class LoginComponent {
             
             this.authService.setTokens(res.data.accessToken, res.data.refreshToken);
             this.messageService.add({ severity: 'success', summary: this.translate.instant('common.success'), detail: res.message });
-            this.router.navigate(['/appointments']);
+            this.router.navigate(['/home']);
           },
           error: (error) => {
             console.log("error when login", error);

@@ -1,0 +1,50 @@
+<div style="padding: 5px;">
+    <div class="dialog-header">
+        <div class="title-section">
+        <i class="pi pi-pencil text-primary me-2"></i>
+        <span class="dialog-title">Edit Office Translation {{translation.language}}</span>
+        </div>
+        <button class="close-btn" (click)="cancel()">✖</button>
+    </div> 
+
+
+  <form [formGroup]="form" class="update-translation-form">
+  <div class="form-grid">
+    <div class="form-field">
+      <label for="name">Name</label>
+      <input id="name" pInputText formControlName="name" />
+    </div>
+
+    <div class="form-field">
+      <label for="city">City</label>
+      <input id="city" pInputText formControlName="city" />
+    </div>
+
+    <div class="form-field">
+      <label for="streetName">Street</label>
+      <input id="streetName" pInputText formControlName="streetName" />
+    </div>
+
+    <div class="form-field">
+      <label for="state">State</label>
+      <input id="state" pInputText formControlName="state" />
+    </div>
+
+    <div class="form-field">
+      <label for="country">Country</label>
+      <input id="country" pInputText formControlName="country" />
+    </div>
+  </div>
+
+  <button
+    pButton
+    label="Update"
+    class="p-button-primary full-width-button mt-3"
+    (click)="update()"
+    [disabled]="form.invalid"
+    [disabled]="loading"
+  ></button>
+</form>
+
+
+</div>

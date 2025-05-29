@@ -9,10 +9,10 @@ using MediatR;
 namespace Appointment_System.Application.Features.Office.Commands
 {
     // Command
-    public record CreateOfficeCommand(List<OfficeTranslationDto> Translations) : IRequest<Result<int>>;
+    public record CreateOfficeCommand(List<OfficeTranslationDto> Translations): IRequest<Result<OfficeWithTranslationsDto>>;
 
     // Handler
-    public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, Result<int>>
+    public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, Result<OfficeWithTranslationsDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -21,11 +21,11 @@ namespace Appointment_System.Application.Features.Office.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Result<int>> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
+        public async Task<Result<OfficeWithTranslationsDto>> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
         {
             // Defensive check — though FluentValidation already handles it
             if (request.Translations.Count == 0)
-                return Result<int>.Fail("Translations are required.");
+                return Result<OfficeWithTranslationsDto>.Fail("Translations are required.");
 
             var office = new Domain.Entities.Office
             {
@@ -48,7 +48,26 @@ namespace Appointment_System.Application.Features.Office.Commands
             await _unitOfWork.OfficeRepository.AddAsync(office);
             await _unitOfWork.SaveChangesAsync();
 
-            return Result<int>.Success(office.Id, "Office created successfully.");
+            // Build the DTO
+            var dto = new OfficeWithTranslationsDto
+            {
+                Id = office.Id,
+                Translations = office.Translations
+                    .Select(t => new OfficeTranslationDto
+                    {
+                        Id = t.Id,
+                        OfficeId = office.Id,
+                        Language = t.Language.Value,
+                        Name = t.Name,
+                        City = t.City,
+                        StreetName = t.StreetName,
+                        State = t.State,
+                        Country = t.Country
+                    })
+                    .ToList()
+            };
+
+            return Result<OfficeWithTranslationsDto>.Success(dto, "Office created successfully.");
         }
     }
 

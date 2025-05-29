@@ -1,0 +1,120 @@
+<!-- AdminOfficesComponent Template -->
+<div class="admin-offices-wrapper p-4">
+  <!-- Header Row -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">Offices Management</h2>
+    <button pButton icon="pi pi-plus" label="Add Office" class="p-button-primary"
+            (click)="openAddOfficeDialog()">
+    </button>
+  </div>
+
+<p-table 
+  [value]="(offices$ | async) || []" 
+  dataKey="id"
+  expandableRows
+  [paginator]="true"
+  [rows]="3"
+  [rowsPerPageOptions]="[3, 6, 9]"
+  [responsiveLayout]="'scroll'"
+  class="p-datatable-sm shadow rounded overflow-hidden w-100"
+  emptyMessage="No offices found."
+>
+  <!-- Table Header -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 30%">Name</th>
+      <th style="width: 30%">City</th>
+      <th style="width: 40%; text-align: right">Actions</th>
+    </tr>
+  </ng-template>
+
+  <!-- Table Body -->
+  <ng-template pTemplate="body" let-office>
+    <tr>
+      <td>{{ getTranslation(office, 'en-US')?.name || '-' }}</td>
+      <td>{{ getTranslation(office, 'en-US')?.city || '-' }}</td>
+      <td style="text-align: right; white-space: nowrap">
+        <!-- Delete Office -->
+        <button 
+          pButton 
+          icon="pi pi-trash" 
+          class="p-button-rounded p-button-sm p-button-text p-button-secondary me-2 shadow-sm"
+          (click)="confirmDeleteOffice(office.id)"
+          tooltip="Delete Office">
+        </button>
+
+        <!-- Toggle Translations -->
+        <button 
+          pButton 
+          [icon]="expandedOfficeId === office.id ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+          class="p-button-rounded p-button-sm p-button-text p-button-secondary shadow-sm"
+          pRowToggler 
+          [pRowTogglerDisabled]="!office.translations?.length"
+          [pRowToggler]="office"
+          tooltip="Show Translations"
+          (click)="toggleExpansion(office.id)">
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- Row Expansion: Translation Table -->
+  <ng-template pTemplate="rowexpansion" let-office>
+    <tr>
+      <td colspan="3">
+        <p-table 
+          [value]="office.translations" 
+          class="p-datatable-sm mt-2 w-100"
+          [responsiveLayout]="'scroll'"
+          emptyMessage="No translations available.">
+          
+          <!-- Translation Header -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Language</th>
+              <th>Name</th>
+              <th>City</th>
+              <th>Street</th>
+              <th>State</th>
+              <th>Country</th>
+              <th style="text-align: right">Actions</th>
+            </tr>
+          </ng-template>
+
+          <!-- Translation Body -->
+          <ng-template pTemplate="body" let-translation>
+            <tr>
+              <td>{{ translation.language }}</td>
+              <td>{{ translation.name }}</td>
+              <td>{{ translation.city }}</td>
+              <td>{{ translation.streetName }}</td>
+              <td>{{ translation.state }}</td>
+              <td>{{ translation.country }}</td>
+              <td style="text-align: right">
+                <!-- Edit Translation -->
+                <button 
+                  pButton 
+                  icon="pi pi-pencil" 
+                  class="p-button-rounded p-button-sm p-button-text p-button-secondary shadow-sm"
+                  (click)="openEditTranslationDialog(translation)"
+                  tooltip="Edit Translation">
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </td>
+    </tr>
+  </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr><td colspan="8">No offices found.</td></tr>
+      </ng-template>
+</p-table>
+
+
+</div>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>
+

@@ -33,7 +33,7 @@
 /* CENTER: Navigation */
 .nav-links {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   position: static; /* changed from relative to static */
   overflow: visible; /* ensure dropdown can overflow */
   z-index: 100;

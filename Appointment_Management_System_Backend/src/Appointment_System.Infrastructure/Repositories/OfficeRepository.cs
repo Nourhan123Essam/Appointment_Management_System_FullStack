@@ -84,7 +84,6 @@ namespace Appointment_System.Infrastructure.Repositories
         public async Task<List<OfficeWithTranslationsDto>> GetAllWithTranslationsAsync()
         {
             return await _context.Offices
-                .Where(o => !o.IsDeleted)
                 .Include(o => o.Translations)
                 .Select(o => new OfficeWithTranslationsDto
                 {
@@ -92,6 +91,8 @@ namespace Appointment_System.Infrastructure.Repositories
                     Translations = o.Translations
                         .Select(t => new OfficeTranslationDto
                         {
+                            Id = t.Id,
+                            OfficeId = o.Id,
                             Language = t.Language.Value, // value object
                             Name = t.Name,
                             StreetName = t.StreetName,

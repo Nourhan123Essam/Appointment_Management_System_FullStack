@@ -1,0 +1,31 @@
+::ng-deep .btn-outline-primary,
+::ng-deep .btn-outline-danger {
+  background-color: transparent !important;
+  border: 1px solid;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .btn-outline-primary {
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+::ng-deep .btn-outline-primary:hover {
+  background-color: #e7f1ff;
+  border-color: #0b5ed7;
+  color: #0b5ed7;
+}
+
+::ng-deep .btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+::ng-deep .btn-outline-danger:hover {
+  background-color: #f8d7da;
+  border-color: #bb2d3b;
+  color: #bb2d3b;
+}

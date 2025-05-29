@@ -1,0 +1,5 @@
+::ng-deep .custom-dialog-header .p-dialog-header {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}

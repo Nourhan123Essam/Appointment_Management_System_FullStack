@@ -62,7 +62,7 @@
         <p><strong>{{ userName }}</strong></p>
         <p><small>{{ userRole }}</small></p>
       </li>
-      <li routerLink="/dashboard">
+      <li routerLink="/dashboard" (click)="activeSection = 'dashboard'; dropdownOpen = false;">
         {{ "header.dashboard" | translate }}
       </li>
       <li (click)="logout()">

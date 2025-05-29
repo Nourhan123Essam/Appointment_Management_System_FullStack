@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
@@ -11,7 +11,7 @@ import { AppStateService } from '../../services/State/app-state.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, 
+  imports: [CommonModule, RouterLink, 
     DropdownModule, FormsModule, TranslateModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
   authService = inject(AuthService);
   dropdownOpen = false;
-  activeSection: 'home' | 'specialists' | 'doctors' = 'home';
+  activeSection: 'home' | 'specialists' | 'doctors' | 'dashboard' = 'home';
   isProfileDropdownOpen = false;
 
   // Moq data until handle this from API

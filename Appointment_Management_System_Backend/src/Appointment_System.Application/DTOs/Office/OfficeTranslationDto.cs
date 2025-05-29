@@ -2,6 +2,9 @@
 {
     public class OfficeTranslationDto
     {
+        public int Id { get; set; }
+        public int OfficeId { get; set; }
+
         public string Language { get; set; } = null!;
 
         public string Name { get; set; } = null!;

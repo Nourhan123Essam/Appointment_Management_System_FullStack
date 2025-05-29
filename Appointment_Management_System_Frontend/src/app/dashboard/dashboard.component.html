@@ -1,1 +1,11 @@
-<p>dashboard works!</p>
+<div class="dashboard-container d-flex py-4 px-5 gap-3" style="height: 85vh;">
+  <!-- Sidebar with margin and shadow -->
+  <div class="sidebar-container">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <!-- Main content with spacing and card-style look -->
+  <div class="content-container flex-grow-1">
+    <router-outlet></router-outlet>
+  </div>
+</div>

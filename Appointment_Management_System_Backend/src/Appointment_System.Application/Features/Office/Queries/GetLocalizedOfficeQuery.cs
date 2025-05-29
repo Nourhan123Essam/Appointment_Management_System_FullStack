@@ -37,6 +37,8 @@ namespace Appointment_System.Application.Features.Office.Queries
 
             var dto = new OfficeTranslationDto
             {
+                Id = translation.Id,
+                OfficeId = request.OfficeId,
                 Language = translation.Language.Value,
                 Name = translation.Name,
                 StreetName = translation.StreetName,

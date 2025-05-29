@@ -18,6 +18,7 @@ import { ForgotPasswordComponent } from './login/forgot-password/forgot-password
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SpecialistsComponent } from './specialists/specialists.component';
+import { OfficesComponent } from './offices/offices.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -47,9 +48,41 @@ export const routes: Routes = [
     { path: 'add-doctor', component: AddDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
     { path: 'update-doctor', component: UpdateDoctorComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
   
-    { path: 'dashboard', component: DashboardComponent },
+    // Dashboard
+    // { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+    {
+        path: 'dashboard',
+        component: DashboardComponent,
+        children: [
+        {
+            path: 'appointments',
+            loadComponent: () => import('./appointments/appointments.component').then(m => m.AppointmentsComponent)
+        },
+        {
+            path: 'offices',
+            loadComponent: () => import('./offices/offices.component').then(m => m.OfficesComponent)
+        },
+        {
+            path: 'specialists',
+            loadComponent: () => import('./specialists/specialists.component').then(m => m.SpecialistsComponent)
+        },
+        {
+            path: 'doctors',
+            loadComponent: () => import('./doctors/doctors.component').then(m => m.DoctorsComponent)
+        },
+        {
+            path: '',
+            redirectTo: 'appointments',
+            pathMatch: 'full'
+        }
+        ]
+    },
 
-    { path: 'specialists', component: SpecialistsComponent },
+    // Specialists
+    { path: 'specialists', component: SpecialistsComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
 
-    { path: '**', redirectTo: '/appointments' }
+    // Offices
+    { path: 'offices', component: OfficesComponent, canActivate: [authGuard], data: { role: ['Admin'] } },
+
+    { path: '**', redirectTo: '/home' }
 ];
