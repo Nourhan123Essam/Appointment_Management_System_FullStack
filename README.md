@@ -6,7 +6,17 @@ A full-stack appointment platform built with **.NET 8**, **Angular 17**, and **C
 
 ---
 
-## Key Highlights
+#### Table of Contents
+- [Project Overview](#project-overview)
+- [Planned Features](#planned-features)
+- [Infrastructure](#infrastructure)
+- [Authentication](#authentication)
+- [Office Management](#office-management)
+- [API Documentation with Swagger](#api-documentation-with-swagger)
+
+---
+
+## Project Overview
 
 - **Clean Architecture** with:
   - CQRS (MediatR), FluentValidation, Unit of Work, Result Pattern, Repository Pattern
@@ -18,7 +28,7 @@ A full-stack appointment platform built with **.NET 8**, **Angular 17**, and **C
   - Docker Compose for Redis, SQL Server, Backend, Frontend  
   - Run locally or fully inside containers
 - **Localization**:
-  - Implemented in both frontend and backend
+  - Implemented in both the frontend and backend
 - **Frontend**:
   - Built with PrimeNG, Angular interceptors, guards, and BehaviorSubject-based state management
 - **External Services**:
@@ -44,9 +54,11 @@ Browse the `Schreens/` folder or explore the commit history to see feature progr
 
 ---
 
+## Infrastructure
+
 **[Docker Compose]**  
 Auto-applies migrations and seeds roles + default admin on rebuild.  
-Run with `docker-compose up --build` to ensure latest updates.  
+Run with `docker-compose up --build` to ensure the latest updates.  
 **Admin credentials**: `admin@example.com / Admin@1234`
 ![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Docker%20compose.png)
 
@@ -104,6 +116,9 @@ Depending on the flow, errors are returned using either the `Result<T>` pattern 
   <img src="https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/FluentValidation%26ExceptionMiddleWare%26%26Localization_accepted-language%20header.png" />
 </div>
 
+---
+
+## Authentication
 
 **[Register Form with validation messages and localization]**  
 ![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/RegisterForm%26localization%26validationMessages.png)
@@ -130,6 +145,31 @@ The example below shows reset password emails sent in Arabic and English.
 
 **[Change Password]**  
 ![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/resetPassword.png)
+
+--- 
+
+## Office Management
+
+**[Offices manegment in Dashboard]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/Offices.png)
+
+**[Add office dialog]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/add-office.png)
+
+**[State management where office added to table without reload + toast message]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/state-managment%26toast-message.png)
+
+**[Sub-table for translations]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/sub-table%20for%20tranlsations.png)
+
+**[Delete office]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/delete-office.png)
+
+**[Update office translation]**  
+![](https://github.com/Nourhan123Essam/Appointment_Management_System_FullStack/blob/main/Schreens/update-office.png)
+
+---
+## API Documentation with Swagger
 
 **[API Coverage in Swagger — In Progress]**  
 APIs are documented and tested through Swagger.  
