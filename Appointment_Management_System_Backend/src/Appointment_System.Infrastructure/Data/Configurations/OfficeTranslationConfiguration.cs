@@ -13,7 +13,7 @@ namespace Appointment_System.Infrastructure.Data.Configurations
             builder.OwnsOne(t => t.Language, lang =>
             {
                 lang.Property(l => l.Value)
-                    .HasColumnName("Language") // ✅ Column name is 'Language' (string)
+                    .HasColumnName("Language") // Column name is 'Language' (string)
                     .HasMaxLength(10)
                     .IsRequired();
             });

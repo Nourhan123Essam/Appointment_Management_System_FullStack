@@ -11,11 +11,6 @@ namespace Appointment_System.Infrastructure.Data.Configurations
             // Primary Key
             builder.HasKey(s => s.Id);
 
-            // Properties
-            builder.Property(s => s.Name)
-                   .IsRequired()
-                   .HasMaxLength(100); // Name of specialization (e.g., Cardiologist)
-
             builder.Property(s => s.IsDeleted)
                    .HasDefaultValue(false); // Soft delete flag
 
@@ -26,14 +21,17 @@ namespace Appointment_System.Infrastructure.Data.Configurations
             // Soft Delete: Ensure only non-deleted specializations are retrieved in queries
             builder.HasQueryFilter(s => !s.IsDeleted);
 
-            // Index on Name for faster lookup
-            builder.HasIndex(s => s.Name).IsUnique(); // Ensures specialization names are unique
-
             // Relationship with DoctorSpecialization 
             builder.HasMany(s => s.DoctorSpecializations)
                    .WithOne(ds => ds.Specialization)
                    .HasForeignKey(ds => ds.SpecializationId)
                    .OnDelete(DeleteBehavior.Restrict); // Prevents deletion of specialization if it’s assigned to doctors
+
+            builder
+                .HasMany(s => s.Translations)
+                .WithOne(t => t.Specialization)
+                .HasForeignKey(t => t.SpecializationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

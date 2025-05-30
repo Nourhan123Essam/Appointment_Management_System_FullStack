@@ -676,20 +676,35 @@ namespace Appointment_System.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Specializations");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.SpecializationTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("SpecializationsTranslation");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1101,6 +1116,39 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("Appointment_System.Domain.Entities.SpecializationTranslation", b =>
+                {
+                    b.HasOne("Appointment_System.Domain.Entities.Specialization", "Specialization")
+                        .WithMany("Translations")
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Appointment_System.Domain.ValueObjects.Language", "LanguageValue", b1 =>
+                        {
+                            b1.Property<int>("SpecializationTranslationId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
+                                .HasColumnName("Language");
+
+                            b1.HasKey("SpecializationTranslationId");
+
+                            b1.ToTable("SpecializationsTranslation");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SpecializationTranslationId");
+                        });
+
+                    b.Navigation("LanguageValue")
+                        .IsRequired();
+
+                    b.Navigation("Specialization");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1208,6 +1256,8 @@ namespace Appointment_System.Infrastructure.Migrations
             modelBuilder.Entity("Appointment_System.Domain.Entities.Specialization", b =>
                 {
                     b.Navigation("DoctorSpecializations");
+
+                    b.Navigation("Translations");
                 });
 #pragma warning restore 612, 618
         }

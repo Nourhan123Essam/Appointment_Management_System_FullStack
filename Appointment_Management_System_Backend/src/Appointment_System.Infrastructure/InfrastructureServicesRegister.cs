@@ -57,6 +57,7 @@ namespace Appointment_System.Infrastructure
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<ISpecializationRepository, SpecializationRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

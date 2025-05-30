@@ -38,6 +38,7 @@ namespace Appointment_System.Infrastructure.Data
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Specialization> Specializations { get; set; }
+        public DbSet<SpecializationTranslation> SpecializationsTranslation { get; set; }
 
        protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,6 +60,7 @@ namespace Appointment_System.Infrastructure.Data
             builder.ApplyConfiguration(new PrescriptionConfiguration());
             builder.ApplyConfiguration(new QualificationConfiguration());
             builder.ApplyConfiguration(new SpecializationConfiguration());
+            builder.ApplyConfiguration(new SpecializationTranslationConfiguration());
         }
     }
 }

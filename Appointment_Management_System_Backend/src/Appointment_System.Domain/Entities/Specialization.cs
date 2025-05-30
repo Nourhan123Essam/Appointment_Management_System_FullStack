@@ -4,11 +4,10 @@ namespace Appointment_System.Domain.Entities
 {
     public class Specialization : BaseEntity
     {
-        public int Id { get; set; } 
-        public string Name { get; set; } = null!; // Name of the specialization (e.g., Cardiologist, Dentist)
+        public int Id { get; set; }
 
-        // Navigation property
+        // Navigation properties
+        public ICollection<SpecializationTranslation> Translations { get; set; } = new List<SpecializationTranslation>();
         public ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
     }
-
 }

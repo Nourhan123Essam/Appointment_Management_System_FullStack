@@ -10,6 +10,7 @@ namespace Appointment_System.Application.Interfaces
         IDoctorAvailabilityRepository AvailabilityRepository { get; }
         IDoctorQualificationRepository QualificationRepository { get; }
         IOfficeRepository OfficeRepository { get; }
+        ISpecializationRepository SpecializationRepository { get; }
 
         Task<int> SaveChangesAsync();
     }

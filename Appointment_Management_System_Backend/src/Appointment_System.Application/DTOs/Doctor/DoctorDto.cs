@@ -23,7 +23,7 @@ namespace Appointment_System.Application.DTOs.Doctor
         public int? FollowUpCount { get; set; } = 0;
         public List<DoctorQualificationDto> Qualifications { get; init; } = new();
         public List<DoctorAvailabilityDto> Availabilities { get; init; } = new();
-        public List<SpecializationDto> DoctorSpecializations { get; set; } = new();
+        public List<SpecializationWithTranslationsDto> DoctorSpecializations { get; set; } = new();
 
         // Empty constructor (for cases where mapping happens in service)
         public DoctorDto() { }
