@@ -1,0 +1,21 @@
+.section-breaker-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4rem 0 2rem;
+  position: relative;
+}
+
+.section-breaker {
+  background-color: #0d6efd; 
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 0.5rem 2rem;
+  border-radius: 40px;
+  z-index: 1;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+

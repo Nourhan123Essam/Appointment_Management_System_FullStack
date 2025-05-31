@@ -7,6 +7,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { AppStateService } from '../../services/State/app-state.service';
+import { SpecializationStateService } from '../../services/State/specialization-state.service';
+import { SpecializationWithDoctorCount } from '../../Interfaces/SpecializationWithDoctorCount';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +22,7 @@ export class HeaderComponent implements OnInit {
   isAdmin: boolean = false;
   isLoggedIn: boolean = false;
   authService = inject(AuthService);
+  specialistService = inject(SpecializationStateService);
   dropdownOpen = false;
   activeSection: 'home' | 'specialists' | 'doctors' | 'dashboard' = 'home';
   isProfileDropdownOpen = false;
@@ -31,11 +34,14 @@ export class HeaderComponent implements OnInit {
 
 
   // Example list until fetch from API
-  specialists = [
-    { id: 1, name: 'Cardiology' },
-    { id: 2, name: 'Neurology' },
-    { id: 3, name: 'Orthopedics' }
-  ];
+  // specialists = [
+  //   { id: 1, name: 'Cardiology' },
+  //   { id: 2, name: 'Neurology' },
+  //   { id: 3, name: 'Orthopedics' }
+  // ];
+
+  specialists: SpecializationWithDoctorCount[] = [];
+  
   languages = [
     { code: 'en', label: 'English' },
     { code: 'ar', label: 'العربية' }
@@ -100,6 +106,14 @@ export class HeaderComponent implements OnInit {
       this.isAdmin = roles? roles.includes("Admin"): false;
     });
     console.log("is admin from header", this.isAdmin);
+
+
+    this.specialistService.specializationsWithDoctorCount$
+      .subscribe(data =>{
+        
+        this.specialists = data || [];
+        console.log("specialists in header", this.specialists);
+      }); 
     
   }
 
@@ -112,6 +126,7 @@ export class HeaderComponent implements OnInit {
     
     // Change text direction
     document.documentElement.dir = langCode.code === 'ar' ? 'rtl' : 'ltr';
+    this.specialistService.loadSpecializationsWithDoctorCount();
   }
 
   logout() {

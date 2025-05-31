@@ -1,0 +1,36 @@
+.dialog-header {
+    display: flex;
+    align-items: center;
+    padding: 26px 0px 26px 16px;
+    background: white;
+  
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+  
+      i {
+        color: #007bff; 
+        font-size: 1.4rem;
+      }
+  
+      .dialog-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+  
+    .close-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #000;
+      transition: color 0.2s;
+  
+      &:hover {
+        color: #007bff;
+      }
+    }
+  }

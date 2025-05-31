@@ -28,7 +28,7 @@ export class OfficeStateService {
           console.log("Created office", res);
           
           const current = this.officesSubject.value;
-          this.officesSubject.next([...current, res.data]);
+          this.officesSubject.next([res.data, ...current]);
         }
       }),
       map(res => res.succeeded),

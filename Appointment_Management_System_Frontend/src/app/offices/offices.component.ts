@@ -38,9 +38,9 @@ export class OfficesComponent implements OnInit {
 
  expandedOfficeId: number | null = null;
 
-toggleExpansion(id: number): void {
-  this.expandedOfficeId = this.expandedOfficeId === id ? null : id;
-}
+  toggleExpansion(id: number): void {
+    this.expandedOfficeId = this.expandedOfficeId === id ? null : id;
+  }
 
 
   offices$ = this.state.offices$;

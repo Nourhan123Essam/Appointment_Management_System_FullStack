@@ -1,0 +1,34 @@
+<div class="hero-section">
+  <div class="overlay">
+    <div class="hero-content">
+      <h1 class="headline">Book Trusted Medical Appointments Easily</h1>
+      <p class="subheadline">Find doctors, clinics, and specialists near you.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <i class="pi pi-user icon"></i> 
+          <div class="value">{{ stats.doctors ?? '...' }}</div>
+          <div class="label">Doctors</div>
+        </div>
+
+        <div class="stat-card">
+          <i class="pi pi-building icon"></i>
+          <div class="value">{{ stats.offices ?? '...' }}</div>
+          <div class="label">Offices</div>
+        </div>
+
+        <div class="stat-card">
+          <i class="pi pi-calendar icon"></i>
+          <div class="value">{{ stats.appointments ?? '...' }}</div>
+          <div class="label">Appointments</div>
+        </div>
+
+        <div class="stat-card">
+          <i class="pi pi-tags icon"></i>
+          <div class="value">{{ stats.specializations ?? '...' }}</div>
+          <div class="label">Specializations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

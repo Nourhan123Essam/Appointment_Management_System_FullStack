@@ -1,0 +1,73 @@
+.specialist-carousel ::ng-deep .p-carousel-item {
+  display: flex;
+  justify-content: center;
+}
+
+.specialist-card {
+  background: #f4f9ff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 220px;
+
+  .specialist-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .doctor-count {
+    font-size: 0.95rem;
+    color: #007ad9;
+  }
+}
+.specialist-carousel-section {
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #073763;
+  }
+
+  .specialist-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+
+    .icon {
+      font-size: 2.5rem;
+      color: #007ad9;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    p {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+
+:host ::ng-deep .p-carousel-content {
+  direction: ltr !important;
+}

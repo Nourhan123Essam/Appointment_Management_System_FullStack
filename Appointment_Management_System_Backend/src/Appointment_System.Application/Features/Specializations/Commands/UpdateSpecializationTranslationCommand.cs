@@ -27,7 +27,7 @@ namespace Appointment_System.Application.Features.Specializations.Commands
                 return Result<string>.Fail("Specialization not found.");
 
             var lang = Language.From(request.Language);
-            var translation = specialization.Translations.FirstOrDefault(t => t.LanguageValue == lang);
+            var translation = specialization.Translations.FirstOrDefault(t => t.LanguageValue.Value == lang.Value);
 
             if (translation is null)
                 return Result<string>.Fail($"Translation in language '{lang.Value}' not found.");

@@ -1,1 +1,111 @@
-<p>specialists works!</p>
+<!-- AdminSpecializationsComponent Template -->
+<div class="admin-specializations-wrapper p-4">
+  <!-- Header Row -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">Specializations Management</h2>
+    <button 
+      pButton 
+      icon="pi pi-plus" 
+      label="Add Specialization" 
+      class="p-button-primary"
+      (click)="openAddSpecializationDialog()">
+    </button>
+  </div>
+
+  <p-table 
+    [value]="(specializations$ | async) || []" 
+    dataKey="id"
+    expandableRows
+    [paginator]="true"
+    [rows]="3"
+    [rowsPerPageOptions]="[3, 6, 9]"
+    [responsiveLayout]="'scroll'"
+    class="p-datatable-sm shadow rounded overflow-hidden w-100"
+    emptyMessage="No specializations found.">
+
+    <!-- Table Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 60%">Name</th>
+        <th style="width: 40%; text-align: right">Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Table Body -->
+    <ng-template pTemplate="body" let-specialization>
+      <tr>
+        <td>{{ getTranslation(specialization, 'en-US')?.name || '-' }}</td>
+        <td style="text-align: right; white-space: nowrap">
+          <!-- Delete Specialization -->
+          <button 
+            pButton 
+            icon="pi pi-trash" 
+            class="p-button-rounded p-button-sm p-button-text p-button-secondary me-2 shadow-sm"
+            (click)="confirmDeleteSpecialization(specialization.id)"
+            tooltip="Delete Specialization">
+          </button>
+
+          <!-- Toggle Translations -->
+          <button 
+            pButton 
+            [icon]="expandedSpecializationId === specialization.id ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+            class="p-button-rounded p-button-sm p-button-text p-button-secondary shadow-sm"
+            pRowToggler 
+            [pRowTogglerDisabled]="!specialization.translations?.length"
+            [pRowToggler]="specialization"
+            tooltip="Show Translations"
+            (click)="toggleExpansion(specialization.id)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Row Expansion: Translation Table -->
+    <ng-template pTemplate="rowexpansion" let-specialization>
+      <tr>
+        <td colspan="2">
+          <p-table 
+            [value]="specialization.translations" 
+            class="p-datatable-sm mt-2 w-100"
+            [responsiveLayout]="'scroll'"
+            emptyMessage="No translations available.">
+
+            <!-- Translation Header -->
+            <ng-template pTemplate="header">
+              <tr class="sub-table-header">
+                <th>Language</th>
+                <th>Name</th>
+                <th style="text-align: right">Actions</th>
+              </tr>
+            </ng-template>
+
+            <!-- Translation Body -->
+            <ng-template pTemplate="body" let-translation>
+              <tr>
+                <td>{{ translation.language }}</td>
+                <td>{{ translation.name }}</td>
+                <td style="text-align: right">
+                  <!-- Edit Translation -->
+                  <button 
+                    pButton 
+                    icon="pi pi-pencil" 
+                    class="p-button-rounded p-button-sm p-button-text p-button-secondary shadow-sm"
+                    (click)="openEditTranslationDialog(translation, specialization.id)"
+                    tooltip="Edit Translation">
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="3">No specializations found.</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Confirmation Dialog -->
+<p-confirmDialog></p-confirmDialog>

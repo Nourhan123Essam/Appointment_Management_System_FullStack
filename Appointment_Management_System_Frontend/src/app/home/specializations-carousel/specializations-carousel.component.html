@@ -1,0 +1,27 @@
+<section class="specialist-carousel-section">
+  <!-- <div class="section-title">Our Specializations</div> -->
+
+ <div [dir]="isRtl ? 'rtl' : 'ltr'">
+  <p-carousel
+    [value]="specializations"
+    [numVisible]="4"
+    [numScroll]="1"
+    [circular]="true"
+    [autoplayInterval]="4000"
+    *ngIf="specializations.length > 0"
+  >
+    <ng-template pTemplate="item" let-specialist>
+      <div class="specialist-card">
+        <div class="specialist-content">
+          <div class="specialist-name">{{ specialist.name }}</div>
+          <div class="doctor-count">{{ specialist.doctorCount }} Doctor(s)</div>
+        </div>
+      </div>
+    </ng-template>
+  </p-carousel>
+</div>
+
+
+    <p *ngIf="specializations.length === 0" class="text-center text-muted mt-4">No specializations available.</p>
+
+</section>

@@ -1,0 +1,24 @@
+<div style="padding: 5px;">
+  <div class="dialog-header">
+    <div class="title-section">
+      <i class="pi pi-pencil text-primary me-2"></i>
+      <span class="dialog-title">Edit Specialist Translation {{ translation.language }}</span>
+    </div>
+    <button class="close-btn" (click)="cancel()">✖</button>
+  </div>
+
+  <form [formGroup]="form" class="update-translation-form">
+    <div class="form-field mb-3">
+      <label for="name">Name</label>
+      <input id="name" pInputText formControlName="name" />
+    </div>
+
+    <button
+      pButton
+      label="Update"
+      class="p-button-primary full-width-button mt-3"
+      (click)="update()"
+      [disabled]="form.invalid || loading"
+    ></button>
+  </form>
+</div>

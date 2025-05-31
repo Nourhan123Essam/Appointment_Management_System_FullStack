@@ -1,0 +1,32 @@
+<div style="padding: 5px;">
+  <div class="dialog-header">
+    <div class="title-section">
+      <i class="pi pi-plus text-primary me-2"></i>
+      <span class="dialog-title">Add Specialization</span>
+    </div>
+    <button class="close-btn" (click)="cancel()">✖</button>
+  </div>
+
+  <form [formGroup]="specializationForm" (ngSubmit)="submit()" class="p-fluid">
+    <p-tabView>
+      <p-tabPanel *ngFor="let lang of languages" [header]="lang">
+        <div [formGroupName]="lang">
+          <div class="p-field mb-3">
+            <label for="name-{{lang}}">Name</label>
+            <input pInputText id="name-{{lang}}" formControlName="name" />
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+
+    <div class="mt-4 text-center">
+      <button 
+        type="submit" 
+        pButton 
+        label="Create Specialization" 
+        [disabled]="specializationForm.invalid"
+        class="p-button-primary">
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,74 @@
+.dialog-header {
+    display: flex;
+    align-items: center;
+    padding: 26px 0px 26px 16px;
+    background: white;
+  
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+  
+      i {
+        color: #007bff; 
+        font-size: 1.4rem;
+      }
+  
+      .dialog-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    }
+  
+    .close-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #000;
+      transition: color 0.2s;
+  
+      &:hover {
+        color: #007bff;
+      }
+    }
+  }
+
+  
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 !important;
+}
+
+form {
+  background-color: #fff;
+  border-radius: 1rem;
+}
+.update-translation-form {
+  padding: 1.5rem;
+
+  .form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .full-width-button {
+    width: 100%;
+    border-radius: 10px;
+  }
+}

@@ -1,1 +1,31 @@
-<p>home works!</p>
+<app-home-hero-stats [stats]="{
+  doctors: null,
+  offices: null,
+  appointments: null,
+  specializations: null
+}"></app-home-hero-stats>
+
+<div class="section-breaker-wrapper">
+  <h2 class="section-breaker">
+    Specializations
+    </h2>
+</div>
+
+<app-specializations-carousel></app-specializations-carousel>
+
+<div class="section-breaker-wrapper">
+  <h2 class="section-breaker">
+    Top Rated Doctors
+    </h2>
+</div>
+<app-top-doctors-list></app-top-doctors-list>
+
+<div class="section-breaker-wrapper">
+  <div class="section-breaker">Why Book With Us</div>
+</div>
+<app-why-book-section />
+
+<div class="section-breaker-wrapper">
+  <div class="section-breaker">Frequently Asked Question</div>
+</div>
+<app-home-faq></app-home-faq>

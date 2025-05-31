@@ -64,32 +64,32 @@ export class AddOfficeComponent implements OnInit {
   }
 
   submit(): void {
-  if (this.officeForm.invalid) return;
+    if (this.officeForm.invalid) return;
 
-  const translations = this.languages.map(lang => ({
-    id: 0,
-    officeID: 0,
-    language: lang,
-    ...this.officeForm.value[lang]
-  }));
+    const translations = this.languages.map(lang => ({
+      id: 0,
+      officeID: 0,
+      language: lang,
+      ...this.officeForm.value[lang]
+    }));
 
-  const newOffice: Office = { id: 0, translations };
+    const newOffice: Office = { id: 0, translations };
 
-  this.officeState.createOffice(newOffice)
-    .subscribe(success => {
-      if(success){
-        this.ref.close(success);
+    this.officeState.createOffice(newOffice)
+      .subscribe(success => {
+        if(success){
+          this.ref.close(success);
+        }
+        else{
+          this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to add office'
+        });
+        }
       }
-      else{
-        this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to add office'
-      });
-      }
-    }
-  );
-}
+    );
+  }
 
   cancel() {
     this.ref.close(false);

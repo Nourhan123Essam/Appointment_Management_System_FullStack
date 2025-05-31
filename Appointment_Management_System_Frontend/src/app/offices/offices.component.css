@@ -29,3 +29,7 @@
   border-color: #bb2d3b;
   color: #bb2d3b;
 }
+.sub-table-header th {
+  background-color: #edf6ffa7; 
+  color: #333;
+}
