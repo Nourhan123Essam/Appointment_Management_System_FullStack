@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Security.Principal;
 using Appointment_System.Application.DTOs.Doctor;
 using Appointment_System.Application.Interfaces.Repositories;
 using Appointment_System.Domain.Entities;
+using Appointment_System.Domain.Responses;
 using Appointment_System.Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Appointment_System.Infrastructure.Repositories
@@ -11,153 +11,119 @@ namespace Appointment_System.Infrastructure.Repositories
     public class DoctorRepository : IDoctorRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IIdentityRepository _identity;
 
-        public DoctorRepository(ApplicationDbContext context,
-        UserManager<IdentityUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+        public DoctorRepository(ApplicationDbContext context, IIdentityRepository identityRepository)
         {
             _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _identity = identityRepository;
         }
 
-        // Get Doctor by Id
-        public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
+        public async Task<Doctor> GetDoctorByIdAsync(int doctorId)
         {
-            return (await _context.Doctors
-                .Include(d => d.Availabilities)
-                .Include(d => d.Qualifications)
-                .FirstOrDefaultAsync(d => d.Id == doctorId));
+            return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == doctorId);
         }
 
-
-        // Create Doctor
-        public async Task AddDoctorAsync(Doctor doctor)
+        public async Task<DoctorTranslation?> GetDoctorTranslationByIdAsync(int Id)
         {
-            _context.Doctors.Add(doctor);
+            return await _context.DoctorTranslations.FirstOrDefaultAsync(d => d.Id == Id);
         }
 
-        public async Task AddAvailabilityAsync(List<Availability> availabilities)
-        {
-            _context.DoctorAvailabilities.AddRange(availabilities);
-        }
-
-        public async Task AddQualificationsAsync(List<Qualification> qualifications)
-        {
-            _context.DoctorQualifications.AddRange(qualifications);
-        }
-
-        // Get all Doctors basic Data
-        public async Task<List<Doctor>> GetAllDoctorsBasicDataAsync()
-        {
-            // Get doctors using UserManager
-            var doctors = await _context.Doctors.ToListAsync();
-            return doctors;
-        }
-
-        // Get all Doctors
-        public async Task<List<Doctor>> GetAllDoctorsAsync()
-        {
-            // Get doctors using UserManager
-            var doctors = await _userManager.GetUsersInRoleAsync("Doctor");
-
-            // Fetch qualifications & availabilities for the doctors
-            var doctorIds = doctors.Select(d => d.Id).ToList();
-
-            var doctorsWithDetails = await _context.Doctors
-                .Where(d => doctorIds.Contains(d.UserId))
-                .Include(d => d.Qualifications)  // Include qualifications
-                .Include(d => d.Availabilities)  // Include availabilities
-                .AsNoTracking()
-                .ToListAsync();
-
-            return doctorsWithDetails;
-        }
-
-        // Update Doctor
-        public async Task<bool> UpdateDoctorAsync(Doctor doctor)
-        {
-            _context.Doctors.Update(doctor);
-            return (await _context.SaveChangesAsync()) > 0;
-        }            
-
-        // Delete Doctor
-        public async Task<bool> DeleteDoctorAsync(Doctor doctor)
-        {
-            _context.Doctors.Remove(doctor);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-
-        // create with trasaction
-        public async Task<DoctorDto> CreateDoctorAsync(DoctorCreateDto dto, string password)
+        public async Task<Result<Doctor>> CreateDoctorWithUserAsync(CreateDoctorDto dto, string password)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                var user = new IdentityUser
-                {
-                    UserName = dto.Email,
-                    Email = dto.Email,
-                };
+                var userId = await _identity.CreateUserAsync(dto.Email, password);
+                if (userId is null)
+                    return Result<Doctor>.Fail("Failed to create user.");
 
-                var result = await _userManager.CreateAsync(user, password);
-                if (!result.Succeeded) return null;
+                var roleAssigned = await _identity.AssignRoleAsync(userId, "Doctor");
+                if (!roleAssigned)
+                    return Result<Doctor>.Fail("Failed to assign Doctor role.");
 
-                var doctor = new Doctor
-                {
-                    FirstName = dto.FirstName,
-                    Email = dto.Email,
-                    LastName = dto.LastName,
-                    YearsOfExperience = dto.YearsOfExperience,
-                    InitialFee = dto.InitialFee,
-                    FollowUpFee = dto.FollowUpFee,
-                    MaxFollowUps = dto.MaxFollowUps,
-                    Bio = dto.Bio
-                };
-
-                var res = await _context.Doctors.AddAsync(doctor);
-                if (res == null) return null;
-
-                if (!await _roleManager.RoleExistsAsync("Doctor"))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole("Doctor"));
-                }
-                await _userManager.AddToRoleAsync(user, "Doctor");
-
-                var availabilities = dto.Availabilities.Select(a => new Availability
-                {
-                    DoctorId = doctor.Id,
-                    DayOfWeek = a.DayOfWeek,
-                    StartTime = a.StartTime,
-                    EndTime = a.EndTime
-                }).ToList();
-                await _context.DoctorAvailabilities.AddRangeAsync(availabilities);
-
-                var qualifications = dto.Qualifications.Select(q => new Qualification
-                {
-                    DoctorId = doctor.Id,
-                    QualificationName = q.QualificationName,
-                    IssuingInstitution = q.IssuingInstitution,
-                    YearEarned = q.YearEarned
-                }).ToList();
-                await _context.DoctorQualifications.AddRangeAsync(qualifications);
-
+                var doctor = dto.ToEntity(userId);
+                await _context.Doctors.AddAsync(doctor);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
-                // Map doctor to DoctorDto or fetch full details if needed
-                return new DoctorDto(doctor); // Or fetch from DB with includes if needed
+                // Reload the doctor with required navigation properties
+                var fullDoctor = await _context.Doctors
+                    .Include(d => d.DoctorSpecializations)
+                        .ThenInclude(ds => ds.Specialization)
+                            .ThenInclude(s => s.Translations)
+                    .Include(d => d.Translations)
+                    .FirstAsync(d => d.Id == doctor.Id);
+
+                await transaction.CommitAsync();
+                
+                return Result<Doctor>.Success(fullDoctor);
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return null;
+                return Result<Doctor>.Fail("An error occurred while creating the doctor: " + ex.Message);
             }
         }
 
+
+        public Task UpdateBasicAsync(Doctor doctor)
+        {
+            _context.Doctors.Update(doctor); // good practice if entity is tracked
+            return Task.CompletedTask;
+        }
+
+        public async Task UpdateTranslationAsync(DoctorTranslation translation)
+        {
+            var existing = await _context.DoctorTranslations
+                .FirstOrDefaultAsync(t => t.DoctorId == translation.DoctorId && t.Language == translation.Language);
+
+            if (existing is not null)
+            {
+                existing.FirstName = translation.FirstName;
+                existing.LastName = translation.LastName;
+                existing.Bio = translation.Bio;
+            }
+            else
+            {
+                await _context.DoctorTranslations.AddAsync(translation);
+            }
+        }
+
+        public async Task DeleteAsync(int doctorId)
+        {
+            var doctor = await _context.Doctors.FindAsync(doctorId);
+            if (doctor is not null)
+            {
+                doctor.IsDeleted = true;
+            }
+        }
+
+        public async Task<List<DoctorBasicDto>> GetAllForCacheAsync()
+        {
+            var doctors = await _context.Doctors
+                .AsNoTracking()
+                .Include(d => d.Translations)
+                .Include(d => d.DoctorSpecializations)
+                    .ThenInclude(ds => ds.Specialization)
+                        .ThenInclude(s => s.Translations)
+                .ToListAsync();
+
+            return doctors.Select(DoctorBasicDto.FromEntity).ToList();
+        }
+
+        public async Task<DoctorBasicDto?> GetForCacheByIdAsync(int doctorId)
+        {
+            var doctor = await _context.Doctors
+                .AsNoTracking()
+                .Include(d => d.Translations)
+                .Include(d => d.DoctorSpecializations)
+                    .ThenInclude(ds => ds.Specialization)
+                        .ThenInclude(s => s.Translations)
+                .FirstOrDefaultAsync(d => d.Id == doctorId);
+
+            return doctor is not null ? DoctorBasicDto.FromEntity(doctor) : null;
+        }
     }
+
 }

@@ -6,7 +6,7 @@ namespace Appointment_System.Domain.Entities
     {
         public int Id { get; set; }
         public int OfficeId { get; set; }
-        public Office Office { get; set; } = null!;
+        public Office Office { get; set; } = new();
 
         public Language Language { get; set; } = null!; 
 

@@ -27,7 +27,7 @@ namespace Appointment_System.Application.Features.Patient.Queries
 
         public async Task<PatientDto?> Handle(GetPatientByIdQuery request, CancellationToken cancellationToken)
         {
-            var patient = await _unitOfWork.Patients.GetPatientByIdAsync(request.PatientId);
+            var patient = await _unitOfWork.PatientRepository.GetPatientByIdAsync(request.PatientId);
             return patient == null ? null : new PatientDto(patient);
         }
     }

@@ -30,7 +30,7 @@ namespace Appointment_System.Application.Features.DoctorAvailabilities.Queries
             if (request.DoctorId <= 0)
                 throw new ArgumentException("DoctorId should be greater than 0");
 
-            var doctorExists = await _unitOfWork.Doctors.GetDoctorByIdAsync(request.DoctorId) != null;
+            var doctorExists = await _unitOfWork.DoctorRepository.GetDoctorByIdAsync(request.DoctorId) != null;
             if (!doctorExists)
                 throw new KeyNotFoundException($"Doctor with ID {request.DoctorId} does not exist.");
 

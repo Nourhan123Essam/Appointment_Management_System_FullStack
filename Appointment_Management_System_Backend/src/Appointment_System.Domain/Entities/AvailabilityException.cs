@@ -12,7 +12,7 @@ namespace Appointment_System.Domain.Entities
         public string? Reason { get; set; }
 
         // Navigation
-        public Availability Availability { get; set; } = null!;
+        public Availability Availability { get; set; } = new();
     }
 
 }

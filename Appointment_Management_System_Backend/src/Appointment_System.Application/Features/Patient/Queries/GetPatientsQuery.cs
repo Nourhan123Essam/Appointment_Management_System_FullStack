@@ -27,7 +27,7 @@ namespace Appointment_System.Application.Features.Patient.Queries
 
         public async Task<PagedResult<PatientDto>> Handle(GetPatientsQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.Patients.GetPatientsAsync(request.QueryParams);
+            return await _unitOfWork.PatientRepository.GetPatientsAsync(request.QueryParams);
         }
     }
 

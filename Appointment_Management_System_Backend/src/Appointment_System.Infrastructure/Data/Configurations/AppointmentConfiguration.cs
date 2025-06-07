@@ -49,10 +49,6 @@ namespace Appointment_System.Infrastructure.Data.Configurations
                    .HasForeignKey<Appointment>(a => a.PrescriptionId)
                    .IsRequired(false);
 
-            builder.HasOne(a => a.Feedback)
-                   .WithOne(f => f.Appointment)
-                   .HasForeignKey<Feedback>(f => f.AppointmentId);
-
             // Ensure no duplicate appointment time per doctor
             builder.HasIndex(a => new { a.DoctorId, a.DateTime }).IsUnique();
 

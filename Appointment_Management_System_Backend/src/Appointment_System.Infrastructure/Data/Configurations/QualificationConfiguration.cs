@@ -8,23 +8,23 @@ namespace Appointment_System.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Qualification> builder)
         {
-            // Primary Key
             builder.HasKey(q => q.Id);
 
-            // Properties
-            builder.Property(q => q.QualificationName).IsRequired().HasMaxLength(200); // Adjusted from 'Title'
-            builder.Property(q => q.IssuingInstitution).IsRequired().HasMaxLength(500); // Adjusted from 'Institution'
-            builder.Property(q => q.YearEarned).IsRequired(); // Keep required for the year
-            builder.Property(q => q.IsDeleted).HasDefaultValue(false); // Soft delete handling
-            builder.Property(q => q.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()"); ; // CreatedAt will be required
+            builder.Property(q => q.YearEarned).IsRequired();
+            builder.Property(q => q.IsDeleted).HasDefaultValue(false);
+            builder.Property(q => q.CreatedAt).IsRequired().HasDefaultValueSql("GETUTCDATE()");
 
-            // Relationship: Qualification to Doctor (DoctorId as Foreign Key)
             builder.HasOne(q => q.Doctor)
                    .WithMany(d => d.Qualifications)
                    .HasForeignKey(q => q.DoctorId)
-                   .OnDelete(DeleteBehavior.Restrict); // Restricted deletion, as qualifications should not be removed if a doctor is deleted
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            // Soft Delete Query Filter (Ensures deleted qualifications are excluded in queries)
+            // Add translations relationship
+            builder.HasMany(q => q.Translations)
+                   .WithOne(t => t.Qualification)
+                   .HasForeignKey(t => t.QualificationId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasQueryFilter(q => !q.IsDeleted);
         }
     }

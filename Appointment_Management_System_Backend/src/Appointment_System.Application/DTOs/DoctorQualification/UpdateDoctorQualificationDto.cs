@@ -16,8 +16,8 @@ namespace Appointment_System.Application.DTOs.DoctorQualification
         // Prevents direct mapping in the service layer for better separation of concerns.
         public void UpdateEntity(Domain.Entities.Qualification qualification)
         {
-            qualification.QualificationName = QualificationName;
-            qualification.IssuingInstitution = IssuingInstitution;
+            //qualification.QualificationName = QualificationName;
+            //qualification.IssuingInstitution = IssuingInstitution;
             qualification.YearEarned = YearEarned;
         }
     }

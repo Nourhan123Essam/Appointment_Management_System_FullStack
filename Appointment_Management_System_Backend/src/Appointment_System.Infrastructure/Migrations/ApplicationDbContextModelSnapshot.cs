@@ -229,10 +229,6 @@ namespace Appointment_System.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Bio")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -242,17 +238,16 @@ namespace Appointment_System.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<int?>("FollowUpCount")
                         .HasColumnType("int");
 
                     b.Property<decimal>("FollowUpFee")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("InitialFee")
                         .HasPrecision(18, 2)
@@ -262,11 +257,6 @@ namespace Appointment_System.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("MaxFollowUps")
                         .HasColumnType("int");
@@ -332,7 +322,7 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.ToTable("DoctorSpecializations");
                 });
 
-            modelBuilder.Entity("Appointment_System.Domain.Entities.Feedback", b =>
+            modelBuilder.Entity("Appointment_System.Domain.Entities.DoctorTranslation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -340,8 +330,40 @@ namespace Appointment_System.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AppointmentId")
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DoctorId")
                         .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("DoctorTranslations");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -368,9 +390,6 @@ namespace Appointment_System.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppointmentId")
-                        .IsUnique();
 
                     b.HasIndex("DoctorId");
 
@@ -560,6 +579,10 @@ namespace Appointment_System.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -635,16 +658,6 @@ namespace Appointment_System.Infrastructure.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("IssuingInstitution")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("QualificationName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -656,6 +669,37 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("DoctorQualifications");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.QualificationTranslation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("IssuingInstitution")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<int>("QualificationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QualificationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QualificationId");
+
+                    b.ToTable("QualificationTranslations");
                 });
 
             modelBuilder.Entity("Appointment_System.Domain.Entities.Specialization", b =>
@@ -1005,21 +1049,24 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.Navigation("Specialization");
                 });
 
-            modelBuilder.Entity("Appointment_System.Domain.Entities.Feedback", b =>
+            modelBuilder.Entity("Appointment_System.Domain.Entities.DoctorTranslation", b =>
                 {
-                    b.HasOne("Appointment_System.Domain.Entities.Appointment", "Appointment")
-                        .WithOne("Feedback")
-                        .HasForeignKey("Appointment_System.Domain.Entities.Feedback", "AppointmentId")
+                    b.HasOne("Appointment_System.Domain.Entities.Doctor", "Doctor")
+                        .WithMany("Translations")
+                        .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Doctor");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.Feedback", b =>
+                {
                     b.HasOne("Appointment_System.Domain.Entities.Doctor", "Doctor")
                         .WithMany("Feedbacks")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Appointment");
 
                     b.Navigation("Doctor");
                 });
@@ -1116,6 +1163,17 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("Appointment_System.Domain.Entities.QualificationTranslation", b =>
+                {
+                    b.HasOne("Appointment_System.Domain.Entities.Qualification", "Qualification")
+                        .WithMany("Translations")
+                        .HasForeignKey("QualificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Qualification");
+                });
+
             modelBuilder.Entity("Appointment_System.Domain.Entities.SpecializationTranslation", b =>
                 {
                     b.HasOne("Appointment_System.Domain.Entities.Specialization", "Specialization")
@@ -1204,8 +1262,6 @@ namespace Appointment_System.Infrastructure.Migrations
                 {
                     b.Navigation("Chat");
 
-                    b.Navigation("Feedback");
-
                     b.Navigation("FollowUpAppointments");
 
                     b.Navigation("Prescription");
@@ -1232,6 +1288,8 @@ namespace Appointment_System.Infrastructure.Migrations
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Qualifications");
+
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Appointment_System.Domain.Entities.Office", b =>
@@ -1251,6 +1309,11 @@ namespace Appointment_System.Infrastructure.Migrations
             modelBuilder.Entity("Appointment_System.Domain.Entities.Prescription", b =>
                 {
                     b.Navigation("Medicines");
+                });
+
+            modelBuilder.Entity("Appointment_System.Domain.Entities.Qualification", b =>
+                {
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Appointment_System.Domain.Entities.Specialization", b =>

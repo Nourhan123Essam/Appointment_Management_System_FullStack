@@ -58,6 +58,7 @@ namespace Appointment_System.Infrastructure
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<ISpecializationRepository, SpecializationRepository>();
+            services.AddScoped<IIdentityRepository, IdentityRepository> ();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -65,6 +66,7 @@ namespace Appointment_System.Infrastructure
 
             // Redis
             services.AddScoped<IRedisService, RedisService>();
+            services.AddScoped<IRedisCacheService, RedisCacheService>();
 
             // Recaptcha
             services.Configure<RecaptchaSettings>(configuration.GetSection("Recaptcha"));

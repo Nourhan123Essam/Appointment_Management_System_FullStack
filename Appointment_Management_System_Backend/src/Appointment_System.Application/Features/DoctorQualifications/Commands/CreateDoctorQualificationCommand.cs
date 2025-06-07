@@ -29,7 +29,7 @@ namespace Appointment_System.Application.Features.DoctorQualifications.Commands
             if (dto.DoctorId <= 0)
                 throw new ArgumentException("DoctorId should be greater than 0");
 
-            var doctor = await _unitOfWork.Doctors.GetDoctorByIdAsync(dto.DoctorId);
+            var doctor = await _unitOfWork.DoctorRepository.GetDoctorByIdAsync(dto.DoctorId);
             if (doctor == null)
                 throw new KeyNotFoundException("Doctor not found");
 

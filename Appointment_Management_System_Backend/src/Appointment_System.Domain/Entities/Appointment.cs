@@ -24,13 +24,12 @@ namespace Appointment_System.Domain.Entities
         public PaymentStatus? PaymentStatus { get; set; }
 
         // Navigation properties
-        public Patient? Patient { get; set; }
-        public Doctor Doctor { get; set; } = null!;
-        public Office Office { get; set; } = null!;
-        public Appointment? ParentAppointment { get; set; }
+        public Patient? Patient { get; set; } = new();
+        public Doctor Doctor { get; set; } = new();
+        public Office Office { get; set; } = new();
+        public Appointment? ParentAppointment { get; set; } = new();
         public ICollection<Appointment> FollowUpAppointments { get; set; } = new List<Appointment>();
-        public Chat? Chat { get; set; }
-        public Prescription? Prescription { get; set; }
-        public Feedback? Feedback { get; set; }
+        public Chat? Chat { get; set; } = new();
+        public Prescription? Prescription { get; set; } = new();
     }
 }

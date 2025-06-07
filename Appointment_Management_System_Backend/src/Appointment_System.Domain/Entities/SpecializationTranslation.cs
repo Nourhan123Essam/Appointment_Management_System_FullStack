@@ -11,7 +11,7 @@ namespace Appointment_System.Domain.Entities
         public string Name { get; set; } = null!;
 
         // Navigation
-        public Specialization Specialization { get; set; } = null!;
+        public Specialization Specialization { get; set; } = new();
     }
 
 }

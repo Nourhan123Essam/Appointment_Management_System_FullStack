@@ -1,4 +1,6 @@
-﻿using Appointment_System.Application.DTOs.Doctor;
+﻿using System.Diagnostics;
+using System.IO;
+using Appointment_System.Application.DTOs.Doctor;
 using Appointment_System.Application.DTOs.DoctorAvailability;
 using Appointment_System.Application.DTOs.DoctorQualification;
 using Appointment_System.Application.Features.Doctor.Commands;
@@ -29,67 +31,104 @@ namespace Appointment_System.Presentation.Controllers
         //////////////////////////////// 1 ///////////////////////////////////////
         // Doctor CRUD operations
         #region Doctor
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "OwnDoctorProfile")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
-            var doctor = await _mediator.Send(new GetDoctorByIdQuery(id));
-            if (doctor == null)
-                return NotFound($"Doctor with ID {id} not found.");
+            var result = await _mediator.Send(new GetDoctorByIdQuery(id));
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
 
-            return Ok(doctor);
+            return Ok(result);
         }
 
+        [HttpGet("public")]
+        public async Task<IActionResult> GetDoctors([FromBody] DoctorFilterOptions filterOptions)
+        {
+            var stopwatch = Stopwatch.StartNew();
+
+            var query = new GetPublicDoctorsQuery(filterOptions);
+            var result = await _mediator.Send(query);
+
+            stopwatch.Stop();
+            Console.WriteLine($"[GetDoctors] Execution time: {stopwatch.ElapsedMilliseconds} ms");
+
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
+
+        [HttpGet("top5")]
+        public async Task<IActionResult> GetTop5Doctors([FromQuery] string language)
+        {
+            var result = await _mediator.Send(new GetTop5DoctorsQuery(language));
+            return result.Succeeded
+                ? Ok(result)
+                : BadRequest(result);
+        }
+
+        [HttpGet("admin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetDoctorsForAdmin([FromBody] DoctorFilterOptions filterOptions)
+        {
+            var query = new GetAdminDoctorsQuery(filterOptions);
+            var result = await _mediator.Send(query);
+            return result.Succeeded
+                ? Ok(result.Data)
+                : BadRequest(result.Message);
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateDoctor([FromBody]DoctorCreateDto doctorDto)
+        public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorDto doctorDto)
         {
-            var doctor = await _mediator.Send(new CreateDoctorCommand(doctorDto));
+            var result = await _mediator.Send(new CreateDoctorCommand(doctorDto, doctorDto.Password));
 
-            if (doctor == null)
-                return BadRequest("Failed to create doctor.");
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
 
-            return CreatedAtAction(nameof(GetDoctorById), new { id = doctor.Id }, doctor);
+            return Ok(result);
         }
 
-        [HttpGet("doctorsBasicData")]
-        public async Task<IActionResult> GetAllDoctorsBasicData()
+        [Authorize(Policy = "OwnDoctorProfile")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDoctor([FromBody] UpdateDoctorDto dto)
         {
-            var doctors = await _mediator.Send(new GetAllDoctorsBasicDataQuery());
-            return Ok(doctors);
+            var result = await _mediator.Send(new UpdateDoctorCommand(dto));
+
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+
         }
 
-        [HttpGet("doctors")]
-        public async Task<IActionResult> GetAllDoctors()
+        [Authorize(Policy = "OwnDoctorProfile")]
+        [HttpPut("translation/{id}")]
+        public async Task<IActionResult> UpdateTranslation([FromBody] DoctorTranslationDto dto)
         {
-            var doctors = await _mediator.Send(new GetAllDoctorsQuery());   
-            return Ok(doctors);
+            var command = new UpdateDoctorTranslationCommand(dto);
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
+
+            return Ok(result.Message);
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("{doctorId}")]
-        public async Task<IActionResult> UpdateDoctor(string doctorId, [FromBody] DoctorUpdateDto dto)
-        {
-            var updated = await _mediator.Send(new UpdateDoctorCommand(doctorId, dto));   
-
-            if (!updated)
-                return NotFound("Doctor not found.");
-
-            return Ok(new { message = "Doctor updated successfully." });
-
-        }
-
         [HttpDelete("{doctorId}")]
         public async Task<IActionResult> DeleteDoctor(int doctorId)
         {
-            var deleted = await _mediator.Send(new DeleteDoctorCommand(doctorId));                                                                       
+            var result = await _mediator.Send(new DeleteDoctorCommand(doctorId));
 
-            if (!deleted)
-                return NotFound("Doctor not found.");
+            if (!result.Succeeded)
+                return BadRequest(result.Message);
 
-            return Ok(new { message = "Doctor deleted successfully." });
-
+            return Ok(result);
         }
 
         #endregion

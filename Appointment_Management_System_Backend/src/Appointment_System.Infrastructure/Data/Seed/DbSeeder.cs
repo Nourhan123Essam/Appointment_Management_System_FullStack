@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Appointment_System.Infrastructure.Data
+namespace Appointment_System.Infrastructure.Data.Seed
 {
     public class DbSeeder
     {
@@ -50,7 +50,7 @@ namespace Appointment_System.Infrastructure.Data
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail};
+                adminUser = new IdentityUser { UserName = adminEmail, Email = adminEmail };
                 try
                 {
                     var result = await userManager.CreateAsync(adminUser, adminPassword);
@@ -63,7 +63,7 @@ namespace Appointment_System.Infrastructure.Data
                 {
                     Console.WriteLine("look hereeeeeeeeeeeeeeeeeeeeeee!!!!!!!!!!!!!!!!!!!", ex);
                 }
-                
+
             }
             else
             {

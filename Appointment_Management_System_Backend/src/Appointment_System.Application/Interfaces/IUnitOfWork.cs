@@ -4,8 +4,8 @@ namespace Appointment_System.Application.Interfaces
 {
     public interface IUnitOfWork
     {
-        IDoctorRepository Doctors { get; }
-        IPatientRepository Patients { get; }
+        IDoctorRepository DoctorRepository { get; }
+        IPatientRepository PatientRepository { get; }
         IAuthenticationRepository Authentication { get; }
         IDoctorAvailabilityRepository AvailabilityRepository { get; }
         IDoctorQualificationRepository QualificationRepository { get; }

@@ -13,7 +13,6 @@ namespace Appointment_System.Infrastructure.Data.Configurations
             // Denormalized DoctorId to improve query performance when fetching doctor feedbacks.
             builder.Property(f => f.DoctorId).IsRequired();
 
-            builder.Property(f => f.AppointmentId).IsRequired();
             builder.Property(f => f.Rate).IsRequired();
             builder.Property(f => f.Message).HasMaxLength(1000);
             builder.Property(f => f.IsDeleted).HasDefaultValue(false);
@@ -23,11 +22,6 @@ namespace Appointment_System.Infrastructure.Data.Configurations
                    .WithMany(d => d.Feedbacks)
                    .HasForeignKey(f => f.DoctorId);
 
-            builder.HasOne(f => f.Appointment)
-                   .WithOne(a => a.Feedback)
-                   .HasForeignKey<Feedback>(f => f.AppointmentId);
-
-            builder.HasIndex(f => f.AppointmentId).IsUnique();
             builder.HasQueryFilter(f => !f.IsDeleted);
         }
     }

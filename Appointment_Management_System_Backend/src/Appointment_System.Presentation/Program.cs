@@ -1,5 +1,4 @@
 ﻿using Appointment_System.Infrastructure;
-using Appointment_System.Infrastructure.Data;
 using Appointment_System.Presentation.Middlewares;
 using Serilog;
 using Appointment_System.Application;
@@ -9,6 +8,9 @@ using DotNetEnv;
 using Appointment_System.Application.Localization;
 using Appointment_System.Presentation.Localization;
 using Appointment_System.Presentation.Extensions;
+using Appointment_System.Infrastructure.Authorization.Policies;
+using Appointment_System.Infrastructure.Data.Seed;
+
 
 //"If you think good architecture is expensive, try bad architecture." - Brian Foote and Joseph Yoder
 
@@ -106,6 +108,13 @@ builder.Services.AddSingleton<ILocalizationService, LocalizationService>();
 // Register the middlewares with DI
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+// Authorization
+builder.Services.AddAuthorization(); 
+builder.Services.AddCustomAuthorization();
+
+// Seeding: Seeding mock data for testing Redis performance
+// Note: there are another commands to uncomment below in seeding secion
+//builder.Services.AddScoped<DoctorTestDataSeeder>();
 
 //*************************************************************************************
 
@@ -137,19 +146,26 @@ app.UseCors("AllowSpecificOrigins");
 // This loads variables from the .env file
 Env.Load();
 
-// Apply pending EF Core migrations and seed required roles/admin user
+// Seeding: Apply pending EF Core migrations and seed required roles/admin user
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         await DbSeeder.MigrateAndSeedAsync(services);
+
+        // OPTIONAL: Seed mock test data (100 doctors, 10 offices, 10 specialists) to test Redis performance
+        // UNCOMMENT the line below and run the project to add test doctors
+        // Note: there are another command to uncomment upove in seeding secion
+        //var doctorSeeder = services.GetRequiredService<DoctorTestDataSeeder>();
+        //await doctorSeeder.SeedAsync();
     }
     catch (Exception ex)
     {
         Console.WriteLine($"Error during DB setup: {ex.Message}");
     }
 }
+
 
 
 // Configure the HTTP request pipeline.

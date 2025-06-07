@@ -25,8 +25,8 @@ namespace Appointment_System.Application.DTOs.DoctorQualification
         public DoctorQualificationDto(Domain.Entities.Qualification entity)
         {
             Id = entity.Id;
-            QualificationName = entity.QualificationName;
-            IssuingInstitution = entity.IssuingInstitution;
+            QualificationName = "";
+            IssuingInstitution = "";
             YearEarned = entity.YearEarned;
             DoctorId = entity.DoctorId;
         }

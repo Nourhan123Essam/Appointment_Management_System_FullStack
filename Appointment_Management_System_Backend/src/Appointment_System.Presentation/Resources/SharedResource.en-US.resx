@@ -219,6 +219,9 @@
   <data name="SessionExpiredOrInvalid" xml:space="preserve">
     <value>Session expired or invalid. </value>
   </data>
+  <data name="SpecializationNotFound" xml:space="preserve">
+    <value>Specialization not found</value>
+  </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>Something went wrong!</value>
   </data>

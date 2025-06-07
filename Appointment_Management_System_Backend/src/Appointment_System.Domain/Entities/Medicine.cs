@@ -16,7 +16,7 @@ namespace Appointment_System.Domain.Entities
         public string? Instructions { get; set; }
 
         // Navigation property to parent prescription
-        public Prescription Prescription { get; set; } = null!;
+        public Prescription Prescription { get; set; } = new();
     }
 
 }

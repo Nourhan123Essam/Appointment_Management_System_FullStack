@@ -39,6 +39,8 @@ namespace Appointment_System.Infrastructure.Data
         public DbSet<Prescription> Prescriptions { get; set; }
         public DbSet<Specialization> Specializations { get; set; }
         public DbSet<SpecializationTranslation> SpecializationsTranslation { get; set; }
+        public DbSet<DoctorTranslation> DoctorTranslations { get; set; }
+        public DbSet<QualificationTranslation> QualificationTranslations { get; set; }
 
        protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -61,6 +63,15 @@ namespace Appointment_System.Infrastructure.Data
             builder.ApplyConfiguration(new QualificationConfiguration());
             builder.ApplyConfiguration(new SpecializationConfiguration());
             builder.ApplyConfiguration(new SpecializationTranslationConfiguration());
+            builder.ApplyConfiguration(new DoctorTranslationConfiguration());
+            builder.ApplyConfiguration(new QualificationTranslationConfiguration());
+
         }
     }
 }
+
+
+// useful commands
+
+// dotnet ef database update --project src/Appointment_System.Infrastructure --startup-project src/Appointment_System.Presentation
+// dotnet ef migrations add InitSpecializationSchema --project src/Appointment_System.Infrastructure --startup-project src/Appointment_System.Presentation

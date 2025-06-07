@@ -8,8 +8,8 @@ namespace Appointment_System.Infrastructure.Repositories
     {
         private readonly ApplicationDbContext _context;
 
-        public IDoctorRepository Doctors { get; }
-        public IPatientRepository Patients { get; }
+        public IDoctorRepository DoctorRepository { get; }
+        public IPatientRepository PatientRepository { get; }
 
         public IAuthenticationRepository Authentication { get; }
 
@@ -30,8 +30,8 @@ namespace Appointment_System.Infrastructure.Repositories
             ISpecializationRepository specializationRepository
         ){
             _context = context;
-            Doctors = doctorRepo;
-            Patients = patientRepo;
+            DoctorRepository = doctorRepo;
+            PatientRepository = patientRepo;
             Authentication = authenticationRepo;
             AvailabilityRepository = doctorAvailabilityRepo;
             QualificationRepository = doctorQualificationRepo;

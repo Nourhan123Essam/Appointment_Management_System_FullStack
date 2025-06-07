@@ -27,16 +27,16 @@ namespace Appointment_System.Application.Features.Patient.Queries
 
         public async Task<List<AppointmentDto>> Handle(GetPatientAppointmentsQuery request, CancellationToken cancellationToken)
         {
-            var appointments = await _unitOfWork.Patients.GetPatientAppointmentsAsync(request.PatientId);
+            var appointments = await _unitOfWork.PatientRepository.GetPatientAppointmentsAsync(request.PatientId);
 
-            var doctors = await _unitOfWork.Doctors.GetAllDoctorsAsync();
+            var doctors = await _unitOfWork.DoctorRepository.GetAllForCacheAsync();
             var doctorDict = doctors.ToDictionary(d => d.Id);
 
             return appointments.Select(a => new AppointmentDto
             {
                 Id = a.Id,
                 DateTime = a.DateTime,
-                DoctorName = doctorDict.TryGetValue(a.DoctorId, out var doc) ? doc.FirstName : "Unknown"
+                DoctorName = doctorDict.TryGetValue(a.DoctorId, out var doc) ? "" : "Unknown"
             }).ToList();
         }
     }

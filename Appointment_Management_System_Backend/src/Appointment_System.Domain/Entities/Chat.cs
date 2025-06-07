@@ -11,7 +11,7 @@ namespace Appointment_System.Domain.Entities
         public int DoctorId { get; set; }  // For fast Sender validation
         public int PatientId { get; set; } // For fast Sender validation
 
-        public Appointment Appointment { get; set; } = null!;
+        public Appointment Appointment { get; set; } = new();
         public ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 

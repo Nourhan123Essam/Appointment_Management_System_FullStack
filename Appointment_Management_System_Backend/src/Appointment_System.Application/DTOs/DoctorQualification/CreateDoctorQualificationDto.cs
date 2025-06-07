@@ -21,8 +21,8 @@ namespace Appointment_System.Application.DTOs.DoctorQualification
         {
             return new Domain.Entities.Qualification
             {
-                QualificationName = QualificationName,
-                IssuingInstitution = IssuingInstitution,
+                //QualificationName = QualificationName,
+                //IssuingInstitution = IssuingInstitution,
                 YearEarned = YearEarned,
                 DoctorId = DoctorId
             };

@@ -8,7 +8,7 @@ namespace Appointment_System.Domain.Entities
         public int SpecializationId { get; set; }
 
         // Navigation
-        public Doctor Doctor { get; set; } = null!;
-        public Specialization Specialization { get; set; } = null!;
+        public Doctor Doctor { get; set; } = new();
+        public Specialization Specialization { get; set; } = new();
     }
 }

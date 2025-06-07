@@ -26,11 +26,11 @@ namespace Appointment_System.Application.Features.Patient.Commands
 
         public async Task<bool> Handle(DeletePatientCommand request, CancellationToken cancellationToken)
         {
-            var patient = await _unitOfWork.Patients.GetPatientByIdAsync(request.PatientId);
+            var patient = await _unitOfWork.PatientRepository.GetPatientByIdAsync(request.PatientId);
             if (patient == null)
                 return false;
 
-            await _unitOfWork.Patients.DeletePatientAsync(patient);
+            await _unitOfWork.PatientRepository.DeletePatientAsync(patient);
             return true;
         }
     }

@@ -8,7 +8,7 @@ namespace Appointment_System.Domain.Entities
         public int AppointmentId { get; set; }
 
         // Navigation properties
-        public Appointment Appointment { get; set; } = null!;
+        public Appointment Appointment { get; set; } = new();
         public ICollection<Medicine> Medicines { get; set; } = new List<Medicine>();
     }
 }

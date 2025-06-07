@@ -11,6 +11,6 @@ namespace Appointment_System.Domain.Entities
         public DateTime SentAt { get; set; }
 
         // Navigation
-        public virtual Chat Chat { get; set; } = null!;
+        public virtual Chat Chat { get; set; } = new();
     }
 }

@@ -219,6 +219,9 @@
   <data name="SessionExpiredOrInvalid" xml:space="preserve">
     <value>الجلسة منتهية أو غير صالحة.</value>
   </data>
+  <data name="SpecializationNotFound" xml:space="preserve">
+    <value>التخصص غير موجود</value>
+  </data>
   <data name="UnexpectedError" xml:space="preserve">
     <value>!حدث خطأ ما</value>
   </data>
